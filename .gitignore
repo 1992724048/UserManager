@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+/.vs
+/_ReSharper.Caches
+/.vscode
+/Debug-x64
+/Release-x64
+/UserManager/lib/static

@@ -1,0 +1,1394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{223fe908-f0ab-4932-8885-9b260d13692f}</ProjectGuid>
+    <RootNamespace>UserManager</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <InterproceduralOptimization>true</InterproceduralOptimization>
+    <UseIntelIPP1A>Static_Library</UseIntelIPP1A>
+    <UseInteloneTBB>true</UseInteloneTBB>
+    <UseInteloneMKL>Parallel</UseInteloneMKL>
+    <UseILP64Interfaces1A>true</UseILP64Interfaces1A>
+    <EnableMKLOpenMPOffloadToGPU>true</EnableMKLOpenMPOffloadToGPU>
+    <UseInteloneDAL>Parallel_Static</UseInteloneDAL>
+    <UseIntelMPI>true</UseIntelMPI>
+    <InstrumentInteloneTBB>true</InstrumentInteloneTBB>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <InterproceduralOptimization>true</InterproceduralOptimization>
+    <UseIntelIPP1A>Static_Library</UseIntelIPP1A>
+    <UseInteloneTBB>true</UseInteloneTBB>
+    <UseInteloneMKL>Parallel</UseInteloneMKL>
+    <UseILP64Interfaces1A>true</UseILP64Interfaces1A>
+    <EnableMKLOpenMPOffloadToGPU>true</EnableMKLOpenMPOffloadToGPU>
+    <UseInteloneDAL>Parallel_Static</UseInteloneDAL>
+    <UseIntelMPI>true</UseIntelMPI>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>Server</TargetName>
+    <OutDir>$(SolutionDir)$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)-$(Platform)\BuildTemp\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>Server</TargetName>
+    <OutDir>$(SolutionDir)$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)-$(Platform)\BuildTemp\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <GuardEHContMetadata>
+      </GuardEHContMetadata>
+      <GenerateAlternateCodePaths>ARROWLAKE</GenerateAlternateCodePaths>
+      <UseProcessorExtensions>ARROWLAKE</UseProcessorExtensions>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <AssemblerOutput>All</AssemblerOutput>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\UserManager\lib\jemalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <AdditionalLibraryDirectories>..\UserManager\lib\static\MTd;..\UserManager\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;Zycore.lib;Zydis.lib;absl.lib;re2.lib;opencv_world4100d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <WPOAssemblyOutput>Asm_and_MachineCode_and_Source</WPOAssemblyOutput>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <GuardEHContMetadata>
+      </GuardEHContMetadata>
+      <GenerateAlternateCodePaths>ARROWLAKE</GenerateAlternateCodePaths>
+      <UseProcessorExtensions>ARROWLAKE</UseProcessorExtensions>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <AssemblerOutput>All</AssemblerOutput>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
+      <PGOUsePreTrainedModel>true</PGOUsePreTrainedModel>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\UserManager\lib\jemalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <AdditionalLibraryDirectories>..\UserManager\lib\static\mpi;..\UserManager\lib\static\MT;..\UserManager\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;Zycore.lib;Zydis.lib;absl.lib;re2.lib;impi.lib;impicxx.lib;libmpi_ilp64.lib;opencv_world4100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <WPOAssemblyOutput>Asm_and_MachineCode_and_Source</WPOAssemblyOutput>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Captcha.hpp" />
+    <ClCompile Include="Controller\admin\AdminController.cpp" />
+    <ClCompile Include="Controller\api\APIController.cpp" />
+    <ClCompile Include="Controller\app\AppController.cpp" />
+    <ClCompile Include="Controller\data\DataController.cpp" />
+    <ClCompile Include="Controller\file\FileController.cpp" />
+    <ClCompile Include="Controller\key\KeyController.cpp" />
+    <ClCompile Include="Controller\setting\SettingController.cpp" />
+    <ClCompile Include="Controller\user\UserController.cpp" />
+    <ClCompile Include="Dao\app\AppDao.cpp" />
+    <ClCompile Include="Dao\data\DataDao.cpp" />
+    <ClCompile Include="Dao\key\KeyDao.cpp" />
+    <ClCompile Include="Dao\user\UserDao.cpp" />
+    <ClCompile Include="lib\config\Config.cpp" />
+    <ClCompile Include="lib\events\joins\abstracteventjoin.cpp" />
+    <ClCompile Include="lib\events\joins\eventjoinwrapper.cpp" />
+    <ClCompile Include="lib\fmt\format.cc" />
+    <ClCompile Include="lib\fmt\os.cc" />
+    <ClCompile Include="lib\jemalloc\src\arena.c" />
+    <ClCompile Include="lib\jemalloc\src\background_thread.c" />
+    <ClCompile Include="lib\jemalloc\src\base.c" />
+    <ClCompile Include="lib\jemalloc\src\bin.c" />
+    <ClCompile Include="lib\jemalloc\src\bin_info.c" />
+    <ClCompile Include="lib\jemalloc\src\bitmap.c" />
+    <ClCompile Include="lib\jemalloc\src\buf_writer.c" />
+    <ClCompile Include="lib\jemalloc\src\cache_bin.c" />
+    <ClCompile Include="lib\jemalloc\src\ckh.c" />
+    <ClCompile Include="lib\jemalloc\src\counter.c" />
+    <ClCompile Include="lib\jemalloc\src\ctl.c" />
+    <ClCompile Include="lib\jemalloc\src\decay.c" />
+    <ClCompile Include="lib\jemalloc\src\div.c" />
+    <ClCompile Include="lib\jemalloc\src\ecache.c" />
+    <ClCompile Include="lib\jemalloc\src\edata.c" />
+    <ClCompile Include="lib\jemalloc\src\edata_cache.c" />
+    <ClCompile Include="lib\jemalloc\src\ehooks.c" />
+    <ClCompile Include="lib\jemalloc\src\emap.c" />
+    <ClCompile Include="lib\jemalloc\src\eset.c" />
+    <ClCompile Include="lib\jemalloc\src\exp_grow.c" />
+    <ClCompile Include="lib\jemalloc\src\extent.c" />
+    <ClCompile Include="lib\jemalloc\src\extent_dss.c" />
+    <ClCompile Include="lib\jemalloc\src\extent_mmap.c" />
+    <ClCompile Include="lib\jemalloc\src\fxp.c" />
+    <ClCompile Include="lib\jemalloc\src\hook.c" />
+    <ClCompile Include="lib\jemalloc\src\hpa.c" />
+    <ClCompile Include="lib\jemalloc\src\hpa_hooks.c" />
+    <ClCompile Include="lib\jemalloc\src\hpdata.c" />
+    <ClCompile Include="lib\jemalloc\src\inspect.c" />
+    <ClCompile Include="lib\jemalloc\src\jemalloc.c" />
+    <ClCompile Include="lib\jemalloc\src\jemalloc_cpp.cpp" />
+    <ClCompile Include="lib\jemalloc\src\large.c" />
+    <ClCompile Include="lib\jemalloc\src\log.c" />
+    <ClCompile Include="lib\jemalloc\src\malloc_io.c" />
+    <ClCompile Include="lib\jemalloc\src\mutex.c" />
+    <ClCompile Include="lib\jemalloc\src\nstime.c" />
+    <ClCompile Include="lib\jemalloc\src\pa.c" />
+    <ClCompile Include="lib\jemalloc\src\pac.c" />
+    <ClCompile Include="lib\jemalloc\src\pages.c" />
+    <ClCompile Include="lib\jemalloc\src\pai.c" />
+    <ClCompile Include="lib\jemalloc\src\pa_extra.c" />
+    <ClCompile Include="lib\jemalloc\src\peak_event.c" />
+    <ClCompile Include="lib\jemalloc\src\prof.c" />
+    <ClCompile Include="lib\jemalloc\src\prof_data.c" />
+    <ClCompile Include="lib\jemalloc\src\prof_log.c" />
+    <ClCompile Include="lib\jemalloc\src\prof_recent.c" />
+    <ClCompile Include="lib\jemalloc\src\prof_stats.c" />
+    <ClCompile Include="lib\jemalloc\src\prof_sys.c" />
+    <ClCompile Include="lib\jemalloc\src\psset.c" />
+    <ClCompile Include="lib\jemalloc\src\rtree.c" />
+    <ClCompile Include="lib\jemalloc\src\safety_check.c" />
+    <ClCompile Include="lib\jemalloc\src\san.c" />
+    <ClCompile Include="lib\jemalloc\src\san_bump.c" />
+    <ClCompile Include="lib\jemalloc\src\sc.c" />
+    <ClCompile Include="lib\jemalloc\src\sec.c" />
+    <ClCompile Include="lib\jemalloc\src\stats.c" />
+    <ClCompile Include="lib\jemalloc\src\sz.c" />
+    <ClCompile Include="lib\jemalloc\src\tcache.c" />
+    <ClCompile Include="lib\jemalloc\src\test_hooks.c" />
+    <ClCompile Include="lib\jemalloc\src\thread_event.c" />
+    <ClCompile Include="lib\jemalloc\src\ticker.c" />
+    <ClCompile Include="lib\jemalloc\src\tsd.c" />
+    <ClCompile Include="lib\jemalloc\src\witness.c" />
+    <ClCompile Include="lib\openssl\applink.c" />
+    <ClCompile Include="lib\zlib\adler32.c" />
+    <ClCompile Include="lib\zlib\compress.c" />
+    <ClCompile Include="lib\zlib\crc32.c" />
+    <ClCompile Include="lib\zlib\deflate.c" />
+    <ClCompile Include="lib\zlib\gzclose.c" />
+    <ClCompile Include="lib\zlib\gzlib.c" />
+    <ClCompile Include="lib\zlib\gzread.c" />
+    <ClCompile Include="lib\zlib\gzwrite.c" />
+    <ClCompile Include="lib\zlib\infback.c" />
+    <ClCompile Include="lib\zlib\inffast.c" />
+    <ClCompile Include="lib\zlib\inflate.c" />
+    <ClCompile Include="lib\zlib\inftrees.c" />
+    <ClCompile Include="lib\zlib\trees.c" />
+    <ClCompile Include="lib\zlib\uncompr.c" />
+    <ClCompile Include="lib\zlib\zutil.c" />
+    <ClCompile Include="Service.cpp" />
+    <ClCompile Include="thread_pool.hpp" />
+    <ClCompile Include="UserManager.cpp" />
+    <ClCompile Include="util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Controller\admin\AdminController.h" />
+    <ClInclude Include="Controller\api\APIController.h" />
+    <ClInclude Include="Controller\app\AppController.h" />
+    <ClInclude Include="Controller\data\DataController.h" />
+    <ClInclude Include="Controller\file\FileController.h" />
+    <ClInclude Include="Controller\HTTPController.h" />
+    <ClInclude Include="Controller\key\KeyController.h" />
+    <ClInclude Include="Controller\setting\SettingController.h" />
+    <ClInclude Include="Controller\user\UserController.h" />
+    <ClInclude Include="Dao\app\AppDao.h" />
+    <ClInclude Include="Dao\Dao.h" />
+    <ClInclude Include="Dao\data\DataDao.h" />
+    <ClInclude Include="Dao\key\KeyDao.h" />
+    <ClInclude Include="Dao\user\UserDao.h" />
+    <ClInclude Include="IOCPSocket.h" />
+    <ClInclude Include="lib\absl\algorithm\algorithm.h" />
+    <ClInclude Include="lib\absl\algorithm\container.h" />
+    <ClInclude Include="lib\absl\base\attributes.h" />
+    <ClInclude Include="lib\absl\base\call_once.h" />
+    <ClInclude Include="lib\absl\base\casts.h" />
+    <ClInclude Include="lib\absl\base\config.h" />
+    <ClInclude Include="lib\absl\base\const_init.h" />
+    <ClInclude Include="lib\absl\base\dynamic_annotations.h" />
+    <ClInclude Include="lib\absl\base\internal\atomic_hook.h" />
+    <ClInclude Include="lib\absl\base\internal\atomic_hook_test_helper.h" />
+    <ClInclude Include="lib\absl\base\internal\cycleclock.h" />
+    <ClInclude Include="lib\absl\base\internal\cycleclock_config.h" />
+    <ClInclude Include="lib\absl\base\internal\direct_mmap.h" />
+    <ClInclude Include="lib\absl\base\internal\dynamic_annotations.h" />
+    <ClInclude Include="lib\absl\base\internal\endian.h" />
+    <ClInclude Include="lib\absl\base\internal\errno_saver.h" />
+    <ClInclude Include="lib\absl\base\internal\exception_safety_testing.h" />
+    <ClInclude Include="lib\absl\base\internal\exception_testing.h" />
+    <ClInclude Include="lib\absl\base\internal\fast_type_id.h" />
+    <ClInclude Include="lib\absl\base\internal\hide_ptr.h" />
+    <ClInclude Include="lib\absl\base\internal\identity.h" />
+    <ClInclude Include="lib\absl\base\internal\inline_variable.h" />
+    <ClInclude Include="lib\absl\base\internal\inline_variable_testing.h" />
+    <ClInclude Include="lib\absl\base\internal\invoke.h" />
+    <ClInclude Include="lib\absl\base\internal\low_level_alloc.h" />
+    <ClInclude Include="lib\absl\base\internal\low_level_scheduling.h" />
+    <ClInclude Include="lib\absl\base\internal\nullability_impl.h" />
+    <ClInclude Include="lib\absl\base\internal\per_thread_tls.h" />
+    <ClInclude Include="lib\absl\base\internal\poison.h" />
+    <ClInclude Include="lib\absl\base\internal\pretty_function.h" />
+    <ClInclude Include="lib\absl\base\internal\raw_logging.h" />
+    <ClInclude Include="lib\absl\base\internal\scheduling_mode.h" />
+    <ClInclude Include="lib\absl\base\internal\scoped_set_env.h" />
+    <ClInclude Include="lib\absl\base\internal\spinlock.h" />
+    <ClInclude Include="lib\absl\base\internal\spinlock_wait.h" />
+    <ClInclude Include="lib\absl\base\internal\strerror.h" />
+    <ClInclude Include="lib\absl\base\internal\sysinfo.h" />
+    <ClInclude Include="lib\absl\base\internal\thread_identity.h" />
+    <ClInclude Include="lib\absl\base\internal\throw_delegate.h" />
+    <ClInclude Include="lib\absl\base\internal\tracing.h" />
+    <ClInclude Include="lib\absl\base\internal\tsan_mutex_interface.h" />
+    <ClInclude Include="lib\absl\base\internal\unaligned_access.h" />
+    <ClInclude Include="lib\absl\base\internal\unscaledcycleclock.h" />
+    <ClInclude Include="lib\absl\base\internal\unscaledcycleclock_config.h" />
+    <ClInclude Include="lib\absl\base\log_severity.h" />
+    <ClInclude Include="lib\absl\base\macros.h" />
+    <ClInclude Include="lib\absl\base\no_destructor.h" />
+    <ClInclude Include="lib\absl\base\nullability.h" />
+    <ClInclude Include="lib\absl\base\optimization.h" />
+    <ClInclude Include="lib\absl\base\options.h" />
+    <ClInclude Include="lib\absl\base\policy_checks.h" />
+    <ClInclude Include="lib\absl\base\port.h" />
+    <ClInclude Include="lib\absl\base\prefetch.h" />
+    <ClInclude Include="lib\absl\base\thread_annotations.h" />
+    <ClInclude Include="lib\absl\cleanup\cleanup.h" />
+    <ClInclude Include="lib\absl\cleanup\internal\cleanup.h" />
+    <ClInclude Include="lib\absl\container\btree_map.h" />
+    <ClInclude Include="lib\absl\container\btree_set.h" />
+    <ClInclude Include="lib\absl\container\btree_test.h" />
+    <ClInclude Include="lib\absl\container\fixed_array.h" />
+    <ClInclude Include="lib\absl\container\flat_hash_map.h" />
+    <ClInclude Include="lib\absl\container\flat_hash_set.h" />
+    <ClInclude Include="lib\absl\container\hash_container_defaults.h" />
+    <ClInclude Include="lib\absl\container\inlined_vector.h" />
+    <ClInclude Include="lib\absl\container\internal\btree.h" />
+    <ClInclude Include="lib\absl\container\internal\btree_container.h" />
+    <ClInclude Include="lib\absl\container\internal\common.h" />
+    <ClInclude Include="lib\absl\container\internal\common_policy_traits.h" />
+    <ClInclude Include="lib\absl\container\internal\compressed_tuple.h" />
+    <ClInclude Include="lib\absl\container\internal\container_memory.h" />
+    <ClInclude Include="lib\absl\container\internal\hashtablez_sampler.h" />
+    <ClInclude Include="lib\absl\container\internal\hashtable_debug.h" />
+    <ClInclude Include="lib\absl\container\internal\hashtable_debug_hooks.h" />
+    <ClInclude Include="lib\absl\container\internal\hash_function_defaults.h" />
+    <ClInclude Include="lib\absl\container\internal\hash_generator_testing.h" />
+    <ClInclude Include="lib\absl\container\internal\hash_policy_testing.h" />
+    <ClInclude Include="lib\absl\container\internal\hash_policy_traits.h" />
+    <ClInclude Include="lib\absl\container\internal\inlined_vector.h" />
+    <ClInclude Include="lib\absl\container\internal\layout.h" />
+    <ClInclude Include="lib\absl\container\internal\node_slot_policy.h" />
+    <ClInclude Include="lib\absl\container\internal\raw_hash_map.h" />
+    <ClInclude Include="lib\absl\container\internal\raw_hash_set.h" />
+    <ClInclude Include="lib\absl\container\internal\test_allocator.h" />
+    <ClInclude Include="lib\absl\container\internal\test_instance_tracker.h" />
+    <ClInclude Include="lib\absl\container\internal\tracked.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_map_constructor_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_map_lookup_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_map_members_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_map_modifiers_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_set_constructor_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_set_lookup_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_set_members_test.h" />
+    <ClInclude Include="lib\absl\container\internal\unordered_set_modifiers_test.h" />
+    <ClInclude Include="lib\absl\container\node_hash_map.h" />
+    <ClInclude Include="lib\absl\container\node_hash_set.h" />
+    <ClInclude Include="lib\absl\crc\crc32c.h" />
+    <ClInclude Include="lib\absl\crc\internal\cpu_detect.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc32c.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc32c_inline.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc32_x86_arm_combined_simd.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc_cord_state.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc_internal.h" />
+    <ClInclude Include="lib\absl\crc\internal\crc_memcpy.h" />
+    <ClInclude Include="lib\absl\crc\internal\non_temporal_arm_intrinsics.h" />
+    <ClInclude Include="lib\absl\crc\internal\non_temporal_memcpy.h" />
+    <ClInclude Include="lib\absl\debugging\failure_signal_handler.h" />
+    <ClInclude Include="lib\absl\debugging\internal\address_is_readable.h" />
+    <ClInclude Include="lib\absl\debugging\internal\bounded_utf8_length_sequence.h" />
+    <ClInclude Include="lib\absl\debugging\internal\decode_rust_punycode.h" />
+    <ClInclude Include="lib\absl\debugging\internal\demangle.h" />
+    <ClInclude Include="lib\absl\debugging\internal\demangle_rust.h" />
+    <ClInclude Include="lib\absl\debugging\internal\elf_mem_image.h" />
+    <ClInclude Include="lib\absl\debugging\internal\examine_stack.h" />
+    <ClInclude Include="lib\absl\debugging\internal\stacktrace_config.h" />
+    <ClInclude Include="lib\absl\debugging\internal\stack_consumption.h" />
+    <ClInclude Include="lib\absl\debugging\internal\symbolize.h" />
+    <ClInclude Include="lib\absl\debugging\internal\utf8_for_code_point.h" />
+    <ClInclude Include="lib\absl\debugging\internal\vdso_support.h" />
+    <ClInclude Include="lib\absl\debugging\leak_check.h" />
+    <ClInclude Include="lib\absl\debugging\stacktrace.h" />
+    <ClInclude Include="lib\absl\debugging\symbolize.h" />
+    <ClInclude Include="lib\absl\flags\commandlineflag.h" />
+    <ClInclude Include="lib\absl\flags\config.h" />
+    <ClInclude Include="lib\absl\flags\declare.h" />
+    <ClInclude Include="lib\absl\flags\flag.h" />
+    <ClInclude Include="lib\absl\flags\internal\commandlineflag.h" />
+    <ClInclude Include="lib\absl\flags\internal\flag.h" />
+    <ClInclude Include="lib\absl\flags\internal\parse.h" />
+    <ClInclude Include="lib\absl\flags\internal\path_util.h" />
+    <ClInclude Include="lib\absl\flags\internal\private_handle_accessor.h" />
+    <ClInclude Include="lib\absl\flags\internal\program_name.h" />
+    <ClInclude Include="lib\absl\flags\internal\registry.h" />
+    <ClInclude Include="lib\absl\flags\internal\sequence_lock.h" />
+    <ClInclude Include="lib\absl\flags\internal\usage.h" />
+    <ClInclude Include="lib\absl\flags\marshalling.h" />
+    <ClInclude Include="lib\absl\flags\parse.h" />
+    <ClInclude Include="lib\absl\flags\reflection.h" />
+    <ClInclude Include="lib\absl\flags\usage.h" />
+    <ClInclude Include="lib\absl\flags\usage_config.h" />
+    <ClInclude Include="lib\absl\functional\any_invocable.h" />
+    <ClInclude Include="lib\absl\functional\bind_front.h" />
+    <ClInclude Include="lib\absl\functional\function_ref.h" />
+    <ClInclude Include="lib\absl\functional\internal\any_invocable.h" />
+    <ClInclude Include="lib\absl\functional\internal\front_binder.h" />
+    <ClInclude Include="lib\absl\functional\internal\function_ref.h" />
+    <ClInclude Include="lib\absl\functional\overload.h" />
+    <ClInclude Include="lib\absl\hash\hash.h" />
+    <ClInclude Include="lib\absl\hash\hash_testing.h" />
+    <ClInclude Include="lib\absl\hash\internal\city.h" />
+    <ClInclude Include="lib\absl\hash\internal\hash.h" />
+    <ClInclude Include="lib\absl\hash\internal\hash_test.h" />
+    <ClInclude Include="lib\absl\hash\internal\low_level_hash.h" />
+    <ClInclude Include="lib\absl\hash\internal\spy_hash_state.h" />
+    <ClInclude Include="lib\absl\log\absl_check.h" />
+    <ClInclude Include="lib\absl\log\absl_log.h" />
+    <ClInclude Include="lib\absl\log\absl_vlog_is_on.h" />
+    <ClInclude Include="lib\absl\log\check.h" />
+    <ClInclude Include="lib\absl\log\die_if_null.h" />
+    <ClInclude Include="lib\absl\log\flags.h" />
+    <ClInclude Include="lib\absl\log\globals.h" />
+    <ClInclude Include="lib\absl\log\initialize.h" />
+    <ClInclude Include="lib\absl\log\internal\append_truncated.h" />
+    <ClInclude Include="lib\absl\log\internal\check_impl.h" />
+    <ClInclude Include="lib\absl\log\internal\check_op.h" />
+    <ClInclude Include="lib\absl\log\internal\conditions.h" />
+    <ClInclude Include="lib\absl\log\internal\config.h" />
+    <ClInclude Include="lib\absl\log\internal\flags.h" />
+    <ClInclude Include="lib\absl\log\internal\fnmatch.h" />
+    <ClInclude Include="lib\absl\log\internal\globals.h" />
+    <ClInclude Include="lib\absl\log\internal\log_format.h" />
+    <ClInclude Include="lib\absl\log\internal\log_impl.h" />
+    <ClInclude Include="lib\absl\log\internal\log_message.h" />
+    <ClInclude Include="lib\absl\log\internal\log_sink_set.h" />
+    <ClInclude Include="lib\absl\log\internal\nullguard.h" />
+    <ClInclude Include="lib\absl\log\internal\nullstream.h" />
+    <ClInclude Include="lib\absl\log\internal\proto.h" />
+    <ClInclude Include="lib\absl\log\internal\strip.h" />
+    <ClInclude Include="lib\absl\log\internal\structured.h" />
+    <ClInclude Include="lib\absl\log\internal\structured_proto.h" />
+    <ClInclude Include="lib\absl\log\internal\test_actions.h" />
+    <ClInclude Include="lib\absl\log\internal\test_helpers.h" />
+    <ClInclude Include="lib\absl\log\internal\test_matchers.h" />
+    <ClInclude Include="lib\absl\log\internal\vlog_config.h" />
+    <ClInclude Include="lib\absl\log\internal\voidify.h" />
+    <ClInclude Include="lib\absl\log\log.h" />
+    <ClInclude Include="lib\absl\log\log_entry.h" />
+    <ClInclude Include="lib\absl\log\log_sink.h" />
+    <ClInclude Include="lib\absl\log\log_sink_registry.h" />
+    <ClInclude Include="lib\absl\log\log_streamer.h" />
+    <ClInclude Include="lib\absl\log\scoped_mock_log.h" />
+    <ClInclude Include="lib\absl\log\structured.h" />
+    <ClInclude Include="lib\absl\log\vlog_is_on.h" />
+    <ClInclude Include="lib\absl\memory\memory.h" />
+    <ClInclude Include="lib\absl\meta\type_traits.h" />
+    <ClInclude Include="lib\absl\numeric\bits.h" />
+    <ClInclude Include="lib\absl\numeric\int128.h" />
+    <ClInclude Include="lib\absl\numeric\internal\bits.h" />
+    <ClInclude Include="lib\absl\numeric\internal\representation.h" />
+    <ClInclude Include="lib\absl\profiling\internal\exponential_biased.h" />
+    <ClInclude Include="lib\absl\profiling\internal\periodic_sampler.h" />
+    <ClInclude Include="lib\absl\profiling\internal\sample_recorder.h" />
+    <ClInclude Include="lib\absl\random\bernoulli_distribution.h" />
+    <ClInclude Include="lib\absl\random\beta_distribution.h" />
+    <ClInclude Include="lib\absl\random\bit_gen_ref.h" />
+    <ClInclude Include="lib\absl\random\discrete_distribution.h" />
+    <ClInclude Include="lib\absl\random\distributions.h" />
+    <ClInclude Include="lib\absl\random\exponential_distribution.h" />
+    <ClInclude Include="lib\absl\random\gaussian_distribution.h" />
+    <ClInclude Include="lib\absl\random\internal\chi_square.h" />
+    <ClInclude Include="lib\absl\random\internal\distribution_caller.h" />
+    <ClInclude Include="lib\absl\random\internal\distribution_test_util.h" />
+    <ClInclude Include="lib\absl\random\internal\explicit_seed_seq.h" />
+    <ClInclude Include="lib\absl\random\internal\fastmath.h" />
+    <ClInclude Include="lib\absl\random\internal\fast_uniform_bits.h" />
+    <ClInclude Include="lib\absl\random\internal\generate_real.h" />
+    <ClInclude Include="lib\absl\random\internal\iostream_state_saver.h" />
+    <ClInclude Include="lib\absl\random\internal\mock_helpers.h" />
+    <ClInclude Include="lib\absl\random\internal\mock_overload_set.h" />
+    <ClInclude Include="lib\absl\random\internal\mock_validators.h" />
+    <ClInclude Include="lib\absl\random\internal\nanobenchmark.h" />
+    <ClInclude Include="lib\absl\random\internal\nonsecure_base.h" />
+    <ClInclude Include="lib\absl\random\internal\pcg_engine.h" />
+    <ClInclude Include="lib\absl\random\internal\platform.h" />
+    <ClInclude Include="lib\absl\random\internal\pool_urbg.h" />
+    <ClInclude Include="lib\absl\random\internal\randen.h" />
+    <ClInclude Include="lib\absl\random\internal\randen_detect.h" />
+    <ClInclude Include="lib\absl\random\internal\randen_engine.h" />
+    <ClInclude Include="lib\absl\random\internal\randen_hwaes.h" />
+    <ClInclude Include="lib\absl\random\internal\randen_slow.h" />
+    <ClInclude Include="lib\absl\random\internal\randen_traits.h" />
+    <ClInclude Include="lib\absl\random\internal\salted_seed_seq.h" />
+    <ClInclude Include="lib\absl\random\internal\seed_material.h" />
+    <ClInclude Include="lib\absl\random\internal\sequence_urbg.h" />
+    <ClInclude Include="lib\absl\random\internal\traits.h" />
+    <ClInclude Include="lib\absl\random\internal\uniform_helper.h" />
+    <ClInclude Include="lib\absl\random\internal\wide_multiply.h" />
+    <ClInclude Include="lib\absl\random\log_uniform_int_distribution.h" />
+    <ClInclude Include="lib\absl\random\mocking_bit_gen.h" />
+    <ClInclude Include="lib\absl\random\mock_distributions.h" />
+    <ClInclude Include="lib\absl\random\poisson_distribution.h" />
+    <ClInclude Include="lib\absl\random\random.h" />
+    <ClInclude Include="lib\absl\random\seed_gen_exception.h" />
+    <ClInclude Include="lib\absl\random\seed_sequences.h" />
+    <ClInclude Include="lib\absl\random\uniform_int_distribution.h" />
+    <ClInclude Include="lib\absl\random\uniform_real_distribution.h" />
+    <ClInclude Include="lib\absl\random\zipf_distribution.h" />
+    <ClInclude Include="lib\absl\status\internal\statusor_internal.h" />
+    <ClInclude Include="lib\absl\status\internal\status_internal.h" />
+    <ClInclude Include="lib\absl\status\internal\status_matchers.h" />
+    <ClInclude Include="lib\absl\status\status.h" />
+    <ClInclude Include="lib\absl\status\statusor.h" />
+    <ClInclude Include="lib\absl\status\status_matchers.h" />
+    <ClInclude Include="lib\absl\status\status_payload_printer.h" />
+    <ClInclude Include="lib\absl\strings\ascii.h" />
+    <ClInclude Include="lib\absl\strings\charconv.h" />
+    <ClInclude Include="lib\absl\strings\charset.h" />
+    <ClInclude Include="lib\absl\strings\cord.h" />
+    <ClInclude Include="lib\absl\strings\cordz_test_helpers.h" />
+    <ClInclude Include="lib\absl\strings\cord_analysis.h" />
+    <ClInclude Include="lib\absl\strings\cord_buffer.h" />
+    <ClInclude Include="lib\absl\strings\cord_test_helpers.h" />
+    <ClInclude Include="lib\absl\strings\escaping.h" />
+    <ClInclude Include="lib\absl\strings\has_absl_stringify.h" />
+    <ClInclude Include="lib\absl\strings\has_ostream_operator.h" />
+    <ClInclude Include="lib\absl\strings\internal\charconv_bigint.h" />
+    <ClInclude Include="lib\absl\strings\internal\charconv_parse.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_functions.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_handle.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_info.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_sample_token.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_statistics.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_update_scope.h" />
+    <ClInclude Include="lib\absl\strings\internal\cordz_update_tracker.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_data_edge.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_internal.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_btree.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_btree_navigator.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_btree_reader.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_consume.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_crc.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_flat.h" />
+    <ClInclude Include="lib\absl\strings\internal\cord_rep_test_util.h" />
+    <ClInclude Include="lib\absl\strings\internal\damerau_levenshtein_distance.h" />
+    <ClInclude Include="lib\absl\strings\internal\escaping.h" />
+    <ClInclude Include="lib\absl\strings\internal\escaping_test_common.h" />
+    <ClInclude Include="lib\absl\strings\internal\memutil.h" />
+    <ClInclude Include="lib\absl\strings\internal\numbers_test_common.h" />
+    <ClInclude Include="lib\absl\strings\internal\ostringstream.h" />
+    <ClInclude Include="lib\absl\strings\internal\pow10_helper.h" />
+    <ClInclude Include="lib\absl\strings\internal\resize_uninitialized.h" />
+    <ClInclude Include="lib\absl\strings\internal\stl_type_traits.h" />
+    <ClInclude Include="lib\absl\strings\internal\stringify_sink.h" />
+    <ClInclude Include="lib\absl\strings\internal\string_constant.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\arg.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\bind.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\checker.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\constexpr_parser.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\extension.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\float_conversion.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\output.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_format\parser.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_join_internal.h" />
+    <ClInclude Include="lib\absl\strings\internal\str_split_internal.h" />
+    <ClInclude Include="lib\absl\strings\internal\utf8.h" />
+    <ClInclude Include="lib\absl\strings\match.h" />
+    <ClInclude Include="lib\absl\strings\numbers.h" />
+    <ClInclude Include="lib\absl\strings\string_view.h" />
+    <ClInclude Include="lib\absl\strings\strip.h" />
+    <ClInclude Include="lib\absl\strings\str_cat.h" />
+    <ClInclude Include="lib\absl\strings\str_format.h" />
+    <ClInclude Include="lib\absl\strings\str_join.h" />
+    <ClInclude Include="lib\absl\strings\str_replace.h" />
+    <ClInclude Include="lib\absl\strings\str_split.h" />
+    <ClInclude Include="lib\absl\strings\substitute.h" />
+    <ClInclude Include="lib\absl\synchronization\barrier.h" />
+    <ClInclude Include="lib\absl\synchronization\blocking_counter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\create_thread_identity.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\futex.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\futex_waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\graphcycles.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\kernel_timeout.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\per_thread_sem.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\pthread_waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\sem_waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\stdcpp_waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\thread_pool.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\waiter_base.h" />
+    <ClInclude Include="lib\absl\synchronization\internal\win32_waiter.h" />
+    <ClInclude Include="lib\absl\synchronization\mutex.h" />
+    <ClInclude Include="lib\absl\synchronization\notification.h" />
+    <ClInclude Include="lib\absl\time\civil_time.h" />
+    <ClInclude Include="lib\absl\time\clock.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\include\cctz\civil_time.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\include\cctz\civil_time_detail.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\include\cctz\time_zone.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\include\cctz\zone_info_source.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_fixed.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_if.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_impl.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_info.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_libc.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\time_zone_posix.h" />
+    <ClInclude Include="lib\absl\time\internal\cctz\src\tzfile.h" />
+    <ClInclude Include="lib\absl\time\internal\test_util.h" />
+    <ClInclude Include="lib\absl\time\time.h" />
+    <ClInclude Include="lib\absl\types\any.h" />
+    <ClInclude Include="lib\absl\types\bad_any_cast.h" />
+    <ClInclude Include="lib\absl\types\bad_optional_access.h" />
+    <ClInclude Include="lib\absl\types\bad_variant_access.h" />
+    <ClInclude Include="lib\absl\types\compare.h" />
+    <ClInclude Include="lib\absl\types\internal\optional.h" />
+    <ClInclude Include="lib\absl\types\internal\span.h" />
+    <ClInclude Include="lib\absl\types\internal\variant.h" />
+    <ClInclude Include="lib\absl\types\optional.h" />
+    <ClInclude Include="lib\absl\types\span.h" />
+    <ClInclude Include="lib\absl\types\variant.h" />
+    <ClInclude Include="lib\absl\utility\internal\if_constexpr.h" />
+    <ClInclude Include="lib\absl\utility\utility.h" />
+    <ClInclude Include="lib\config\Config.h" />
+    <ClInclude Include="lib\config\converters.h" />
+    <ClInclude Include="lib\config\Field.h" />
+    <ClInclude Include="lib\config\fields\Enum.h" />
+    <ClInclude Include="lib\config\internal\FieldBase.h" />
+    <ClInclude Include="lib\config\internal\FieldEntry.h" />
+    <ClInclude Include="lib\config\internal\FieldSerialize.h" />
+    <ClInclude Include="lib\Encode.h" />
+    <ClInclude Include="lib\Encrypt.h" />
+    <ClInclude Include="lib\events\event.hpp" />
+    <ClInclude Include="lib\events\handlers\abstracteventhandler.hpp" />
+    <ClInclude Include="lib\events\handlers\eventhandlerptr.h" />
+    <ClInclude Include="lib\events\handlers\functoreventhandler.hpp" />
+    <ClInclude Include="lib\events\handlers\handlercast.hpp" />
+    <ClInclude Include="lib\events\handlers\helpers\innerholder.hpp" />
+    <ClInclude Include="lib\events\handlers\helpers\objectsaver.hpp" />
+    <ClInclude Include="lib\events\handlers\methodeventhandler.hpp" />
+    <ClInclude Include="lib\events\helpers\is_equatable.hpp" />
+    <ClInclude Include="lib\events\joins\abstracteventjoin.h" />
+    <ClInclude Include="lib\events\joins\eventjoinwrapper.h" />
+    <ClInclude Include="lib\events\joins\eventjoinwrapper.hpp" />
+    <ClInclude Include="lib\events\joins\handlereventjoin.h" />
+    <ClInclude Include="lib\events\joins\handlereventjoin.hpp" />
+    <ClInclude Include="lib\fmt\args.h" />
+    <ClInclude Include="lib\fmt\base.h" />
+    <ClInclude Include="lib\fmt\chrono.h" />
+    <ClInclude Include="lib\fmt\color.h" />
+    <ClInclude Include="lib\fmt\compile.h" />
+    <ClInclude Include="lib\fmt\core.h" />
+    <ClInclude Include="lib\fmt\format-inl.h" />
+    <ClInclude Include="lib\fmt\format.h" />
+    <ClInclude Include="lib\fmt\os.h" />
+    <ClInclude Include="lib\fmt\ostream.h" />
+    <ClInclude Include="lib\fmt\printf.h" />
+    <ClInclude Include="lib\fmt\ranges.h" />
+    <ClInclude Include="lib\fmt\std.h" />
+    <ClInclude Include="lib\fmt\xchar.h" />
+    <ClInclude Include="lib\httplib.h" />
+    <ClInclude Include="lib\jemalloc\internal\activity_callback.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_inlines_a.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_inlines_b.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_stats.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_structs_a.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_structs_b.h" />
+    <ClInclude Include="lib\jemalloc\internal\arena_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\assert.h" />
+    <ClInclude Include="lib\jemalloc\internal\atomic.h" />
+    <ClInclude Include="lib\jemalloc\internal\atomic_c11.h" />
+    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_atomic.h" />
+    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_sync.h" />
+    <ClInclude Include="lib\jemalloc\internal\atomic_msvc.h" />
+    <ClInclude Include="lib\jemalloc\internal\background_thread_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\background_thread_inlines.h" />
+    <ClInclude Include="lib\jemalloc\internal\background_thread_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\base.h" />
+    <ClInclude Include="lib\jemalloc\internal\base_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\base_inlines.h" />
+    <ClInclude Include="lib\jemalloc\internal\base_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\base_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\bin.h" />
+    <ClInclude Include="lib\jemalloc\internal\bin_info.h" />
+    <ClInclude Include="lib\jemalloc\internal\bin_stats.h" />
+    <ClInclude Include="lib\jemalloc\internal\bin_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\bitmap.h" />
+    <ClInclude Include="lib\jemalloc\internal\bit_util.h" />
+    <ClInclude Include="lib\jemalloc\internal\buf_writer.h" />
+    <ClInclude Include="lib\jemalloc\internal\cache_bin.h" />
+    <ClInclude Include="lib\jemalloc\internal\ckh.h" />
+    <ClInclude Include="lib\jemalloc\internal\counter.h" />
+    <ClInclude Include="lib\jemalloc\internal\ctl.h" />
+    <ClInclude Include="lib\jemalloc\internal\decay.h" />
+    <ClInclude Include="lib\jemalloc\internal\div.h" />
+    <ClInclude Include="lib\jemalloc\internal\ecache.h" />
+    <ClInclude Include="lib\jemalloc\internal\edata.h" />
+    <ClInclude Include="lib\jemalloc\internal\edata_cache.h" />
+    <ClInclude Include="lib\jemalloc\internal\ehooks.h" />
+    <ClInclude Include="lib\jemalloc\internal\emap.h" />
+    <ClInclude Include="lib\jemalloc\internal\emitter.h" />
+    <ClInclude Include="lib\jemalloc\internal\eset.h" />
+    <ClInclude Include="lib\jemalloc\internal\exp_grow.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_dss.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_inlines.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_mmap.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\extent_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\fb.h" />
+    <ClInclude Include="lib\jemalloc\internal\fxp.h" />
+    <ClInclude Include="lib\jemalloc\internal\hash.h" />
+    <ClInclude Include="lib\jemalloc\internal\hook.h" />
+    <ClInclude Include="lib\jemalloc\internal\hpa.h" />
+    <ClInclude Include="lib\jemalloc\internal\hpa_hooks.h" />
+    <ClInclude Include="lib\jemalloc\internal\hpa_opts.h" />
+    <ClInclude Include="lib\jemalloc\internal\hpdata.h" />
+    <ClInclude Include="lib\jemalloc\internal\inspect.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_decls.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_defs.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_includes.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_a.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_b.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_c.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_macros.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\jemalloc_preamble.h" />
+    <ClInclude Include="lib\jemalloc\internal\large_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\lockedint.h" />
+    <ClInclude Include="lib\jemalloc\internal\log.h" />
+    <ClInclude Include="lib\jemalloc\internal\malloc_io.h" />
+    <ClInclude Include="lib\jemalloc\internal\mpsc_queue.h" />
+    <ClInclude Include="lib\jemalloc\internal\mutex.h" />
+    <ClInclude Include="lib\jemalloc\internal\mutex_pool.h" />
+    <ClInclude Include="lib\jemalloc\internal\mutex_prof.h" />
+    <ClInclude Include="lib\jemalloc\internal\nstime.h" />
+    <ClInclude Include="lib\jemalloc\internal\pa.h" />
+    <ClInclude Include="lib\jemalloc\internal\pac.h" />
+    <ClInclude Include="lib\jemalloc\internal\pages.h" />
+    <ClInclude Include="lib\jemalloc\internal\pai.h" />
+    <ClInclude Include="lib\jemalloc\internal\peak.h" />
+    <ClInclude Include="lib\jemalloc\internal\peak_event.h" />
+    <ClInclude Include="lib\jemalloc\internal\ph.h" />
+    <ClInclude Include="lib\jemalloc\internal\private_namespace.gen.h" />
+    <ClInclude Include="lib\jemalloc\internal\private_namespace.h" />
+    <ClInclude Include="lib\jemalloc\internal\prng.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_data.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_hook.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_inlines.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_inlines_a.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_inlines_b.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_log.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_recent.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_stats.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_sys.h" />
+    <ClInclude Include="lib\jemalloc\internal\prof_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\psset.h" />
+    <ClInclude Include="lib\jemalloc\internal\public_namespace.h" />
+    <ClInclude Include="lib\jemalloc\internal\public_unnamespace.h" />
+    <ClInclude Include="lib\jemalloc\internal\ql.h" />
+    <ClInclude Include="lib\jemalloc\internal\qr.h" />
+    <ClInclude Include="lib\jemalloc\internal\quantum.h" />
+    <ClInclude Include="lib\jemalloc\internal\rb.h" />
+    <ClInclude Include="lib\jemalloc\internal\rtree.h" />
+    <ClInclude Include="lib\jemalloc\internal\rtree_tsd.h" />
+    <ClInclude Include="lib\jemalloc\internal\safety_check.h" />
+    <ClInclude Include="lib\jemalloc\internal\san.h" />
+    <ClInclude Include="lib\jemalloc\internal\san_bump.h" />
+    <ClInclude Include="lib\jemalloc\internal\sc.h" />
+    <ClInclude Include="lib\jemalloc\internal\sec.h" />
+    <ClInclude Include="lib\jemalloc\internal\sec_opts.h" />
+    <ClInclude Include="lib\jemalloc\internal\seq.h" />
+    <ClInclude Include="lib\jemalloc\internal\slab_data.h" />
+    <ClInclude Include="lib\jemalloc\internal\smoothstep.h" />
+    <ClInclude Include="lib\jemalloc\internal\spin.h" />
+    <ClInclude Include="lib\jemalloc\internal\stats.h" />
+    <ClInclude Include="lib\jemalloc\internal\sz.h" />
+    <ClInclude Include="lib\jemalloc\internal\tcache_externs.h" />
+    <ClInclude Include="lib\jemalloc\internal\tcache_inlines.h" />
+    <ClInclude Include="lib\jemalloc\internal\tcache_structs.h" />
+    <ClInclude Include="lib\jemalloc\internal\tcache_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\test_hooks.h" />
+    <ClInclude Include="lib\jemalloc\internal\thread_event.h" />
+    <ClInclude Include="lib\jemalloc\internal\ticker.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd_generic.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd_malloc_thread_cleanup.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd_tls.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd_types.h" />
+    <ClInclude Include="lib\jemalloc\internal\tsd_win.h" />
+    <ClInclude Include="lib\jemalloc\internal\typed_list.h" />
+    <ClInclude Include="lib\jemalloc\internal\util.h" />
+    <ClInclude Include="lib\jemalloc\internal\witness.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_defs.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_macros.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_mangle.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_mangle_jet.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_protos.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_protos_jet.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_rename.h" />
+    <ClInclude Include="lib\jemalloc\jemalloc_typedefs.h" />
+    <ClInclude Include="lib\jemalloc\strings.h" />
+    <ClInclude Include="lib\jemalloc\windows_extra.h" />
+    <ClInclude Include="lib\json.hpp" />
+    <ClInclude Include="lib\openssl\aes.h" />
+    <ClInclude Include="lib\openssl\asn1.h" />
+    <ClInclude Include="lib\openssl\asn1err.h" />
+    <ClInclude Include="lib\openssl\asn1t.h" />
+    <ClInclude Include="lib\openssl\async.h" />
+    <ClInclude Include="lib\openssl\asyncerr.h" />
+    <ClInclude Include="lib\openssl\bio.h" />
+    <ClInclude Include="lib\openssl\bioerr.h" />
+    <ClInclude Include="lib\openssl\blowfish.h" />
+    <ClInclude Include="lib\openssl\bn.h" />
+    <ClInclude Include="lib\openssl\bnerr.h" />
+    <ClInclude Include="lib\openssl\buffer.h" />
+    <ClInclude Include="lib\openssl\buffererr.h" />
+    <ClInclude Include="lib\openssl\byteorder.h" />
+    <ClInclude Include="lib\openssl\camellia.h" />
+    <ClInclude Include="lib\openssl\cast.h" />
+    <ClInclude Include="lib\openssl\cmac.h" />
+    <ClInclude Include="lib\openssl\cmp.h" />
+    <ClInclude Include="lib\openssl\cmperr.h" />
+    <ClInclude Include="lib\openssl\cmp_util.h" />
+    <ClInclude Include="lib\openssl\cms.h" />
+    <ClInclude Include="lib\openssl\cmserr.h" />
+    <ClInclude Include="lib\openssl\comp.h" />
+    <ClInclude Include="lib\openssl\comperr.h" />
+    <ClInclude Include="lib\openssl\conf.h" />
+    <ClInclude Include="lib\openssl\conferr.h" />
+    <ClInclude Include="lib\openssl\configuration.h" />
+    <ClInclude Include="lib\openssl\conftypes.h" />
+    <ClInclude Include="lib\openssl\conf_api.h" />
+    <ClInclude Include="lib\openssl\core.h" />
+    <ClInclude Include="lib\openssl\core_dispatch.h" />
+    <ClInclude Include="lib\openssl\core_names.h" />
+    <ClInclude Include="lib\openssl\core_object.h" />
+    <ClInclude Include="lib\openssl\crmf.h" />
+    <ClInclude Include="lib\openssl\crmferr.h" />
+    <ClInclude Include="lib\openssl\crypto.h" />
+    <ClInclude Include="lib\openssl\cryptoerr.h" />
+    <ClInclude Include="lib\openssl\cryptoerr_legacy.h" />
+    <ClInclude Include="lib\openssl\ct.h" />
+    <ClInclude Include="lib\openssl\cterr.h" />
+    <ClInclude Include="lib\openssl\decoder.h" />
+    <ClInclude Include="lib\openssl\decodererr.h" />
+    <ClInclude Include="lib\openssl\des.h" />
+    <ClInclude Include="lib\openssl\dh.h" />
+    <ClInclude Include="lib\openssl\dherr.h" />
+    <ClInclude Include="lib\openssl\dsa.h" />
+    <ClInclude Include="lib\openssl\dsaerr.h" />
+    <ClInclude Include="lib\openssl\dtls1.h" />
+    <ClInclude Include="lib\openssl\ebcdic.h" />
+    <ClInclude Include="lib\openssl\ec.h" />
+    <ClInclude Include="lib\openssl\ecdh.h" />
+    <ClInclude Include="lib\openssl\ecdsa.h" />
+    <ClInclude Include="lib\openssl\ecerr.h" />
+    <ClInclude Include="lib\openssl\encoder.h" />
+    <ClInclude Include="lib\openssl\encodererr.h" />
+    <ClInclude Include="lib\openssl\engine.h" />
+    <ClInclude Include="lib\openssl\engineerr.h" />
+    <ClInclude Include="lib\openssl\err.h" />
+    <ClInclude Include="lib\openssl\ess.h" />
+    <ClInclude Include="lib\openssl\esserr.h" />
+    <ClInclude Include="lib\openssl\evp.h" />
+    <ClInclude Include="lib\openssl\evperr.h" />
+    <ClInclude Include="lib\openssl\e_os2.h" />
+    <ClInclude Include="lib\openssl\e_ostime.h" />
+    <ClInclude Include="lib\openssl\fipskey.h" />
+    <ClInclude Include="lib\openssl\fips_names.h" />
+    <ClInclude Include="lib\openssl\hmac.h" />
+    <ClInclude Include="lib\openssl\hpke.h" />
+    <ClInclude Include="lib\openssl\http.h" />
+    <ClInclude Include="lib\openssl\httperr.h" />
+    <ClInclude Include="lib\openssl\idea.h" />
+    <ClInclude Include="lib\openssl\indicator.h" />
+    <ClInclude Include="lib\openssl\kdf.h" />
+    <ClInclude Include="lib\openssl\kdferr.h" />
+    <ClInclude Include="lib\openssl\lhash.h" />
+    <ClInclude Include="lib\openssl\macros.h" />
+    <ClInclude Include="lib\openssl\md2.h" />
+    <ClInclude Include="lib\openssl\md4.h" />
+    <ClInclude Include="lib\openssl\md5.h" />
+    <ClInclude Include="lib\openssl\mdc2.h" />
+    <ClInclude Include="lib\openssl\ml_kem.h" />
+    <ClInclude Include="lib\openssl\modes.h" />
+    <ClInclude Include="lib\openssl\objects.h" />
+    <ClInclude Include="lib\openssl\objectserr.h" />
+    <ClInclude Include="lib\openssl\obj_mac.h" />
+    <ClInclude Include="lib\openssl\ocsp.h" />
+    <ClInclude Include="lib\openssl\ocsperr.h" />
+    <ClInclude Include="lib\openssl\opensslconf.h" />
+    <ClInclude Include="lib\openssl\opensslv.h" />
+    <ClInclude Include="lib\openssl\ossl_typ.h" />
+    <ClInclude Include="lib\openssl\params.h" />
+    <ClInclude Include="lib\openssl\param_build.h" />
+    <ClInclude Include="lib\openssl\pem.h" />
+    <ClInclude Include="lib\openssl\pem2.h" />
+    <ClInclude Include="lib\openssl\pemerr.h" />
+    <ClInclude Include="lib\openssl\pkcs12.h" />
+    <ClInclude Include="lib\openssl\pkcs12err.h" />
+    <ClInclude Include="lib\openssl\pkcs7.h" />
+    <ClInclude Include="lib\openssl\pkcs7err.h" />
+    <ClInclude Include="lib\openssl\proverr.h" />
+    <ClInclude Include="lib\openssl\provider.h" />
+    <ClInclude Include="lib\openssl\prov_ssl.h" />
+    <ClInclude Include="lib\openssl\quic.h" />
+    <ClInclude Include="lib\openssl\rand.h" />
+    <ClInclude Include="lib\openssl\randerr.h" />
+    <ClInclude Include="lib\openssl\rc2.h" />
+    <ClInclude Include="lib\openssl\rc4.h" />
+    <ClInclude Include="lib\openssl\rc5.h" />
+    <ClInclude Include="lib\openssl\ripemd.h" />
+    <ClInclude Include="lib\openssl\rsa.h" />
+    <ClInclude Include="lib\openssl\rsaerr.h" />
+    <ClInclude Include="lib\openssl\safestack.h" />
+    <ClInclude Include="lib\openssl\seed.h" />
+    <ClInclude Include="lib\openssl\self_test.h" />
+    <ClInclude Include="lib\openssl\sha.h" />
+    <ClInclude Include="lib\openssl\srp.h" />
+    <ClInclude Include="lib\openssl\srtp.h" />
+    <ClInclude Include="lib\openssl\ssl.h" />
+    <ClInclude Include="lib\openssl\ssl2.h" />
+    <ClInclude Include="lib\openssl\ssl3.h" />
+    <ClInclude Include="lib\openssl\sslerr.h" />
+    <ClInclude Include="lib\openssl\sslerr_legacy.h" />
+    <ClInclude Include="lib\openssl\stack.h" />
+    <ClInclude Include="lib\openssl\store.h" />
+    <ClInclude Include="lib\openssl\storeerr.h" />
+    <ClInclude Include="lib\openssl\symhacks.h" />
+    <ClInclude Include="lib\openssl\thread.h" />
+    <ClInclude Include="lib\openssl\tls1.h" />
+    <ClInclude Include="lib\openssl\trace.h" />
+    <ClInclude Include="lib\openssl\ts.h" />
+    <ClInclude Include="lib\openssl\tserr.h" />
+    <ClInclude Include="lib\openssl\txt_db.h" />
+    <ClInclude Include="lib\openssl\types.h" />
+    <ClInclude Include="lib\openssl\ui.h" />
+    <ClInclude Include="lib\openssl\uierr.h" />
+    <ClInclude Include="lib\openssl\whrlpool.h" />
+    <ClInclude Include="lib\openssl\x509.h" />
+    <ClInclude Include="lib\openssl\x509err.h" />
+    <ClInclude Include="lib\openssl\x509v3.h" />
+    <ClInclude Include="lib\openssl\x509v3err.h" />
+    <ClInclude Include="lib\openssl\x509_acert.h" />
+    <ClInclude Include="lib\openssl\x509_vfy.h" />
+    <ClInclude Include="lib\openssl\__DECC_INCLUDE_EPILOGUE.H" />
+    <ClInclude Include="lib\openssl\__DECC_INCLUDE_PROLOGUE.H" />
+    <ClInclude Include="lib\re2\filtered_re2.h" />
+    <ClInclude Include="lib\re2\re2.h" />
+    <ClInclude Include="lib\re2\set.h" />
+    <ClInclude Include="lib\re2\stringpiece.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="lib\magic_enum\magic_enum.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_all.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_containers.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_flags.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_format.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_fuse.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_iostream.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_switch.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_utility.hpp" />
+    <ClInclude Include="lib\MemoryPool\MemoryPool.h" />
+    <ClInclude Include="lib\opencv2\calib3d.hpp" />
+    <ClInclude Include="lib\opencv2\calib3d\calib3d.hpp" />
+    <ClInclude Include="lib\opencv2\calib3d\calib3d_c.h" />
+    <ClInclude Include="lib\opencv2\core.hpp" />
+    <ClInclude Include="lib\opencv2\core\affine.hpp" />
+    <ClInclude Include="lib\opencv2\core\async.hpp" />
+    <ClInclude Include="lib\opencv2\core\base.hpp" />
+    <ClInclude Include="lib\opencv2\core\bindings_utils.hpp" />
+    <ClInclude Include="lib\opencv2\core\bufferpool.hpp" />
+    <ClInclude Include="lib\opencv2\core\check.hpp" />
+    <ClInclude Include="lib\opencv2\core\core.hpp" />
+    <ClInclude Include="lib\opencv2\core\core_c.h" />
+    <ClInclude Include="lib\opencv2\core\cuda.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\block.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\border_interpolate.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\color.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\common.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\datamov_utils.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\color_detail.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce_key_val.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\transform_detail.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\type_traits_detail.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\detail\vec_distance_detail.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\dynamic_smem.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\emulation.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\filters.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\funcattrib.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\functional.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\limits.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\reduce.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\saturate_cast.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\scan.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\simd_functions.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\transform.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\type_traits.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\utility.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\vec_distance.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\vec_math.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\vec_traits.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\warp.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\warp_reduce.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda\warp_shuffle.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda_stream_accessor.hpp" />
+    <ClInclude Include="lib\opencv2\core\cuda_types.hpp" />
+    <ClInclude Include="lib\opencv2\core\cvdef.h" />
+    <ClInclude Include="lib\opencv2\core\cvstd.hpp" />
+    <ClInclude Include="lib\opencv2\core\cvstd.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\cvstd_wrapper.hpp" />
+    <ClInclude Include="lib\opencv2\core\cv_cpu_dispatch.h" />
+    <ClInclude Include="lib\opencv2\core\cv_cpu_helper.h" />
+    <ClInclude Include="lib\opencv2\core\detail\async_promise.hpp" />
+    <ClInclude Include="lib\opencv2\core\detail\dispatch_helper.impl.hpp" />
+    <ClInclude Include="lib\opencv2\core\detail\exception_ptr.hpp" />
+    <ClInclude Include="lib\opencv2\core\directx.hpp" />
+    <ClInclude Include="lib\opencv2\core\dualquaternion.hpp" />
+    <ClInclude Include="lib\opencv2\core\dualquaternion.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\eigen.hpp" />
+    <ClInclude Include="lib\opencv2\core\fast_math.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\hal.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\interface.h" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_avx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_avx512.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_cpp.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_forward.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_lasx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_lsx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_msa.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_neon.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv071.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_non-policy.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_overloaded-non-policy.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_011_compat.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_compat_overloaded.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_scalable.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_sse.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_sse_em.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_vsx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_wasm.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\msa_macros.h" />
+    <ClInclude Include="lib\opencv2\core\hal\simd_utils.impl.hpp" />
+    <ClInclude Include="lib\opencv2\core\mat.hpp" />
+    <ClInclude Include="lib\opencv2\core\mat.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\matx.hpp" />
+    <ClInclude Include="lib\opencv2\core\matx.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\neon_utils.hpp" />
+    <ClInclude Include="lib\opencv2\core\ocl.hpp" />
+    <ClInclude Include="lib\opencv2\core\ocl_genbase.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\ocl_defs.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\opencl_info.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\opencl_svm.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clblas.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clfft.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core_wrappers.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl_wrappers.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clblas.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clfft.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core_wrappers.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl_wrappers.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_20.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_definitions.hpp" />
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_hsa_extension.hpp" />
+    <ClInclude Include="lib\opencv2\core\opengl.hpp" />
+    <ClInclude Include="lib\opencv2\core\operations.hpp" />
+    <ClInclude Include="lib\opencv2\core\optim.hpp" />
+    <ClInclude Include="lib\opencv2\core\ovx.hpp" />
+    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.openmp.hpp" />
+    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.tbb.hpp" />
+    <ClInclude Include="lib\opencv2\core\parallel\parallel_backend.hpp" />
+    <ClInclude Include="lib\opencv2\core\persistence.hpp" />
+    <ClInclude Include="lib\opencv2\core\quaternion.hpp" />
+    <ClInclude Include="lib\opencv2\core\quaternion.inl.hpp" />
+    <ClInclude Include="lib\opencv2\core\saturate.hpp" />
+    <ClInclude Include="lib\opencv2\core\simd_intrinsics.hpp" />
+    <ClInclude Include="lib\opencv2\core\softfloat.hpp" />
+    <ClInclude Include="lib\opencv2\core\sse_utils.hpp" />
+    <ClInclude Include="lib\opencv2\core\traits.hpp" />
+    <ClInclude Include="lib\opencv2\core\types.hpp" />
+    <ClInclude Include="lib\opencv2\core\types_c.h" />
+    <ClInclude Include="lib\opencv2\core\utility.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.impl.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\filesystem.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\fp_control_utils.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\instrumentation.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\logger.defines.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\logger.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\logtag.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\tls.hpp" />
+    <ClInclude Include="lib\opencv2\core\utils\trace.hpp" />
+    <ClInclude Include="lib\opencv2\core\va_intel.hpp" />
+    <ClInclude Include="lib\opencv2\core\version.hpp" />
+    <ClInclude Include="lib\opencv2\core\vsx_utils.hpp" />
+    <ClInclude Include="lib\opencv2\cvconfig.h" />
+    <ClInclude Include="lib\opencv2\dnn.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\all_layers.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\dict.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\dnn.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\dnn.inl.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\layer.details.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\layer.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\shape_utils.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\utils\debug_utils.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\utils\inference_engine.hpp" />
+    <ClInclude Include="lib\opencv2\dnn\version.hpp" />
+    <ClInclude Include="lib\opencv2\features2d.hpp" />
+    <ClInclude Include="lib\opencv2\features2d\features2d.hpp" />
+    <ClInclude Include="lib\opencv2\features2d\hal\interface.h" />
+    <ClInclude Include="lib\opencv2\flann.hpp" />
+    <ClInclude Include="lib\opencv2\flann\allocator.h" />
+    <ClInclude Include="lib\opencv2\flann\all_indices.h" />
+    <ClInclude Include="lib\opencv2\flann\any.h" />
+    <ClInclude Include="lib\opencv2\flann\autotuned_index.h" />
+    <ClInclude Include="lib\opencv2\flann\composite_index.h" />
+    <ClInclude Include="lib\opencv2\flann\config.h" />
+    <ClInclude Include="lib\opencv2\flann\defines.h" />
+    <ClInclude Include="lib\opencv2\flann\dist.h" />
+    <ClInclude Include="lib\opencv2\flann\dummy.h" />
+    <ClInclude Include="lib\opencv2\flann\dynamic_bitset.h" />
+    <ClInclude Include="lib\opencv2\flann\flann.hpp" />
+    <ClInclude Include="lib\opencv2\flann\flann_base.hpp" />
+    <ClInclude Include="lib\opencv2\flann\general.h" />
+    <ClInclude Include="lib\opencv2\flann\ground_truth.h" />
+    <ClInclude Include="lib\opencv2\flann\hdf5.h" />
+    <ClInclude Include="lib\opencv2\flann\heap.h" />
+    <ClInclude Include="lib\opencv2\flann\hierarchical_clustering_index.h" />
+    <ClInclude Include="lib\opencv2\flann\index_testing.h" />
+    <ClInclude Include="lib\opencv2\flann\kdtree_index.h" />
+    <ClInclude Include="lib\opencv2\flann\kdtree_single_index.h" />
+    <ClInclude Include="lib\opencv2\flann\kmeans_index.h" />
+    <ClInclude Include="lib\opencv2\flann\linear_index.h" />
+    <ClInclude Include="lib\opencv2\flann\logger.h" />
+    <ClInclude Include="lib\opencv2\flann\lsh_index.h" />
+    <ClInclude Include="lib\opencv2\flann\lsh_table.h" />
+    <ClInclude Include="lib\opencv2\flann\matrix.h" />
+    <ClInclude Include="lib\opencv2\flann\miniflann.hpp" />
+    <ClInclude Include="lib\opencv2\flann\nn_index.h" />
+    <ClInclude Include="lib\opencv2\flann\object_factory.h" />
+    <ClInclude Include="lib\opencv2\flann\params.h" />
+    <ClInclude Include="lib\opencv2\flann\random.h" />
+    <ClInclude Include="lib\opencv2\flann\result_set.h" />
+    <ClInclude Include="lib\opencv2\flann\sampling.h" />
+    <ClInclude Include="lib\opencv2\flann\saving.h" />
+    <ClInclude Include="lib\opencv2\flann\simplex_downhill.h" />
+    <ClInclude Include="lib\opencv2\flann\timer.h" />
+    <ClInclude Include="lib\opencv2\gapi.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\gcpukernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\ot.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\stereo.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\cpu\video.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\fluid\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidbuffer.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidkernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\fluid\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\garg.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\garray.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gasync_context.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcall.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcommon.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcompiled.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcompiled_async.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcompoundkernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcomputation.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gcomputation_async.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gframe.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gkernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gmat.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gmetaarg.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gopaque.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gproto.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gpu\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gpu\ggpukernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gpu\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gscalar.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gstreaming.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gtransform.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gtyped.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\gtype_traits.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ie.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_onnx.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ov.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\ie.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\onnx.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\ov.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\infer\parsers.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\media.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\oak\infer.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\oak\oak.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\ocl\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\ocl\goclkernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\ocl\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\opencv_includes.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\operators.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\ot.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\assert.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\convert.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\cvdefs.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\exports.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\mat.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\saturate.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\scalar.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\own\types.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\plaidml\core.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\plaidml\gplaidmlkernel.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\plaidml\plaidml.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\python\python.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\render.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\render\render.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\render\render_types.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\rmat.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\s11n.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\s11n\base.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\stereo.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\cap.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\desync.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\format.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamerpipeline.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamersource.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\meta.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\accel_types.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\cfg_params.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\data_provider_interface.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\default.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\device_selector_interface.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\source.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\queue_source.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\source.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\streaming\sync.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\any.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\compiler_hints.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\copy_through_move.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\optional.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\throw.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\type_traits.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\util.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\util\variant.hpp" />
+    <ClInclude Include="lib\opencv2\gapi\video.hpp" />
+    <ClInclude Include="lib\opencv2\highgui.hpp" />
+    <ClInclude Include="lib\opencv2\highgui\highgui.hpp" />
+    <ClInclude Include="lib\opencv2\highgui\highgui_c.h" />
+    <ClInclude Include="lib\opencv2\imgcodecs.hpp" />
+    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs.hpp" />
+    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs_c.h" />
+    <ClInclude Include="lib\opencv2\imgcodecs\ios.h" />
+    <ClInclude Include="lib\opencv2\imgcodecs\legacy\constants_c.h" />
+    <ClInclude Include="lib\opencv2\imgcodecs\macosx.h" />
+    <ClInclude Include="lib\opencv2\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\bindings.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\detail\gcgraph.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\detail\legacy.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\hal\hal.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\hal\interface.h" />
+    <ClInclude Include="lib\opencv2\imgproc\imgproc.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\imgproc_c.h" />
+    <ClInclude Include="lib\opencv2\imgproc\segmentation.hpp" />
+    <ClInclude Include="lib\opencv2\imgproc\types_c.h" />
+    <ClInclude Include="lib\opencv2\ml.hpp" />
+    <ClInclude Include="lib\opencv2\ml\ml.hpp" />
+    <ClInclude Include="lib\opencv2\ml\ml.inl.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\aruco_board.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\aruco_detector.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\aruco_dictionary.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\barcode.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\charuco_detector.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\detection_based_tracker.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\face.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\graphical_code_detector.hpp" />
+    <ClInclude Include="lib\opencv2\objdetect\objdetect.hpp" />
+    <ClInclude Include="lib\opencv2\opencv.hpp" />
+    <ClInclude Include="lib\opencv2\opencv_modules.hpp" />
+    <ClInclude Include="lib\opencv2\photo.hpp" />
+    <ClInclude Include="lib\opencv2\photo\cuda.hpp" />
+    <ClInclude Include="lib\opencv2\photo\legacy\constants_c.h" />
+    <ClInclude Include="lib\opencv2\photo\photo.hpp" />
+    <ClInclude Include="lib\opencv2\stitching.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\autocalib.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\blenders.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\camera.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\exposure_compensate.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\matchers.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\motion_estimators.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\seam_finders.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\timelapsers.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\util.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\util_inl.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\warpers.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\detail\warpers_inl.hpp" />
+    <ClInclude Include="lib\opencv2\stitching\warpers.hpp" />
+    <ClInclude Include="lib\opencv2\video.hpp" />
+    <ClInclude Include="lib\opencv2\videoio.hpp" />
+    <ClInclude Include="lib\opencv2\videoio\cap_ios.h" />
+    <ClInclude Include="lib\opencv2\videoio\legacy\constants_c.h" />
+    <ClInclude Include="lib\opencv2\videoio\registry.hpp" />
+    <ClInclude Include="lib\opencv2\videoio\videoio.hpp" />
+    <ClInclude Include="lib\opencv2\videoio\videoio_c.h" />
+    <ClInclude Include="lib\opencv2\video\background_segm.hpp" />
+    <ClInclude Include="lib\opencv2\video\detail\tracking.detail.hpp" />
+    <ClInclude Include="lib\opencv2\video\legacy\constants_c.h" />
+    <ClInclude Include="lib\opencv2\video\tracking.hpp" />
+    <ClInclude Include="lib\opencv2\video\video.hpp" />
+    <ClInclude Include="lib\opencv2\world.hpp" />
+    <ClInclude Include="lib\parallel_hashmap\btree.h" />
+    <ClInclude Include="lib\parallel_hashmap\meminfo.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_base.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_bits.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_config.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_dump.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_fwd_decl.h" />
+    <ClInclude Include="lib\parallel_hashmap\phmap_utils.h" />
+    <ClInclude Include="lib\sqlite3.h" />
+    <ClInclude Include="lib\units.h" />
+    <ClInclude Include="lib\zlib\crc32.h" />
+    <ClInclude Include="lib\zlib\deflate.h" />
+    <ClInclude Include="lib\zlib\gzguts.h" />
+    <ClInclude Include="lib\zlib\inffast.h" />
+    <ClInclude Include="lib\zlib\inffixed.h" />
+    <ClInclude Include="lib\zlib\inflate.h" />
+    <ClInclude Include="lib\zlib\inftrees.h" />
+    <ClInclude Include="lib\zlib\trees.h" />
+    <ClInclude Include="lib\zlib\zconf.h" />
+    <ClInclude Include="lib\zlib\zlib.h" />
+    <ClInclude Include="lib\zlib\zutil.h" />
+    <ClInclude Include="Model\AppModel.h" />
+    <ClInclude Include="Model\DataModel.h" />
+    <ClInclude Include="Model\KeyModel.h" />
+    <ClInclude Include="Model\UserModel.h" />
+    <ClInclude Include="Service.h" />
+    <ClInclude Include="util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\absl\base\internal\spinlock_akaros.inc" />
+    <None Include="lib\absl\base\internal\spinlock_linux.inc" />
+    <None Include="lib\absl\base\internal\spinlock_posix.inc" />
+    <None Include="lib\absl\base\internal\spinlock_win32.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_aarch64-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_arm-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_emscripten-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_generic-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_powerpc-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_riscv-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_unimplemented-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_win32-inl.inc" />
+    <None Include="lib\absl\debugging\internal\stacktrace_x86-inl.inc" />
+    <None Include="lib\absl\debugging\symbolize_darwin.inc" />
+    <None Include="lib\absl\debugging\symbolize_elf.inc" />
+    <None Include="lib\absl\debugging\symbolize_emscripten.inc" />
+    <None Include="lib\absl\debugging\symbolize_unimplemented.inc" />
+    <None Include="lib\absl\debugging\symbolize_win32.inc" />
+    <None Include="lib\absl\log\check_test_impl.inc" />
+    <None Include="lib\absl\log\log_basic_test_impl.inc" />
+    <None Include="lib\absl\numeric\int128_have_intrinsic.inc" />
+    <None Include="lib\absl\numeric\int128_no_intrinsic.inc" />
+    <None Include="lib\absl\time\internal\get_current_time_chrono.inc" />
+    <None Include="lib\absl\time\internal\get_current_time_posix.inc" />
+    <None Include="web\index.html">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
