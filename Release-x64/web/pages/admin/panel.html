@@ -8,11 +8,8 @@ $cookie$
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/res/image/favicon.ico">
     <title>真白管理面板</title>
-
-    <!-- 引入样式库 -->
     <script src="/res/js/tailwind.js"></script>
 
-    <!-- 引入脚本库 -->
     <script src="/res/js/jquery-3.7.1.min.js"></script>
     <script src="/res/js/vue.global.js"></script>
     <script src="/res/js/all.js"></script>
@@ -175,25 +172,20 @@ $cookie$
             </el-menu-item>
         </el-menu>
 
-        <!-- 右侧内容区 -->
         <div class="w-full">
-            <!-- 顶部操作栏 -->
             <div class="absolute top-0 z-50 h-15! w-full! border-b-1 border-b-gray-300 items-center p-3 inline-flex flex-nowrap text-nowrap"
                 style="background-image: radial-gradient(transparent 1px, #ffffff 1px); background-size: 4px 4px; backdrop-filter: saturate(50%) blur(4px);">
                 最&nbsp;<span
                     class="text-blue-500 text-nowrap">安全/高效/轻量</span>&nbsp;的用户管理系统，数据库、中间件、后端、前端自集成一键部署，IOCP异步网络I/O轻轻松松10万+级用户并发
             </div>
 
-            <!-- iframe 区域 -->
+
             <iframe class="inline z-40 box w-full h-full select-none animate m-0 p-0"
                 src="./setting.html"></iframe>
         </div>
     </div>
 
-    <!-- 鼠标点击音效 -->
     <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
-
-    <!-- 水印信息 -->
     <div class="watermark select-none">
         真白管理面板 V1.0 Alpha
         <br>
@@ -206,7 +198,7 @@ $cookie$
 
     @font-face {
         font-family: StarRail;
-        src: url('/res/font/zh-cn.woff2');
+        src: url('/res/font/zh-cn.ttf');
     }
 
     * {
@@ -256,19 +248,18 @@ $cookie$
     }
 </style>
 <script>
+    let isTransitioning = false;
+
     const app = Vue.createApp({
         data() {
             return {
             }
         },
         mounted() {
-            let isTransitioning = false;  // 添加状态标志
-
             const el_menu = $('li');
-
             el_menu.click(function () {
-                if (isTransitioning) return;  // 如果正在过渡，直接返回
-                isTransitioning = true;  // 设置过渡状态
+                if (isTransitioning) return;
+                isTransitioning = true;
 
                 const box = $('.box');
                 box.removeClass('animate');
@@ -283,7 +274,7 @@ $cookie$
                     iframe.attr('src', url);
                     iframe.on('load', function () {
                         box.addClass('animate');
-                        isTransitioning = false;  // 重置过渡状态
+                        isTransitioning = false;
                     });
                 });
             });

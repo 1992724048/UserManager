@@ -8,10 +8,8 @@ $cookie$
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>后端设置</title>
 
-    <!-- 引入样式库 -->
     <script src="/res/js/tailwind.js"></script>
 
-    <!-- 引入脚本库 -->
     <script src="/res/js/jquery-3.7.1.min.js"></script>
     <script src="/res/js/vue.global.js"></script>
     <script src="/res/js/all.js"></script>
@@ -23,7 +21,7 @@ $cookie$
 
     @font-face {
         font-family: StarRail;
-        src: url('/res/font/zh-cn.woff2');
+        src: url('/res/font/zh-cn.ttf');
     }
 
     * {
@@ -312,39 +310,33 @@ $cookie$
             </div>
         </div>
 
-        <!-- 修改弹窗内容 -->
         <el-dialog v-model="edit_popup_visible" title="修改密钥" width="350px" :close-on-click-modal="false">
             <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
             <el-form :model="edit_key" label-width="100px" :rules="formRules" ref="formRef">
-                <!-- 增加时间 -->
                 <el-form-item label="增加时间" prop="add_time">
-                    <!-- 输入框 -->
                     <div class="flex flex-col">
                         <el-input v-model.number="edit_key.add_time" placeholder="请输入秒数" style="width: 200px"
                             type="number">
                             <template #append>秒</template>
                         </el-input>
 
-                        <!-- 时间提示（强制下方显示） -->
                         <div class="mt-1 text-gray-400 text-xs w-full">
                             当前时长：{{ formatSeconds(edit_key.add_time) }}
                         </div>
                     </div>
                 </el-form-item>
 
-                <!-- 所属应用 -->
+
                 <el-form-item label="所属应用" prop="app">
                     <el-input v-model="edit_key.app" placeholder="请输入应用名称" style="width: 200px" clearable />
                 </el-form-item>
 
-                <!-- 密钥价格 -->
                 <el-form-item label="密钥价格" prop="price">
                     <el-input v-model="edit_key.price" placeholder="请输入价格" style="width: 200px">
                         <template #append>元</template>
                     </el-input>
                 </el-form-item>
 
-                <!-- 使用状态 -->
                 <el-form-item label="使用状态">
                     <el-switch v-model="edit_key.is_use" active-text="已使用" inactive-text="未使用" :active-value="1"
                         :inactive-value="0" />
@@ -359,11 +351,8 @@ $cookie$
             </template>
         </el-dialog>
 
-        <!-- 背景遮罩 -->
         <div class="overlay" v-if="edit_popup_visible || delete_popup_visible"></div>
 
-
-        <!-- 鼠标点击音效 -->
         <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
     </div>
 </body>
@@ -399,16 +388,6 @@ $cookie$
                     add_time: [
                         { required: true, message: '持续时间不能为空', trigger: 'blur' },
                         { type: 'number', min: 0, message: '持续时间不能为负数' },
-                        {
-                            validator: (rule, value, callback) => {
-                                if (value > 31536000) { // 31536000秒 = 1年
-                                    callback(new Error('持续时间不能超过1年'))
-                                } else {
-                                    callback()
-                                }
-                            },
-                            trigger: 'blur'
-                        }
                     ],
                     price: [
                         { required: true, message: '价格不能为空' },
@@ -416,6 +395,9 @@ $cookie$
                             pattern: /^[1-9]\d*(\.\d{1,2})?$|^0\.\d{1,2}$/,
                             message: '请输入有效的金额（最多两位小数）'
                         }
+                    ],
+                    app: [
+                        { required: true, message: '应用不能为空' },
                     ]
                 }
             }
@@ -662,13 +644,13 @@ $cookie$
             },
             formatTimestamp(timestamp) {
                 const date = new Date(timestamp  * 1000);
-                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+                const pad = n => n.toString().padStart(2, '0');
 
                 return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
                     `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
             },
             formatSeconds(seconds) {
-                seconds = parseInt(seconds) // 确保处理的是数字类型
+                seconds = parseInt(seconds)
 
                 const days = Math.floor(seconds / 86400)
                 seconds %= 86400
@@ -677,12 +659,11 @@ $cookie$
                 const minutes = Math.floor(seconds / 60)
                 const secs = seconds % 60
 
-                // 使用中文单位构建时间字符串
                 const parts = []
                 if (days > 0) parts.push(`${days}天`)
                 if (hours > 0) parts.push(`${hours}小时`)
                 if (minutes > 0) parts.push(`${minutes}分钟`)
-                if (secs > 0 || parts.length === 0) parts.push(`${secs}秒`) // 确保至少显示一个单位
+                if (secs > 0 || parts.length === 0) parts.push(`${secs}秒`)
 
                 return parts.join(' ')
             }

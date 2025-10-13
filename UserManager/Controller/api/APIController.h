@@ -23,24 +23,7 @@ namespace nlohmann {
     template<>
     struct adl_serializer<APIParams> {
         static auto to_json(json& j, const APIParams& p) -> void {
-            j = json{
-                {
-                    "name",
-                    p.name
-                },
-                {
-                    "type",
-                    p.type
-                },
-                {
-                    "required",
-                    p.required
-                },
-                {
-                    "desc",
-                    p.desc
-                }
-            };
+            j = json{{"name", p.name}, {"type", p.type}, {"required", p.required}, {"desc", p.desc}};
         }
 
         static auto from_json(const json& j, APIParams& p) -> void {
@@ -54,36 +37,7 @@ namespace nlohmann {
     template<>
     struct adl_serializer<APIData> {
         static auto to_json(json& j, const APIData& d) -> void {
-            j = json{
-                {
-                    "name",
-                    d.name
-                },
-                {
-                    "note",
-                    d.note
-                },
-                {
-                    "url",
-                    d.url
-                },
-                {
-                    "method",
-                    d.method
-                },
-                {
-                    "type",
-                    d.type
-                },
-                {
-                    "desc",
-                    d.desc
-                },
-                {
-                    "params",
-                    d.params
-                }
-            };
+            j = json{{"name", d.name}, {"note", d.note}, {"url", d.url}, {"method", d.method}, {"type", d.type}, {"desc", d.desc}, {"params", d.params}};
         }
 
         static auto from_json(const json& j, APIData& d) -> void {

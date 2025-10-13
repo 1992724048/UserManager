@@ -1,8 +1,7 @@
 ﻿#include "DataController.h"
 
 namespace controller {
-    DataController::DataController() {
-    }
+    DataController::DataController() {}
 
     auto DataController::get_all(const httplib::Request& req, httplib::Response& res) -> void {
         nlohmann::json json = nlohmann::json::parse(req.body);
@@ -27,48 +26,10 @@ namespace controller {
             json["data"] = nlohmann::json::array();
 
             for (const auto& data : datas) {
-                json["data"].push_back({
-                    {
-                        "username",
-                        data.username
-                    },
-                    {
-                        "app_id",
-                        data.app_id
-                    },
-                    {
-                        "create_time",
-                        data.create_time
-                    },
-                    {
-                        "end_time",
-                        data.end_time
-                    },
-                    {
-                        "use_count",
-                        data.use_count
-                    }
-                });
+                json["data"].push_back({{"username", data.username}, {"app_id", data.app_id}, {"create_time", data.create_time}, {"end_time", data.end_time}, {"use_count", data.use_count}});
             }
 
-            json["pagination"] = {
-                {
-                    "current_page",
-                    page
-                },
-                {
-                    "page_size",
-                    page_size
-                },
-                {
-                    "total_users",
-                    total_users
-                },
-                {
-                    "total_pages",
-                    total_pages
-                }
-            };
+            json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_users", total_users}, {"total_pages", total_pages}};
 
             res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
@@ -99,43 +60,9 @@ namespace controller {
             json["success"] = true;
             json["message"] = "搜索成功!";
             json["data"] = nlohmann::json::array();
-            json["data"].push_back({
-                {
-                    "username",
-                    app->username
-                },
-                {
-                    "app_id",
-                    app->app_id
-                },
-                {
-                    "create_time",
-                    app->create_time
-                },
-                {
-                    "end_time",
-                    app->end_time
-                },
-                {
-                    "use_count",
-                    app->use_count
-                }
-            });
+            json["data"].push_back({{"username", app->username}, {"app_id", app->app_id}, {"create_time", app->create_time}, {"end_time", app->end_time}, {"use_count", app->use_count}});
 
-            json["pagination"] = {
-                {
-                    "current_page",
-                    1
-                },
-                {
-                    "total_users",
-                    1
-                },
-                {
-                    "total_pages",
-                    1
-                }
-            };
+            json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
 
             res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
@@ -182,7 +109,7 @@ namespace controller {
             if (username.empty() || app_id.empty()) {
                 throw std::runtime_error("应用或用户不能为空!");
             }
-            
+
             if (DataDao::Delete(username, app_id)) {
                 json["success"] = true;
                 json["message"] = "删除成功!";

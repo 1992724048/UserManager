@@ -6,14 +6,14 @@
 #include <type_traits>
 #include <string_view>
 #include <functional>
+#include <utility>
 #include <variant>
 
 class SQLiteWrapper {
 public:
     class SQLiteStatement {
     public:
-        SQLiteStatement(sqlite3_stmt* stmt) : stmt(stmt) {
-        }
+        SQLiteStatement(sqlite3_stmt* stmt) : stmt(stmt) {}
 
         ~SQLiteStatement() {
             if (stmt) {
@@ -23,8 +23,12 @@ public:
 
         [[nodiscard]] auto step() const -> bool {
             const int rc = sqlite3_step(stmt);
-            if (rc == SQLITE_ROW) return true;
-            if (rc == SQLITE_DONE) return false;
+            if (rc == SQLITE_ROW) {
+                return true;
+            }
+            if (rc == SQLITE_DONE) {
+                return false;
+            }
             throw std::runtime_error("SQL step error: " + std::string(sqlite3_errmsg(sqlite3_db_handle(stmt))));
         }
 
@@ -117,8 +121,9 @@ public:
         }
 
         auto set(const std::initializer_list<std::string> setters) -> SQLBuilder& {
-            for (const auto& s : setters)
+            for (const auto& s : setters) {
                 this->setters.push_back(s + " = ?");
+            }
             return *this;
         }
 
@@ -364,9 +369,7 @@ public:
         if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
             throw std::runtime_error("SQLite准备语句失败");
         }
-        return {
-            stmt
-        };
+        return {stmt};
     }
 
     template<typename... Args>
@@ -377,11 +380,9 @@ public:
         }
 
         int index = 1;
-        (bindParameter(stmt, index++, std::forward<Args>(args)), ...);
+        (bind_parameter(stmt, index++, std::forward<Args>(args)), ...);
 
-        return {
-            stmt
-        };
+        return {stmt};
     }
 
     template<typename... Args>
@@ -392,7 +393,7 @@ public:
         }
 
         int index = 1;
-        (bindParameter(stmt, index++, std::forward<Args>(args)), ...);
+        (bind_parameter(stmt, index++, std::forward<Args>(args)), ...);
 
         if (sqlite3_step(stmt) != SQLITE_DONE) {
             sqlite3_finalize(stmt);
@@ -420,7 +421,7 @@ public:
         std::shared_ptr<SQLiteWrapper> sqlite_wrapper;
 
     public:
-        Connection(const std::shared_ptr<SQLiteWrapper>& wrapper) {
+        explicit Connection(const std::shared_ptr<SQLiteWrapper>& wrapper) {
             sqlite_wrapper = wrapper;
         }
 
@@ -448,8 +449,9 @@ public:
 
     static auto initializePool() -> void {
         const auto max = Service::Instance().f_sqlite_max_connect.value();
-        for (int i = 0; i < max; ++i)
+        for (int i = 0; std::cmp_less(i, max); ++i) {
             connection_queue.push(std::make_shared<SQLiteWrapper>());
+        }
     }
 
 private:
@@ -459,7 +461,7 @@ private:
     inline static std::condition_variable condition;
 
     template<typename T>
-    auto bindParameter(sqlite3_stmt* stmt, int index, T&& value) -> void {
+    auto bind_parameter(sqlite3_stmt* stmt, int index, T&& value) -> void {
         using Type = std::decay_t<T>;
         if constexpr (std::is_integral_v<Type>) {
             sqlite3_bind_int64(stmt, index, static_cast<sqlite3_int64>(value));
@@ -481,7 +483,7 @@ private:
 
 class Dao {
 public:
-    static auto InitDateBase() -> void {
+    static auto init_date_base() -> void {
         // 启用sqlite优化选项
         sqlite3_config(SQLITE_CONFIG_MULTITHREAD);
         bool new_db = false;
@@ -510,7 +512,6 @@ public:
                         keys        INTEGER           not null
                     );
                     )",
-
                 R"(create table datas
                     (
                         app_id      TEXT            not null,
@@ -520,7 +521,6 @@ public:
                         use_count   BIGINT          not null
                     );
                     )",
-
                 R"(create table keys
                     (
                         key_str     TEXT              not null,
@@ -535,7 +535,6 @@ public:
                         on keys (key_str);
 
                     )",
-
                 R"(create table users
                     (
                         username    TEXT    not null,
@@ -550,8 +549,9 @@ public:
                     )",
             };
 
-            for (const auto& sql : sql_statements)
+            for (const auto& sql : sql_statements) {
                 db_wrapper.execute(sql);
+            }
         }
 
         SQLiteWrapper::initializePool();

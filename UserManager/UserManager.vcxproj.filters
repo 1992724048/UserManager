@@ -126,195 +126,6 @@
     <ClCompile Include="lib\zlib\zutil.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\arena.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\background_thread.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\base.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\bin.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\bin_info.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\bitmap.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\buf_writer.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\cache_bin.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\ckh.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\counter.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\ctl.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\decay.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\div.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\ecache.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\edata.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\edata_cache.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\ehooks.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\emap.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\eset.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\exp_grow.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\extent.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\extent_dss.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\extent_mmap.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\fxp.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\hook.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\hpa.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\hpa_hooks.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\hpdata.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\inspect.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\jemalloc.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\jemalloc_cpp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\large.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\log.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\malloc_io.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\mutex.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\nstime.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\pa.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\pa_extra.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\pac.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\pages.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\pai.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\peak_event.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof_data.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof_log.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof_recent.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof_stats.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\prof_sys.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\psset.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\rtree.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\safety_check.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\san.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\san_bump.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\sc.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\sec.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\stats.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\sz.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\tcache.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\test_hooks.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\thread_event.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\ticker.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\tsd.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\jemalloc\src\witness.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="lib\openssl\applink.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -575,1068 +386,6 @@
     <ClInclude Include="lib\MemoryPool\MemoryPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="lib\opencv2\calib3d.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\calib3d\calib3d.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\calib3d\calib3d_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\affine.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\async.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\base.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\bindings_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\bufferpool.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\check.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\core_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\block.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\border_interpolate.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\color.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\common.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\datamov_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\color_detail.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce_key_val.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\transform_detail.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\type_traits_detail.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\detail\vec_distance_detail.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\dynamic_smem.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\emulation.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\filters.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\funcattrib.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\functional.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\limits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\reduce.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\saturate_cast.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\scan.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\simd_functions.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\transform.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\type_traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\utility.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\vec_distance.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\vec_math.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\vec_traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\warp.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\warp_reduce.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda\warp_shuffle.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda_stream_accessor.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cuda_types.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cvdef.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cvstd.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cvstd.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cvstd_wrapper.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cv_cpu_dispatch.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\cv_cpu_helper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\detail\async_promise.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\detail\dispatch_helper.impl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\detail\exception_ptr.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\directx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\dualquaternion.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\dualquaternion.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\eigen.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\fast_math.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\hal.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\interface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_avx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_avx512.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_cpp.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_forward.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_lasx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_lsx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_msa.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_neon.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv071.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_non-policy.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_overloaded-non-policy.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_011_compat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_compat_overloaded.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_scalable.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_sse.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_sse_em.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_vsx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\intrin_wasm.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\msa_macros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\hal\simd_utils.impl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\mat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\mat.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\matx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\matx.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\neon_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\ocl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\ocl_genbase.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\ocl_defs.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\opencl_info.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\opencl_svm.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clblas.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clfft.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core_wrappers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl_wrappers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clblas.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clfft.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core_wrappers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl_wrappers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_20.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_definitions.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_hsa_extension.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\opengl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\operations.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\optim.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\ovx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.openmp.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.tbb.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\parallel\parallel_backend.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\persistence.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\quaternion.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\quaternion.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\saturate.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\simd_intrinsics.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\softfloat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\sse_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\types.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\types_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utility.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.impl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\filesystem.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\fp_control_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\instrumentation.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\logger.defines.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\logger.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\logtag.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\tls.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\utils\trace.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\va_intel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\version.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\core\vsx_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\cvconfig.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\all_layers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\dict.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\dnn.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\dnn.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\layer.details.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\layer.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\shape_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\utils\debug_utils.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\utils\inference_engine.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\dnn\version.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\features2d.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\features2d\features2d.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\features2d\hal\interface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\allocator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\all_indices.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\any.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\autotuned_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\composite_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\config.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\defines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\dist.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\dummy.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\dynamic_bitset.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\flann.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\flann_base.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\general.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\ground_truth.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\hdf5.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\heap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\hierarchical_clustering_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\index_testing.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\kdtree_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\kdtree_single_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\kmeans_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\linear_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\logger.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\lsh_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\lsh_table.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\matrix.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\miniflann.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\nn_index.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\object_factory.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\params.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\random.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\result_set.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\sampling.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\saving.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\simplex_downhill.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\flann\timer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\gcpukernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\ot.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\stereo.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\cpu\video.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\fluid\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidbuffer.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidkernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\fluid\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\garg.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\garray.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gasync_context.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcall.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcommon.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcompiled.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcompiled_async.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcompoundkernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcomputation.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gcomputation_async.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gframe.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gkernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gmat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gmetaarg.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gopaque.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gproto.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gpu\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gpu\ggpukernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gpu\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gscalar.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gstreaming.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gtransform.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gtyped.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\gtype_traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ie.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\bindings_onnx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ov.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\ie.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\onnx.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\ov.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\infer\parsers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\media.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\oak\infer.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\oak\oak.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\ocl\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\ocl\goclkernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\ocl\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\opencv_includes.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\operators.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\ot.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\assert.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\convert.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\cvdefs.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\exports.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\mat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\saturate.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\scalar.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\own\types.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\plaidml\core.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\plaidml\gplaidmlkernel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\plaidml\plaidml.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\python\python.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\render.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\render\render.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\render\render_types.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\rmat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\s11n.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\s11n\base.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\stereo.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\cap.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\desync.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\format.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamerpipeline.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamersource.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\meta.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\accel_types.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\cfg_params.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\data_provider_interface.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\default.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\device_selector_interface.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\source.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\queue_source.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\source.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\streaming\sync.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\any.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\compiler_hints.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\copy_through_move.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\optional.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\throw.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\type_traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\util.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\util\variant.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\gapi\video.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\highgui.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\highgui\highgui.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\highgui\highgui_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs\ios.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs\legacy\constants_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgcodecs\macosx.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\bindings.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\detail\gcgraph.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\detail\legacy.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\hal\hal.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\hal\interface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\imgproc.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\imgproc_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\segmentation.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\imgproc\types_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\ml.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\ml\ml.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\ml\ml.inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\aruco_board.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\aruco_detector.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\aruco_dictionary.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\barcode.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\charuco_detector.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\detection_based_tracker.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\face.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\graphical_code_detector.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\objdetect\objdetect.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\opencv.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\opencv_modules.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\photo.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\photo\cuda.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\photo\legacy\constants_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\photo\photo.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\autocalib.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\blenders.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\camera.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\exposure_compensate.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\matchers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\motion_estimators.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\seam_finders.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\timelapsers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\util.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\util_inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\warpers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\detail\warpers_inl.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\stitching\warpers.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio\cap_ios.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio\legacy\constants_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio\registry.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio\videoio.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\videoio\videoio_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video\background_segm.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video\detail\tracking.detail.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video\legacy\constants_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video\tracking.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\video\video.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\opencv2\world.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="lib\units.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -1659,453 +408,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Controller\file\FileController.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\activity_callback.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_inlines_a.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_inlines_b.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_stats.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_structs_a.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_structs_b.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\arena_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\assert.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\atomic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\atomic_c11.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_atomic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_sync.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\atomic_msvc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\background_thread_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\background_thread_inlines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\background_thread_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\base.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\base_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\base_inlines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\base_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\base_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bin.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bin_info.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bin_stats.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bin_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bit_util.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\bitmap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\buf_writer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\cache_bin.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ckh.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\counter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ctl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\decay.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\div.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ecache.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\edata.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\edata_cache.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ehooks.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\emap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\emitter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\eset.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\exp_grow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_dss.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_inlines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_mmap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\extent_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\fb.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\fxp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hash.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hook.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hpa.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hpa_hooks.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hpa_opts.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\hpdata.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\inspect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_decls.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_defs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_includes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_a.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_b.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_c.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_macros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_preamble.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\large_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\lockedint.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\log.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\malloc_io.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\mpsc_queue.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\mutex.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\mutex_pool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\mutex_prof.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\nstime.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\pa.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\pac.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\pages.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\pai.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\peak.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\peak_event.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ph.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\private_namespace.gen.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\private_namespace.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prng.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_data.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_hook.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines_a.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines_b.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_log.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_recent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_stats.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_sys.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\prof_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\psset.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\public_namespace.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\public_unnamespace.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ql.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\qr.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\quantum.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\rb.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\rtree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\rtree_tsd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\safety_check.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\san.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\san_bump.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\sc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\sec.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\sec_opts.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\seq.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\slab_data.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\smoothstep.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\spin.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\stats.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\sz.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tcache_externs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tcache_inlines.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tcache_structs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tcache_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\test_hooks.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\thread_event.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\ticker.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd_generic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd_malloc_thread_cleanup.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd_tls.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\tsd_win.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\typed_list.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\util.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\internal\witness.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_defs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_macros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_mangle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_mangle_jet.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_protos.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_protos_jet.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_rename.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\jemalloc_typedefs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\strings.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\jemalloc\windows_extra.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lib\openssl\__DECC_INCLUDE_EPILOGUE.H">
@@ -3630,6 +1932,1080 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lib\absl\utility\utility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\atomic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\bits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\prim.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\track.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc\types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc-override.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc-stats.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\calib3d\calib3d.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\calib3d\calib3d_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\color_detail.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\reduce_key_val.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\transform_detail.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\type_traits_detail.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\detail\vec_distance_detail.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\block.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\border_interpolate.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\color.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\common.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\datamov_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\dynamic_smem.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\emulation.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\filters.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\funcattrib.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\functional.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\limits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\reduce.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\saturate_cast.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\scan.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\simd_functions.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\transform.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\type_traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\utility.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\vec_distance.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\vec_math.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\vec_traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\warp.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\warp_reduce.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda\warp_shuffle.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\detail\async_promise.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\detail\dispatch_helper.impl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\detail\exception_ptr.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\hal.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_avx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_avx512.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_cpp.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_forward.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_lasx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_legacy_ops.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_lsx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_math.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_msa.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_neon.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_scalable.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv071.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_sse.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_sse_em.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_vsx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\intrin_wasm.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\msa_macros.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\hal\simd_utils.impl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clblas.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_clfft.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_core_wrappers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\autogenerated\opencl_gl_wrappers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clblas.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_clfft.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_core_wrappers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_gl_wrappers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_20.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_definitions.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\runtime\opencl_svm_hsa_extension.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\ocl_defs.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\opencl_info.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opencl\opencl_svm.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.openmp.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\parallel\backend\parallel_for.tbb.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\parallel\parallel_backend.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\allocator_stats.impl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\filesystem.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\fp_control_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\instrumentation.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\logger.defines.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\logger.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\logtag.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\tls.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utils\trace.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\affine.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\async.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\base.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\bindings_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\bufferpool.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\check.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\core_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda_stream_accessor.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cuda_types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cv_cpu_dispatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cv_cpu_helper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cvdef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cvstd.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cvstd.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\cvstd_wrapper.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\directx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\dualquaternion.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\dualquaternion.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\eigen.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\fast_math.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\mat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\mat.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\matx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\matx.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\neon_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\ocl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\ocl_genbase.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\opengl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\operations.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\optim.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\ovx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\persistence.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\quaternion.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\quaternion.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\saturate.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\simd_intrinsics.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\softfloat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\sse_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\types_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\utility.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\va_intel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\version.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core\vsx_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\utils\debug_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\utils\inference_engine.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\all_layers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\dict.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\dnn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\dnn.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\layer.details.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\layer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\shape_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn\version.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\features2d\hal\interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\features2d\features2d.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\all_indices.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\any.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\autotuned_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\composite_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\defines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\dist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\dummy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\dynamic_bitset.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\flann.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\flann_base.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\general.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\ground_truth.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\heap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\hierarchical_clustering_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\index_testing.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\kdtree_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\kdtree_single_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\kmeans_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\linear_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\logger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\lsh_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\lsh_table.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\matrix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\miniflann.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\nn_index.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\object_factory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\params.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\random.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\result_set.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\sampling.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\saving.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\simplex_downhill.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann\timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\gcpukernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\ot.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\stereo.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\cpu\video.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\fluid\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidbuffer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\fluid\gfluidkernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\fluid\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gpu\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gpu\ggpukernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gpu\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ie.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_onnx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\bindings_ov.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\ie.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\onnx.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\ov.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer\parsers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\oak\infer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\oak\oak.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\ocl\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\ocl\goclkernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\ocl\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\assert.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\convert.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\cvdefs.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\exports.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\mat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\saturate.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\scalar.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\own\types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\plaidml\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\plaidml\gplaidmlkernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\plaidml\plaidml.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\python\python.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\render\render.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\render\render_types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\s11n\base.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamerpipeline.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\gstreamer\gstreamersource.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\accel_types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\cfg_params.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\data_provider_interface.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\default.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\device_selector_interface.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\onevpl\source.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\cap.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\desync.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\format.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\meta.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\queue_source.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\source.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\streaming\sync.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\any.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\compiler_hints.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\copy_through_move.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\optional.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\throw.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\type_traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\util.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\util\variant.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\garg.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\garray.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gasync_context.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcall.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcommon.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcompiled.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcompiled_async.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcompoundkernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcomputation.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gcomputation_async.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gframe.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gkernel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gmat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gmetaarg.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gopaque.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gproto.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gscalar.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gstreaming.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gtransform.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gtype_traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\gtyped.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\infer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\media.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\opencv_includes.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\operators.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\ot.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\render.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\rmat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\s11n.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\stereo.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi\video.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\highgui\highgui.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\highgui\highgui_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs\legacy\constants_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs\imgcodecs_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs\ios.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs\macosx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\detail\gcgraph.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\detail\legacy.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\hal\hal.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\hal\interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\bindings.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\imgproc_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\segmentation.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc\types_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\ml\ml.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\ml\ml.inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\aruco_board.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\aruco_detector.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\aruco_dictionary.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\barcode.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\charuco_detector.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\detection_based_tracker.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\face.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\graphical_code_detector.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect\objdetect.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\photo\legacy\constants_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\photo\cuda.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\photo\photo.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\autocalib.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\blenders.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\camera.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\exposure_compensate.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\matchers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\motion_estimators.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\seam_finders.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\timelapsers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\util.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\util_inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\warpers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\detail\warpers_inl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching\warpers.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video\detail\tracking.detail.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video\legacy\constants_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video\background_segm.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video\tracking.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video\video.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\videoio\legacy\constants_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\videoio\registry.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\videoio\videoio.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\videoio\videoio_c.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\calib3d.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\core.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\cvconfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\dnn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\features2d.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\flann.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\gapi.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\highgui.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgcodecs.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\imgproc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\ml.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\objdetect.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\opencv.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\opencv_modules.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\photo.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\stitching.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\video.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\videoio.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\opencv2\world.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

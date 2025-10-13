@@ -85,6 +85,6 @@ public:
 	static auto get_cache_paths(const httplib::Request& req, httplib::Response& res) -> void;
 	static auto sql_enum_path(const httplib::Request& req, httplib::Response& res) -> void;
 	static auto sql_remove_file(const httplib::Request& req, httplib::Response& res) -> void;
-	static auto sql_download(const httplib::Request& req, httplib::Response& res) -> void;
+	static auto sql_download(const httplib::Request& _req, httplib::Response& _res) -> void;
 	static auto sql_backup(const httplib::Request& req, httplib::Response& res) -> void;
 };

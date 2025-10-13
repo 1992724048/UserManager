@@ -53,8 +53,8 @@ auto AppDao::Update(const std::string& app, bool is_stop) -> int {
     return sqlite_wrapper->execute(sql, is_stop, app);
 }
 
-auto AppDao::Update(const std::string& app, int users, int keys) -> int {
-    if (app.empty()) {
+auto AppDao::Update(const std::string& _app, int _users, int _keys) -> int {
+    if (_app.empty()) {
         return 0;
     }
 
@@ -65,7 +65,7 @@ auto AppDao::Update(const std::string& app, int users, int keys) -> int {
     }).where("app_name = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, users, keys, app);
+    return sqlite_wrapper->execute(sql, _users, _keys, _app);
 }
 
 auto AppDao::Add(const std::string& app_name) -> int {

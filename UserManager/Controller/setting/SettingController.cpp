@@ -28,17 +28,10 @@ namespace controller {
         service.f_file_cache_max_size.value() = json["file_cache_max_size"];
         service.f_file_cache_max_size.FireChanged();
 
-        service.f_max_requests.value() = json["f_max_requests"];
-        service.f_max_requests.FireChanged();
-
-        service.f_window_time.value() = json["f_window_time"];
-        service.f_window_time.FireChanged();
-
         service.f_max_download_speed.value() = json["f_max_download_speed"];
         service.f_max_download_speed.FireChanged();
 
         config::Save();
-        Service::rate_limiter.Set(service.f_max_requests, std::chrono::seconds(service.f_window_time));
 
         json.clear();
         json["success"] = true;
@@ -126,8 +119,6 @@ namespace controller {
         const Service& service = Service::Instance();
         nlohmann::json json;
         json["server_port"] = service.f_server_port.value();
-        json["f_window_time"] = service.f_window_time.value();
-        json["f_max_requests"] = service.f_max_requests.value();
         json["f_max_download_speed"] = service.f_max_download_speed.value();
         json["tbb_mode"] = service.f_tbb_mode.value();
         json["username"] = service.f_username.value();

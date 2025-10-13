@@ -35,7 +35,7 @@
 #include "httplib.h"
 
 #include "lib/config/Config.h"
-#include "jemalloc.h"
+#include "mimalloc.h"
 
 #include <openssl/rsa.h>
 #include <openssl/aes.h>
@@ -61,33 +61,47 @@ using namespace units::area;
 using namespace units::velocity;
 
 namespace util {
-    template <typename Ret>
+    template<typename Ret>
     struct CoroWrapper {
         struct promise_type {
             Ret value_;
 
             auto get_return_object() {
-                return CoroWrapper(
-                    std::coroutine_handle<promise_type>::from_promise(*this)
-                );
+                return CoroWrapper(std::coroutine_handle<promise_type>::from_promise(*this));
             }
 
-            static auto initial_suspend() noexcept -> std::suspend_always { return {}; }
-            static auto final_suspend() noexcept -> std::suspend_always { return {}; }
-            auto return_value(Ret&& v) -> void { value_ = std::forward<decltype(v)>(v); }
-            static auto unhandled_exception() -> void { std::terminate(); }
+            static auto initial_suspend() noexcept -> std::suspend_always {
+                return {};
+            }
+
+            static auto final_suspend() noexcept -> std::suspend_always {
+                return {};
+            }
+
+            auto return_value(Ret&& v) -> void {
+                value_ = std::forward<decltype(v)>(v);
+            }
+
+            static auto unhandled_exception() -> void {
+                std::terminate();
+            }
         };
 
         explicit CoroWrapper(std::coroutine_handle<promise_type> h) : handle(h) {}
 
         ~CoroWrapper() {
-            if (handle)
+            if (handle) {
                 handle.destroy();
+            }
         }
 
-        auto operator()() -> void { handle.resume(); }
+        auto operator()() -> void {
+            handle.resume();
+        }
 
-        auto value() -> Ret { return handle.promise().value_; }
+        auto value() -> Ret {
+            return handle.promise().value_;
+        }
 
     private:
         std::coroutine_handle<promise_type> handle;
@@ -110,8 +124,9 @@ namespace util {
             thread_ = std::jthread([ms, task](const std::stop_token& st) {
                 while (!st.stop_requested()) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-                    if (!st.stop_requested())
+                    if (!st.stop_requested()) {
                         task();
+                    }
                 }
             });
         }
@@ -145,14 +160,18 @@ namespace util {
         /**
          * @brief 更新起始时间点为当前时间
          */
-        auto update_start() -> void { start = Clock::now(); }
+        auto update_start() -> void {
+            start = Clock::now();
+        }
 
         /**
          * @brief 获取从起始时间点到当前时间点的持续时间，以秒为单位
          * 
          * @return double 持续时间，单位为秒
          */
-        [[nodiscard]] auto get_duration() const -> double { return std::chrono::duration<double>(Clock::now() - start).count(); }
+        [[nodiscard]] auto get_duration() const -> double {
+            return std::chrono::duration<double>(Clock::now() - start).count();
+        }
 
     private:
         /**
@@ -163,64 +182,127 @@ namespace util {
 
     class Encode {
     public:
-        static auto GbkToUtf8(const std::string& str) -> std::string {
-            const auto GBK_LOCALE_NAME = ".936";
-            std::wstring_convert convert(new std::codecvt_byname<wchar_t, char, mbstate_t>(GBK_LOCALE_NAME));
-            const std::wstring tmp_wstr = convert.from_bytes(str);
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> cv2;
-            return cv2.to_bytes(tmp_wstr);
+        static auto gbk_to_utf8(const std::string_view str) -> std::string {
+            const int wlen = MultiByteToWideChar(936, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
+            if (wlen == 0) {
+                throw std::runtime_error("Failed to convert GBK to UTF-16");
+            }
+
+            std::wstring wstr(wlen, 0);
+            if (MultiByteToWideChar(936, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
+                throw std::runtime_error("Failed to convert GBK to UTF-16");
+            }
+
+            const int ulen = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+            if (ulen == 0) {
+                throw std::runtime_error("Failed to convert UTF-16 to UTF-8");
+            }
+
+            std::string utf8(ulen, 0);
+            if (WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), utf8.data(), ulen, nullptr, nullptr) == 0) {
+                throw std::runtime_error("Failed to convert UTF-16 to UTF-8");
+            }
+
+            return utf8;
         }
 
-        static auto Utf8ToGbk(const std::string& str) -> std::string {
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-            const std::wstring tmp_wstr = conv.from_bytes(str);
-            const auto GBK_LOCALE_NAME = ".936";
-            std::wstring_convert convert(new std::codecvt_byname<wchar_t, char, mbstate_t>(GBK_LOCALE_NAME));
-            return convert.to_bytes(tmp_wstr);
+        static auto utf8_to_gbk(const std::string_view str) -> std::string {
+            const int wlen = MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
+            if (wlen == 0) {
+                return {};
+            }
+
+            std::wstring wstr(wlen, 0);
+            if (MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
+                throw std::runtime_error("Failed to convert UTF-8 to UTF-16");
+            }
+
+            const int glen = WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+            if (glen == 0) {
+                throw std::runtime_error("Failed to convert UTF-16 to GBK");
+            }
+
+            std::string gbk(glen, 0);
+            if (WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), gbk.data(), glen, nullptr, nullptr) == 0) {
+                throw std::runtime_error("Failed to convert UTF-16 to GBK");
+            }
+
+            return gbk;
         }
 
-        static auto w2s(const std::wstring& wstr) -> std::string {
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-            return converter.to_bytes(wstr);
+        static auto wchar_to_char(const std::wstring& wstr) -> std::string {
+            const int len = WideCharToMultiByte(CP_ACP, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+            if (len == 0) {
+                throw std::runtime_error("Failed to convert wide string to multibyte");
+            }
+
+            std::string str(len, 0);
+            if (WideCharToMultiByte(CP_ACP, 0, wstr.data(), static_cast<int>(wstr.size()), str.data(), len, nullptr, nullptr) == 0) {
+                throw std::runtime_error("Failed to convert wide string to multibyte");
+            }
+
+            return str;
         }
 
-        static auto s2w(const std::string& input) -> std::wstring {
-            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-            return converter.from_bytes(input);
+        static auto char_to_wchar(const std::string& str) -> std::wstring {
+            const int wlen = MultiByteToWideChar(CP_ACP, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
+            if (wlen == 0) {
+                throw std::runtime_error("Failed to convert multibyte string to wide string");
+            }
+
+            std::wstring wstr(wlen, 0);
+            if (MultiByteToWideChar(CP_ACP, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
+                throw std::runtime_error("Failed to convert multibyte string to wide string");
+            }
+
+            return wstr;
+        }
+
+        static auto wchar_to_utf8(const std::wstring& wstr) -> std::string {
+            const int ulen = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+            if (ulen == 0) {
+                throw std::runtime_error("Failed to convert wide string to UTF-8");
+            }
+
+            std::string utf8(ulen, 0);
+            if (WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), utf8.data(), ulen, nullptr, nullptr) == 0) {
+                throw std::runtime_error("Failed to convert wide string to UTF-8");
+            }
+
+            return utf8;
+        }
+
+        static auto utf8_to_wchar(const std::string_view str) -> std::wstring {
+            const int wlen = MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
+            if (wlen == 0) {
+                throw std::runtime_error("Failed to convert UTF-8 to wide string");
+            }
+
+            std::wstring wstr(wlen, 0);
+            if (MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
+                throw std::runtime_error("Failed to convert UTF-8 to wide string");
+            }
+
+            return wstr;
+        }
+
+        static auto wchar_to_gbk(const std::wstring& wstr) -> std::string {
+            const int glen = WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+            if (glen == 0) {
+                throw std::runtime_error("Failed to convert wide string to GBK");
+            }
+
+            std::string gbk(glen, 0);
+            if (WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), gbk.data(), glen, nullptr, nullptr) == 0) {
+                throw std::runtime_error("Failed to convert wide string to GBK");
+            }
+
+            return gbk;
         }
     };
 
-    template <typename T>
-    class JemallocAllocator {
-    public:
-        using value_type = T;
-
-        JemallocAllocator() noexcept = default;
-
-        template <typename U>
-        explicit JemallocAllocator(const JemallocAllocator<U>&) noexcept {}
-
-        auto allocate(const std::size_t n) -> T* {
-            if (n > std::numeric_limits<std::size_t>::max() / sizeof(T))
-                throw std::bad_alloc();
-            T* p = static_cast<T*>(je_malloc(n * sizeof(T)));
-            if (!p)
-                throw std::bad_alloc();
-            return p;
-        }
-
-        static auto deallocate(T* const p, const size_t size) noexcept -> void { je_free(p); }
-    };
-
-    template <typename T, typename U>
-    auto operator==(const JemallocAllocator<T>&, const JemallocAllocator<U>&) noexcept -> bool { return true; }
-
-    template <typename T, typename U>
-    auto operator!=(const JemallocAllocator<T>&, const JemallocAllocator<U>&) noexcept -> bool { return false; }
-
-    template <typename K, typename V>
-    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, JemallocAllocator<
-                                                      std::pair<K, V>>, 4, std::mutex>;
+    template<typename K, typename V>
+    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::mutex>;
 
     class File {
     public:
@@ -239,11 +321,12 @@ namespace util {
             std::error_code ec;
 
             for (const auto& entry : std::filesystem::directory_iterator(directory, ec)) {
-                if (ec || !entry.exists())
+                if (ec || !entry.exists()) {
                     continue;
+                }
 
                 FileInfo info;
-                info.filename = Encode::GbkToUtf8(entry.path().filename().string());
+                info.filename = Encode::gbk_to_utf8(entry.path().filename().string());
                 info.is_directory = entry.is_directory();
 
                 if (info.is_directory) {
@@ -251,12 +334,14 @@ namespace util {
                     info.size = 0;
                 } else {
                     info.size = entry.file_size(ec);
-                    if (ec)
+                    if (ec) {
                         info.size = 0;
+                    }
 
                     std::string ext = entry.path().extension().string();
-                    if (!ext.empty() && ext[0] == '.')
+                    if (!ext.empty() && ext[0] == '.') {
                         ext.erase(0, 1);
+                    }
                     info.type = ext;
                 }
 
@@ -271,8 +356,9 @@ namespace util {
 
             std::ranges::sort(result,
                               [](const FileInfo& a, const FileInfo& b) {
-                                  if (a.is_directory != b.is_directory)
+                                  if (a.is_directory != b.is_directory) {
                                       return a.is_directory;
+                                  }
                                   return a.filename < b.filename;
                               });
 
@@ -282,20 +368,15 @@ namespace util {
     private:
         static auto get_file_times(const std::filesystem::path& path, time_t* creation, time_t* access, time_t* modification) -> void {
             *creation = *access = *modification = 0;
-            const std::shared_ptr<void> hFile(CreateFileW(path.wstring().c_str(),
-                                                          GENERIC_READ,
-                                                          FILE_SHARE_READ,
-                                                          nullptr,
-                                                          OPEN_EXISTING,
-                                                          FILE_ATTRIBUTE_NORMAL,
-                                                          nullptr),
-                                              CloseHandle);
-            if (hFile.get() == INVALID_HANDLE_VALUE)
+            const std::shared_ptr<void> hFile(CreateFileW(path.wstring().c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr), CloseHandle);
+            if (hFile.get() == INVALID_HANDLE_VALUE) {
                 return;
+            }
 
             FILETIME ftCreate, ftAccess, ftWrite;
-            if (!GetFileTime(hFile.get(), &ftCreate, &ftAccess, &ftWrite))
+            if (!GetFileTime(hFile.get(), &ftCreate, &ftAccess, &ftWrite)) {
                 return;
+            }
 
             auto convertFileTime = [](const FILETIME& ft) {
                 ULARGE_INTEGER ull;
@@ -310,103 +391,18 @@ namespace util {
         }
     };
 
-    class RateLimiter {
-    public:
-        RateLimiter(const size_t max_requests = 5,
-                    const std::chrono::seconds window = std::chrono::minutes(1),
-                    const std::chrono::minutes cleanup_interval = std::chrono::minutes(5)) : max_requests_(max_requests),
-                                                                                             window_duration_(window),
-                                                                                             cleanup_interval_(cleanup_interval),
-                                                                                             running_(true),
-                                                                                             clean_thread_(&RateLimiter::cleanup_loop, this) {}
-
-        ~RateLimiter() {
-            stop();
-            if (clean_thread_.joinable())
-                clean_thread_.join();
-        }
-
-        auto Set(const size_t max_requests, const std::chrono::seconds window) -> void {
-            std::lock_guard lock(mutex_);
-            // 重置限流参数并清空所有记录
-            max_requests_ = max_requests;
-            window_duration_ = window;
-            ip_requests_.clear();
-        }
-
-        auto allow_request(const std::string& ip) -> bool {
-            std::lock_guard lock(mutex_);
-            auto now = std::chrono::steady_clock::now();
-
-            auto& timestamps = ip_requests_[ip];
-
-            // 清理当前IP的过期请求
-            while (!timestamps.empty() && (now - timestamps.front() > window_duration_))
-                timestamps.pop_front();
-
-            if (timestamps.size() >= max_requests_)
-                return false;
-
-            timestamps.push_back(now);
-            return true;
-        }
-
-        auto stop() -> void {
-            running_.store(false);
-            cv_.notify_all();
-        }
-
-    private:
-        auto cleanup_loop() -> void {
-            while (running_.load()) {
-                std::unique_lock lock(mutex_);
-
-                // 定时清理（带优雅退出能力）
-                if (cv_.wait_for(lock, cleanup_interval_, [this] { return !running_.load(); }))
-                    break;
-
-                // 全量清理过期IP
-                auto now = std::chrono::steady_clock::now();
-                std::vector<std::string> expired_ips;
-
-                // 第一阶段：收集过期IP
-                for (auto& [fst, snd] : ip_requests_) {
-                    auto& timestamps = snd;
-                    while (!timestamps.empty() && (now - timestamps.front() > window_duration_))
-                        timestamps.pop_front();
-                    if (timestamps.empty())
-                        expired_ips.emplace_back(fst);
-                }
-
-
-                // 第二阶段：删除空记录
-                for (const auto& ip : expired_ips)
-                    ip_requests_.erase(ip);
-            }
-        }
-
-        size_t max_requests_;
-        std::chrono::seconds window_duration_;
-        std::chrono::minutes cleanup_interval_;
-        SafeMap<std::string, std::list<std::chrono::steady_clock::time_point>> ip_requests_;
-        std::mutex mutex_;
-        std::atomic<bool> running_;
-        std::condition_variable cv_;
-        std::thread clean_thread_;
-    };
-
-    template <typename T, typename... Args>
+    template<typename T, typename... Args>
     static auto make_jemalloc_shared(Args&&... args) -> std::shared_ptr<T> {
-        void* mem = je_malloc(sizeof(T));
+        void* mem = mi_malloc(sizeof(T));
         try {
             new(mem) T(std::forward<Args>(args)...);
             return std::shared_ptr<T>(static_cast<T*>(mem),
                                       [](T* ptr) {
                                           ptr->~T();
-                                          je_free(ptr);
+                                          mi_free(ptr);
                                       });
         } catch (...) {
-            je_free(mem);
+            mi_free(mem);
             throw;
         }
     }
@@ -434,8 +430,9 @@ namespace util {
             const auto today = std::chrono::floor<std::chrono::days>(now);
 
             std::lock_guard lock(rwlock_);
-            if (data_[today].insert(ip).second)
+            if (data_[today].insert(ip).second) {
                 async_cleanup(now - std::chrono::days(30));
+            }
         }
 
         auto get(const std::chrono::days days) const -> int {
@@ -445,8 +442,9 @@ namespace util {
             std::lock_guard lock(rwlock_);
             int total = 0;
             auto it = data_.lower_bound(cutoff_day);
-            for (; it != data_.end(); ++it)
+            for (; it != data_.end(); ++it) {
                 total += it->second.size();
+            }
             return total;
         }
 
@@ -454,8 +452,9 @@ namespace util {
             const auto target_day = std::chrono::floor<std::chrono::days>(day);
 
             std::lock_guard lock(rwlock_);
-            if (auto it = data_.find(target_day); it != data_.end())
+            if (const auto it = data_.find(target_day); it != data_.end()) {
                 return it->second.size();
+            }
             return 0;
         }
 
@@ -469,14 +468,14 @@ namespace util {
                 std::lock_guard lock(rwlock_);
                 auto it = data_.lower_bound(cutoff_day);
                 for (; it != data_.end(); ++it) {
-                    result.push_back({
-                        it->first,
-                        static_cast<int>(it->second.size())
-                    });
+                    result.push_back({it->first, static_cast<int>(it->second.size())});
                 }
             }
 
-            std::ranges::sort(result, [](const auto& a, const auto& b) { return a.date < b.date; });
+            std::ranges::sort(result,
+                              [](const auto& a, const auto& b) {
+                                  return a.date < b.date;
+                              });
 
             return result;
         }
@@ -488,8 +487,9 @@ namespace util {
             std::lock_guard lock(rwlock_);
             auto it = data_.lower_bound(cutoff_day);
             for (; it != data_.end(); ++it) {
-                if (it->second.contains(ip))
+                if (it->second.contains(ip)) {
                     return true;
+                }
             }
             return false;
         }
@@ -498,17 +498,15 @@ namespace util {
             std::unordered_set<std::string> unique_ips;
 
             std::lock_guard lock(rwlock_);
-            for (const auto& ips : data_ | std::views::values)
+            for (const auto& ips : data_ | std::views::values) {
                 unique_ips.insert(ips.begin(), ips.end());
+            }
 
             return unique_ips;
         }
 
         auto get_peak_day() const -> DailyStat {
-            DailyStat peak{
-                {},
-                0
-            };
+            DailyStat peak{{}, 0};
 
             std::lock_guard lock(rwlock_);
             for (const auto& [date, ips] : data_) {
@@ -524,8 +522,8 @@ namespace util {
 
     extern auto GetMIMEType(const std::string& extension) -> std::string;
     extern auto replace_all(std::string& str, const std::string& from, const std::string& to) -> std::string&;
-    extern auto AppPath() -> std::filesystem::path;
-    extern auto ReadFile(const std::filesystem::path& path) -> std::string;
+    extern auto app_path() -> std::filesystem::path;
+    extern auto read_file(const std::filesystem::path& path) -> std::string;
     extern auto generate_session_token() -> std::string;
 
     inline auto generate_timestamp_sha256() -> std::string {
@@ -547,8 +545,9 @@ namespace util {
         SHA256(bytes, sizeof(bytes), hash);
 
         std::stringstream ss;
-        for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(hash[i]);
+        for (const unsigned char i : hash) {
+            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(i);
+        }
 
         return ss.str();
     }

@@ -3,7 +3,7 @@
 #include <cstddef>
 
 struct FileDate {
-    std::basic_string<char, std::char_traits<char>, util::JemallocAllocator<char>> data;
+    std::basic_string<char, std::char_traits<char>, mi_stl_allocator<char>> data;
     std::chrono::system_clock::time_point read_time;
     std::size_t size;
     std::size_t revc_count;
@@ -44,7 +44,7 @@ class Service {
     util::Timer cookie_timer;
     util::Timer file_cache_timer;
     tbb::global_control gc{tbb::global_control::max_allowed_parallelism,
-                           std::thread::hardware_concurrency() * 6
+                           std::thread::hardware_concurrency() * 8
     };
     inline static std::pair<std::string, std::chrono::system_clock::time_point> active_sessions;
 public:
@@ -57,8 +57,6 @@ public:
 
     config::Field<int> f_server_port;
     config::Field<int> f_file_cache_time;
-    config::Field<int> f_max_requests;
-    config::Field<int> f_window_time;
     config::Field<int> f_max_download_speed;
     config::Field<bool> f_tbb_mode;
     config::Field<bool> f_file_cache;
@@ -78,7 +76,6 @@ public:
 
     std::size_t file_total_size{};
     inline static util::SafeMap<std::string, FileDate> file_cache;
-    inline static util::RateLimiter rate_limiter;
 
     static auto Instance() -> Service&;
 

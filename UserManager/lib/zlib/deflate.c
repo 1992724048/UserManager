@@ -1,4 +1,4 @@
-/* deflate.c -- compress data using the deflation algorithm
+﻿/* deflate.c -- compress data using the deflation algorithm
  * Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
@@ -944,7 +944,7 @@ local void flush_pending(z_streamp strm) {
 
 /* ========================================================================= */
 int ZEXPORT deflate(z_streamp strm, int flush) {
-    int old_flush; /* value of flush param for previous deflate call */
+    /* value of flush param for previous deflate call */
     deflate_state *s;
 
     if (deflateStateCheck(strm) || flush > Z_BLOCK || flush < 0) {
@@ -959,7 +959,7 @@ int ZEXPORT deflate(z_streamp strm, int flush) {
     }
     if (strm->avail_out == 0) ERR_RETURN(strm, Z_BUF_ERROR);
 
-    old_flush = s->last_flush;
+    const int old_flush = s->last_flush;
     s->last_flush = flush;
 
     /* Flush as much pending output as possible */

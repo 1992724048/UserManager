@@ -1,4 +1,5 @@
 ﻿#include "Service.h"
+#include <ipp.h>
 
 #include "Controller/HTTPController.h"
 #include "Controller/app/AppController.h"
@@ -18,8 +19,6 @@ auto Service::Instance() -> Service& {
 
 Service::Service() : NFS(f_server_port, "", "server", 443),
                      NFS(f_file_cache_time, "", "server", std::chrono::duration_cast<std::chrono::seconds>(std::chrono::days(3)).count()),
-                     NFS(f_max_requests, "", "server", 50),
-                     NFS(f_window_time, "", "server", 1),
                      NFS(f_max_download_speed, "", "server", 0.5 * 1024 * 1024),
                      NFS(f_tbb_mode, "", "server", true),
                      NFS(f_file_cache, "", "server", false),
@@ -28,14 +27,16 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
                      NFS(f_username, "", "admin", "admin"),
                      NFS(f_password, "", "admin", "admin123"),
                      NFS(f_domain, "", "server", "localhost"),
-                     NFS(f_cert_path, "", "ca", util::AppPath() / "SSL" / "cert.pem"),
-                     NFS(f_key_path, "", "ca", util::AppPath() / "SSL" / "key.pem"),
-                     NFS(f_sql_path, "", "sql", util::AppPath() / "SQL" / "sqlite.db"),
-                     NFS(f_web_files, "", "server", util::AppPath() / "web"),
-                     NFS(f_files_path, "", "server", util::AppPath() / "root"),
-                     NFS(f_web_error_page, "", "server", util::AppPath() / "web"/ "res" / "error.html"),
+                     NFS(f_cert_path, "", "ca", util::app_path() / "SSL" / "cert.pem"),
+                     NFS(f_key_path, "", "ca", util::app_path() / "SSL" / "key.pem"),
+                     NFS(f_sql_path, "", "sql", util::app_path() / "SQL" / "sqlite.db"),
+                     NFS(f_web_files, "", "server", util::app_path() / "web"),
+                     NFS(f_files_path, "", "server", util::app_path() / "root"),
+                     NFS(f_web_error_page, "", "server", util::app_path() / "web"/ "res" / "error.html"),
                      NFS(f_log_level, "", "log", Logger::Level::Trace),
                      NFS(f_log_type, "", "log", Logger::LoggerType::Any) {
+    ippInit();
+
     cookie_timer.start(std::chrono::duration_cast<std::chrono::milliseconds>(1h).count(),
                        [this] {
                            const auto now = std::chrono::system_clock::now();
@@ -47,8 +48,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
     file_cache_timer.start(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::days(1)).count(),
                            [this] {
                                for (auto& [path, date] : file_cache) {
-                                   if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - date.read_time).count() >
-                                       f_file_cache_time) {
+                                   if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - date.read_time).count() > f_file_cache_time) {
                                        file_cache.erase(path);
                                    }
                                }
@@ -63,7 +63,6 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
     }
 
     Logger::SetLevel(f_log_level, f_log_type);
-    rate_limiter.Set(f_max_requests, std::chrono::seconds(f_window_time));
 
     LOG_DEBUG << fmt::format("Cert 路径: {}", f_cert_path.value().string());
     LOG_DEBUG << fmt::format("Key  路径: {}", f_key_path.value().string());
@@ -78,9 +77,8 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
     }
 
     server->set_error_handler([this](const httplib::Request& req, httplib::Response& res) {
-        static const boost::regex pattern(R"(\$(status|message|ip|time|path|home|cookie|http)\$)",
-                                          static_cast<boost::regex_constants::flag_type_>(boost::regex::perl | boost::regex::optimize));
-        static const std::string error_template = util::ReadFile(f_web_error_page);
+        static const boost::regex pattern(R"(\$(status|message|ip|time|path|home|cookie|http)\$)", static_cast<boost::regex_constants::flag_type_>(boost::regex::perl | boost::regex::optimize));
+        static const std::string error_template = util::read_file(f_web_error_page);
 
         auto format_time = []() -> std::string {
             using namespace std::chrono;
@@ -163,12 +161,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
 
     server->set_logger([this](const httplib::Request& req, const httplib::Response& res) -> void {
         if (res.status >= 400 && res.status <= 600) {
-            LOG_WARNING << fmt::format("{}:{} -> {} {} -> {}",
-                                       req.remote_addr,
-                                       req.remote_port,
-                                       res.status,
-                                       httplib::status_message(res.status),
-                                       req.path);
+            LOG_WARNING << fmt::format("{}:{} -> {} {} -> {}", req.remote_addr, req.remote_port, res.status, httplib::status_message(res.status), req.path);
         }
     });
 }
@@ -180,7 +173,7 @@ Service::~Service() {
 }
 
 auto Service::Run() const -> int {
-    Dao::InitDateBase();
+    Dao::init_date_base();
     httplib::HttpControllerBase::registerMethod();
 
     LOG_DEBUG << fmt::format("服务器网址: https://localhost:{}/", f_server_port.value());
@@ -224,10 +217,7 @@ auto Service::AddCookie() -> std::string {
     const std::string session_token = util::generate_session_token();
     const auto expiry_time = std::chrono::system_clock::now() + std::chrono::hours(72);
 
-    active_sessions = {
-        session_token,
-        expiry_time
-    };
+    active_sessions = {session_token, expiry_time};
 
     std::ostringstream oss;
     oss << "session_token=" << session_token << "; Path=/; HttpOnly; Secure; Expires=";

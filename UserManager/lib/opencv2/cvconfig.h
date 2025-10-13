@@ -2,7 +2,7 @@
 #define OPENCV_CVCONFIG_H_INCLUDED
 
 /* OpenCV compiled as static or dynamic libs */
-#define BUILD_SHARED_LIBS
+/* #undef BUILD_SHARED_LIBS */
 
 /* OpenCV intrinsics optimized code */
 #define CV_ENABLE_INTRINSICS
@@ -57,14 +57,14 @@
 /* #undef HAVE_HALIDE */
 
 /* Vulkan support */
-/* #undef HAVE_VULKAN */
+#define HAVE_VULKAN
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
 /* Intel Integrated Performance Primitives */
 #define HAVE_IPP
-#define HAVE_IPP_ICV
+/* #undef HAVE_IPP_ICV */
 #define HAVE_IPP_IW
 #define HAVE_IPP_IW_LL
 
@@ -77,6 +77,9 @@
 
 /* IJG JPEG codec */
 #define HAVE_JPEG
+
+/* JPEG XL codec */
+/* #undef HAVE_JPEGXL */
 
 /* GDCM DICOM codec */
 /* #undef HAVE_GDCM */
@@ -116,7 +119,7 @@
 /* #undef HAVE_PTHREADS_PF */
 
 /* Intel Threading Building Blocks */
-/* #undef HAVE_TBB */
+#define HAVE_TBB
 
 /* Ste||ar Group High Performance ParallelX */
 /* #undef HAVE_HPX */
@@ -135,7 +138,7 @@
 /* #undef HAVE_VA_INTEL */
 
 /* Lapack */
-/* #undef HAVE_LAPACK */
+#define HAVE_LAPACK
 
 /* Library was compiled with functions instrumentation */
 /* #undef ENABLE_INSTRUMENTATION */

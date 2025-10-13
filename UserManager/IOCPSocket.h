@@ -6,7 +6,6 @@
 #include <memory>
 #include <filesystem>
 #include <parallel_hashmap/phmap.h>
-#include <jemalloc.h>
 #include <array>
 #include <cstring>
 #include <thread>
@@ -18,6 +17,7 @@
 #include <tbb/task_group.h>
 
 #include "Logger.h"
+#include "mimalloc.h"
 
 #undef max
 
@@ -56,49 +56,24 @@ public:
 };
 
 class IOCPSocket {
-    template<typename T>
-    class JemallocAllocator {
-    public:
-        using value_type = T;
-
-        JemallocAllocator() noexcept = default;
-
-        template<typename U>
-        explicit JemallocAllocator(const JemallocAllocator<U>&) noexcept {
-        }
-
-        auto allocate(const std::size_t n) -> T* {
-            if (n > std::numeric_limits<std::size_t>::max() / sizeof(T))
-                throw std::bad_alloc();
-            T* p = static_cast<T*>(je_malloc(n * sizeof(T)));
-            if (!p)
-                throw std::bad_alloc();
-            return p;
-        }
-
-        static auto deallocate(T* const p, const size_t size) noexcept -> void {
-            je_free(p);
-        }
-    };
-
     template<typename T, typename... Args>
     static auto jemalloc_shared(Args&&... args) -> std::shared_ptr<T> {
-        void* mem = je_malloc(sizeof(T));
+        void* mem = mi_malloc(sizeof(T));
         try {
             new(mem) T(std::forward<Args>(args)...);
             return std::shared_ptr<T>(static_cast<T*>(mem),
                                       [](T* ptr) {
                                           ptr->~T();
-                                          je_free(ptr);
+                                          mi_free(ptr);
                                       });
         } catch (...) {
-            je_free(mem);
+            mi_free(mem);
             throw;
         }
     }
-    
+
     template<typename K, typename V>
-    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, JemallocAllocator<std::pair<K, V>>, 4, std::mutex>;
+    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::mutex>;
 
 public:
     inline static HANDLE iocp = nullptr;
@@ -111,7 +86,7 @@ public:
     inline static LPFN_ACCEPTEX lpfnAcceptEx = nullptr;
     inline static LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockaddrs = nullptr;
 
-    static auto build(const socket_t sock_, const int threads = std::thread::hardware_concurrency()) -> void {
+    static auto build(const socket_t sock_, const int threads = std::thread::hardware_concurrency() * 2) -> void {
         listen_sock = sock_;
         ta.initialize(threads);
 
@@ -148,17 +123,19 @@ public:
                         LPOVERLAPPED overlapped = nullptr;
 
                         const int ret = GetQueuedCompletionStatus(iocp, &bytes, &key, &overlapped, INFINITE);
-                        IOContext* io_context = CONTAINING_RECORD(overlapped, IOContext, overlapped);
+                        const auto io_context = CONTAINING_RECORD(overlapped, IOContext, overlapped);
 
-                        if (io_context->client == INVALID_SOCKET)
+                        if (io_context->client == INVALID_SOCKET) {
                             continue;
+                        }
 
                         if (!ret || overlapped == nullptr) {
                             const auto error = GetLastError();
                             if (error == WAIT_TIMEOUT || error == ERROR_NETNAME_DELETED || error == ERROR_OPERATION_ABORTED) {
                                 io_contexts.erase(io_context->client);
-                                while (!post_accept())
+                                while (!post_accept()) {
                                     std::this_thread::sleep_for(1ms);
+                                }
                             }
                             continue;
                         }
@@ -167,14 +144,7 @@ public:
                             sockaddr *local_addr = nullptr, *remote_addr = nullptr;
                             int local_len = 0, remote_len = 0;
 
-                            GetAcceptExSockaddrs(io_context->buff,
-                                                 0,
-                                                 sizeof(SOCKADDR_STORAGE) + 16,
-                                                 sizeof(SOCKADDR_STORAGE) + 16,
-                                                 &local_addr,
-                                                 &local_len,
-                                                 &remote_addr,
-                                                 &remote_len);
+                            GetAcceptExSockaddrs(io_context->buff, 0, sizeof(SOCKADDR_STORAGE) + 16, sizeof(SOCKADDR_STORAGE) + 16, &local_addr, &local_len, &remote_addr, &remote_len);
 
                             std::string ip_str(INET6_ADDRSTRLEN + 1, '\0');
                             unsigned short port = 0;
@@ -190,16 +160,17 @@ public:
 
                             call_back(io_context->client, std::move(ip_str), port);
 
-                            while (!post_accept())
+                            while (!post_accept()) {
                                 std::this_thread::sleep_for(1ms);
+                            }
                             continue;
                         }
 
-                        if (io_context->type == RECV)
+                        if (io_context->type == RECV) {
                             continue;
-
-                        if (io_context->type == SEND) {
                         }
+
+                        if (io_context->type == SEND) {}
                     }
                 });
             });
@@ -207,8 +178,9 @@ public:
     }
 
     static auto get_io_context(const socket_t sock) -> std::shared_ptr<IOContext> {
-        if (io_contexts.contains(sock))
+        if (io_contexts.contains(sock)) {
             return io_contexts[sock];
+        }
         return nullptr;
     }
 

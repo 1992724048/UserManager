@@ -3,7 +3,7 @@
 #include "rand.h"
 
 namespace util {
-    auto AppPath() -> std::filesystem::path {
+    auto app_path() -> std::filesystem::path {
         static std::filesystem::path app_path;
         if (app_path.empty()) {
             char pathOut[MAX_PATH] = {};
@@ -13,7 +13,7 @@ namespace util {
         return app_path;
     }
 
-    auto ReadFile(const std::filesystem::path& path) -> std::string {
+    auto read_file(const std::filesystem::path& path) -> std::string {
         std::ifstream in(path, std::ios::binary);
         if (!in) {
             throw std::runtime_error("Failed to open file: " + path.string());
@@ -47,8 +47,9 @@ namespace util {
         }
 
         std::stringstream ss;
-        for (const unsigned char i : buffer)
+        for (const unsigned char i : buffer) {
             ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(i);
+        }
         return ss.str();
     }
 
@@ -362,8 +363,9 @@ namespace util {
         const size_t to_len = to.length();
 
         std::vector bad_char(256, from_len);
-        for (size_t i = 0; i < from_len - 1; ++i)
+        for (size_t i = 0; i < from_len - 1; ++i) {
             bad_char[static_cast<unsigned char>(from[i])] = from_len - i - 1;
+        }
 
         size_t pos = 0;
         while (pos <= str.length() - from_len) {

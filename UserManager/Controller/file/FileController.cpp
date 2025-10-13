@@ -2,8 +2,7 @@
 
 #include "chrono.h"
 
-FileController::FileController() {
-}
+FileController::FileController() {}
 
 auto FileController::file_logic(const httplib::Request&& req, httplib::Response&& res, const bool user, const bool res_path) -> void {
     const Service& service = Service::Instance();
@@ -44,7 +43,7 @@ auto FileController::file_logic(const httplib::Request&& req, httplib::Response&
             revc_count++;
             read_time = std::chrono::system_clock::now();
         } else if (service.file_total_size < service.f_file_cache_max_size) {
-            buffer = util::ReadFile(resolved_local);
+            buffer = util::read_file(resolved_local);
             auto& [data, read_time, size, revc_count] = Service::file_cache[resolved_local.string()];
             data = buffer;
             size = buffer.size();
@@ -54,7 +53,7 @@ auto FileController::file_logic(const httplib::Request&& req, httplib::Response&
     }
 
     if (buffer.empty()) {
-        buffer = util::ReadFile(resolved_local);
+        buffer = util::read_file(resolved_local);
     }
 
     const std::string ext = resolved_local.extension().string();
@@ -90,7 +89,7 @@ auto FileController::logic_enum_path(const httplib::Request& req, httplib::Respo
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         if (!path.empty() && (path[0] == '\\' || path[0] == '/')) {
@@ -122,34 +121,13 @@ auto FileController::logic_enum_path(const httplib::Request& req, httplib::Respo
         json["data"] = nlohmann::json::array();
         for (const auto& [filename, size, type, is_directory, creation_time, access_time, modification_time] : util::File::list_directory(path_)) {
             json["data"].push_back({
-                {
-                    "filename",
-                    filename
-                },
-                {
-                    "size",
-                    size
-                },
-                {
-                    "type",
-                    type
-                },
-                {
-                    "is_directory",
-                    is_directory
-                },
-                {
-                    "creation_time",
-                    creation_time
-                },
-                {
-                    "access_time",
-                    access_time
-                },
-                {
-                    "modification_time",
-                    modification_time
-                }
+                {"filename", filename},
+                {"size", size},
+                {"type", type},
+                {"is_directory", is_directory},
+                {"creation_time", creation_time},
+                {"access_time", access_time},
+                {"modification_time", modification_time}
             });
         }
 
@@ -168,7 +146,7 @@ auto FileController::logic_remove_file(const httplib::Request& req, httplib::Res
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -191,7 +169,7 @@ auto FileController::logic_remove_directory(const httplib::Request& req, httplib
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -214,7 +192,7 @@ auto FileController::logic_create_file(const httplib::Request& req, httplib::Res
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -239,7 +217,7 @@ auto FileController::logic_create_directory(const httplib::Request& req, httplib
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -262,8 +240,8 @@ auto FileController::logic_rename(const httplib::Request& req, httplib::Response
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
-        const std::string new_path = util::Encode::Utf8ToGbk(json["new_path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
+        const std::string new_path = util::Encode::utf8_to_gbk(json["new_path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -285,8 +263,8 @@ auto FileController::logic_copy(const httplib::Request& req, httplib::Response& 
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
-        const std::string new_path = util::Encode::Utf8ToGbk(json["new_path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
+        const std::string new_path = util::Encode::utf8_to_gbk(json["new_path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -308,8 +286,8 @@ auto FileController::logic_cut(const httplib::Request& req, httplib::Response& r
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
-        const std::string new_path = util::Encode::Utf8ToGbk(json["new_path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
+        const std::string new_path = util::Encode::utf8_to_gbk(json["new_path"]);
         json.clear();
 
         const auto path_ = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
@@ -333,7 +311,7 @@ auto FileController::logic_upload(const httplib::Request& req, httplib::Response
 
     try {
         std::string current_path = req.get_param_value("path");
-        current_path = util::Encode::Utf8ToGbk(current_path);
+        current_path = util::Encode::utf8_to_gbk(current_path);
 
         auto target_dir = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / current_path;
         if (!exists(target_dir)) {
@@ -345,7 +323,7 @@ auto FileController::logic_upload(const httplib::Request& req, httplib::Response
         }
 
         const auto& file = req.get_file_value("file");
-        std::string filename = util::Encode::Utf8ToGbk(file.filename);
+        std::string filename = util::Encode::utf8_to_gbk(file.filename);
         auto save_path = target_dir / filename;
 
         if (save_path.lexically_relative(service.f_files_path).string().find("..") != std::string::npos) {
@@ -382,7 +360,7 @@ auto FileController::logic_download(const httplib::Request& req, httplib::Respon
     const Service& service = Service::Instance();
 
     try {
-        std::string path = util::Encode::Utf8ToGbk(req.get_param_value("path"));
+        std::string path = util::Encode::utf8_to_gbk(req.get_param_value("path"));
 
         auto full_path = (web ? service.f_web_files / "pages" / "user" : service.f_files_path) / path;
         if (full_path.lexically_relative(service.f_files_path).string().find("..") != std::string::npos) {
@@ -401,15 +379,17 @@ auto FileController::logic_download(const httplib::Request& req, httplib::Respon
             throw std::runtime_error("非法路径访问");
         }
 
-        std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
-        res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::GbkToUtf8(full_path.filename().string()) + "\"");
+        auto file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
+        res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::gbk_to_utf8(full_path.filename().string()) + "\"");
 
         LOG_TRACE << fmt::format("{} 正在被 {}:{} 地址下载", path, req.remote_addr, req.remote_port);
 
-        res.set_content_provider(file_size(full_path),
+        res.set_content_provider(std::filesystem::file_size(full_path),
                                  "application/octet-stream",
-                                 [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time =
-                                     std::chrono::steady_clock::now(), chunk_size = 0](const size_t offset, const size_t length, const httplib::DataSink& sink) mutable {
+                                 [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time = std::chrono::steady_clock::now(), chunk_size = 0](
+                                 const size_t offset,
+                                 const size_t length,
+                                 const httplib::DataSink& sink) mutable {
                                      const size_t max_chunk = std::max<size_t>(speed_limit, 1024);
                                      const auto now = std::chrono::steady_clock::now();
 
@@ -530,61 +510,34 @@ auto FileController::web_user_view_count(const httplib::Request& req, httplib::R
     nlohmann::json json;
 
     try {
-        // 1. 获取请求参数
-        int days = 30; // 默认查询30天
+        int days = 30;
         if (req.has_param("days")) {
             days = std::stoi(req.get_param_value("days"));
 
-            // 参数有效性校验
             if (days <= 0 || days > 30) {
                 json["success"] = false;
                 json["error"] = "Invalid days parameter (1-30 allowed)";
-                res.status = 400; // Bad Request
+                res.status = 400;
                 res.set_content(json.dump(), "application/json");
                 return;
             }
         }
 
-        // 2. 获取统计结果
         int count = visit.get(std::chrono::days(days));
 
-        // 3. 构造响应
         json["success"] = true;
-        json["data"] = {
-            {
-                "days",
-                days
-            },
-            {
-                "unique_visitors",
-                count
-            },
-            {
-                "period",
-                "最近 " + std::to_string(days) + " 天"
-            }
-        };
+        json["data"] = {{"days", days}, {"unique_visitors", count}, {"period", "最近 " + std::to_string(days) + " 天"}};
 
         const auto stats = visit.get_daily_stats(std::chrono::days(days));
         nlohmann::json daily_data = nlohmann::json::array();
 
         for (const auto& [date, unique_visitors] : stats) {
-            daily_data.push_back({
-                {
-                    "date",
-                    std::chrono::system_clock::to_time_t(date)
-                },
-                {
-                    "count",
-                    unique_visitors
-                }
-            });
+            daily_data.push_back({{"date", std::chrono::system_clock::to_time_t(date)}, {"count", unique_visitors}});
         }
         json["data"]["daily"] = daily_data;
 
         res.set_content(json.dump(4), "application/json"); // 美化格式
     } catch (const std::exception& e) {
-        // 异常处理
         json["success"] = false;
         json["error"] = "服务器处理请求时发生错误";
         json["detail"] = e.what();
@@ -597,46 +550,25 @@ auto FileController::log_enum_path(const httplib::Request& req, httplib::Respons
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         if (!path.empty() && (path[0] == '\\' || path[0] == '/')) {
             path = path.substr(0, 1);
         }
 
-        const auto path_ = util::AppPath() / "logs";
+        const auto path_ = util::app_path() / "logs";
 
         json["data"] = nlohmann::json::array();
         for (const auto& [filename, size, type, is_directory, creation_time, access_time, modification_time] : util::File::list_directory(path_)) {
             json["data"].push_back({
-                {
-                    "filename",
-                    filename
-                },
-                {
-                    "size",
-                    size
-                },
-                {
-                    "type",
-                    type
-                },
-                {
-                    "is_directory",
-                    is_directory
-                },
-                {
-                    "creation_time",
-                    creation_time
-                },
-                {
-                    "access_time",
-                    access_time
-                },
-                {
-                    "modification_time",
-                    modification_time
-                }
+                {"filename", filename},
+                {"size", size},
+                {"type", type},
+                {"is_directory", is_directory},
+                {"creation_time", creation_time},
+                {"access_time", access_time},
+                {"modification_time", modification_time}
             });
         }
 
@@ -654,10 +586,10 @@ auto FileController::log_remove_file(const httplib::Request& req, httplib::Respo
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
-        const auto path_ = util::AppPath() / "logs" / path;
+        const auto path_ = util::app_path() / "logs" / path;
 
         if (!std::filesystem::remove(path_)) {
             throw std::runtime_error("文件不存在或删除失败!");
@@ -676,17 +608,19 @@ auto FileController::log_download(const httplib::Request& req, httplib::Response
     const Service& service = Service::Instance();
 
     try {
-        const std::string path = util::Encode::Utf8ToGbk(req.get_param_value("path"));
+        const std::string path = util::Encode::utf8_to_gbk(req.get_param_value("path"));
 
-        auto full_path = util::AppPath() / "logs" / path;
+        auto full_path = util::app_path() / "logs" / path;
 
-        std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
-        res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::GbkToUtf8(full_path.filename().string()) + "\"");
+        auto file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
+        res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::gbk_to_utf8(full_path.filename().string()) + "\"");
 
-        res.set_content_provider(file_size(full_path),
+        res.set_content_provider(std::filesystem::file_size(full_path),
                                  "application/octet-stream",
-                                 [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time =
-                                     std::chrono::steady_clock::now(), chunk_size = 0](const size_t offset, const size_t length, const httplib::DataSink& sink) mutable {
+                                 [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time = std::chrono::steady_clock::now(), chunk_size = 0](
+                                 const size_t offset,
+                                 const size_t length,
+                                 const httplib::DataSink& sink) mutable {
                                      const size_t max_chunk = std::max<size_t>(speed_limit, 1024);
                                      const auto now = std::chrono::steady_clock::now();
 
@@ -735,24 +669,7 @@ auto FileController::get_cache_paths(const httplib::Request& req, httplib::Respo
     json["data"] = nlohmann::json::array();
 
     for (auto& [fst, snd] : Service::file_cache) {
-        json["data"].push_back({
-            {
-                "file_size",
-                snd.size
-            },
-            {
-                "file_read_count",
-                snd.revc_count
-            },
-            {
-                "file_read_time",
-                snd.read_time.time_since_epoch().count()
-            },
-            {
-                "file_path",
-                fst
-            }
-        });
+        json["data"].push_back({{"file_size", snd.size}, {"file_read_count", snd.revc_count}, {"file_read_time", snd.read_time.time_since_epoch().count()}, {"file_path", fst}});
     }
 
     json["success"] = true;
@@ -763,7 +680,7 @@ auto FileController::sql_enum_path(const httplib::Request& req, httplib::Respons
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         if (!path.empty() && (path[0] == '\\' || path[0] == '/')) {
@@ -775,34 +692,13 @@ auto FileController::sql_enum_path(const httplib::Request& req, httplib::Respons
         json["data"] = nlohmann::json::array();
         for (const auto& [filename, size, type, is_directory, creation_time, access_time, modification_time] : util::File::list_directory(path_)) {
             json["data"].push_back({
-                {
-                    "filename",
-                    filename
-                },
-                {
-                    "size",
-                    size
-                },
-                {
-                    "type",
-                    type
-                },
-                {
-                    "is_directory",
-                    is_directory
-                },
-                {
-                    "creation_time",
-                    creation_time
-                },
-                {
-                    "access_time",
-                    access_time
-                },
-                {
-                    "modification_time",
-                    modification_time
-                }
+                {"filename", filename},
+                {"size", size},
+                {"type", type},
+                {"is_directory", is_directory},
+                {"creation_time", creation_time},
+                {"access_time", access_time},
+                {"modification_time", modification_time}
             });
         }
 
@@ -820,7 +716,7 @@ auto FileController::sql_remove_file(const httplib::Request& req, httplib::Respo
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto path_ = service.f_sql_path.value().parent_path() / "backup" / path;
@@ -838,54 +734,56 @@ auto FileController::sql_remove_file(const httplib::Request& req, httplib::Respo
     res.set_content(json.dump(), "application/json");
 }
 
-auto FileController::sql_download(const httplib::Request& req, httplib::Response& res) -> void {
+auto FileController::sql_download(const httplib::Request& _req, httplib::Response& _res) -> void {
     const Service& service = Service::Instance();
 
     try {
-        const std::string path = util::Encode::Utf8ToGbk(req.get_param_value("path"));
+        const std::string path = util::Encode::utf8_to_gbk(_req.get_param_value("path"));
 
         auto full_path = service.f_sql_path.value().parent_path() / "backup" / path;
 
-        std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
-        res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::GbkToUtf8(full_path.filename().string()) + "\"");
+        auto file = std::make_shared<std::ifstream>(full_path, std::ios::binary);
+        _res.set_header("Content-Disposition", "attachment; filename=\"" + util::Encode::gbk_to_utf8(full_path.filename().string()) + "\"");
 
-        res.set_content_provider(file_size(full_path),
-                                 "application/octet-stream",
-                                 [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time =
-                                     std::chrono::steady_clock::now(), chunk_size = 0](const size_t offset, const size_t length, const httplib::DataSink& sink) mutable {
-                                     const size_t max_chunk = std::max<size_t>(speed_limit, 1024);
-                                     const auto now = std::chrono::steady_clock::now();
+        _res.set_content_provider(std::filesystem::file_size(full_path),
+                                  "application/octet-stream",
+                                  [file, speed_limit = service.f_max_download_speed, start_time = std::chrono::steady_clock::now(), last_chunk_time = std::chrono::steady_clock::now(), chunk_size = 0](
+                                  const size_t offset,
+                                  const size_t length,
+                                  const httplib::DataSink& sink) mutable {
+                                      const size_t max_chunk = std::max<size_t>(speed_limit, 1024);
+                                      const auto now = std::chrono::steady_clock::now();
 
-                                     const double elapsed = std::chrono::duration<double>(now - last_chunk_time).count();
-                                     const size_t allowed_bytes = static_cast<size_t>(speed_limit * elapsed);
+                                      const double elapsed = std::chrono::duration<double>(now - last_chunk_time).count();
+                                      const size_t allowed_bytes = static_cast<size_t>(speed_limit * elapsed);
 
-                                     size_t bytes_to_send = std::max(max_chunk, allowed_bytes);
-                                     if (bytes_to_send == 0) {
-                                         bytes_to_send = 1;
-                                     }
+                                      size_t bytes_to_send = std::max(max_chunk, allowed_bytes);
+                                      if (bytes_to_send == 0) {
+                                          bytes_to_send = 1;
+                                      }
 
-                                     std::vector<char> buffer(bytes_to_send);
-                                     file->seekg(offset);
-                                     file->read(buffer.data(), bytes_to_send);
-                                     const std::streamsize bytes_read = file->gcount();
+                                      std::vector<char> buffer(bytes_to_send);
+                                      file->seekg(offset);
+                                      file->read(buffer.data(), bytes_to_send);
+                                      const std::streamsize bytes_read = file->gcount();
 
-                                     if (bytes_read > 0) {
-                                         sink.write(buffer.data(), bytes_read);
-                                         const double expected_time = bytes_read / static_cast<double>(speed_limit);
-                                         const double actual_time = std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count();
+                                      if (bytes_read > 0) {
+                                          sink.write(buffer.data(), bytes_read);
+                                          const double expected_time = bytes_read / static_cast<double>(speed_limit);
+                                          const double actual_time = std::chrono::duration<double>(std::chrono::steady_clock::now() - now).count();
 
-                                         if (actual_time < expected_time) {
-                                             std::this_thread::sleep_for(std::chrono::duration<double>(expected_time - actual_time));
-                                         }
-                                         last_chunk_time = std::chrono::steady_clock::now();
-                                     }
-                                     return true;
-                                 });
+                                          if (actual_time < expected_time) {
+                                              std::this_thread::sleep_for(std::chrono::duration<double>(expected_time - actual_time));
+                                          }
+                                          last_chunk_time = std::chrono::steady_clock::now();
+                                      }
+                                      return true;
+                                  });
     } catch (const std::exception& e) {
         nlohmann::json json;
         json["success"] = false;
         json["message"] = e.what();
-        res.set_content(json.dump(), "application/json");
+        _res.set_content(json.dump(), "application/json");
     }
 }
 
@@ -893,7 +791,7 @@ auto FileController::sql_backup(const httplib::Request& req, httplib::Response& 
     const Service& service = Service::Instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
-        const std::string path = util::Encode::Utf8ToGbk(json["path"]);
+        const std::string path = util::Encode::utf8_to_gbk(json["path"]);
         json.clear();
 
         const auto now = std::chrono::system_clock::now();

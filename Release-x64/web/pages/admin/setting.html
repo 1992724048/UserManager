@@ -25,7 +25,7 @@
     /* 定义字体 */
     @font-face {
         font-family: StarRail;
-        src: url('/res/font/zh-cn.woff2');
+        src: url('/res/font/zh-cn.ttf');
     }
 
     /* 全局样式设置 */
@@ -170,23 +170,6 @@
                                     placeholder="单位: 字节 服务器文件缓存在内存中的最大大小">
                                     <template #suffix>
                                         <span>字节</span>
-                                    </template>
-                                </el-input-number>
-                            </el-form-item>
-
-                            <el-form-item label="时间限制">
-                                <el-input-number v-model="form.f_window_time" class="w-[220px]!" placeholder="单位: 秒">
-                                    <template #suffix>
-                                        <span>秒</span>
-                                    </template>
-                                </el-input-number>
-                            </el-form-item>
-
-                            <el-form-item label="最大请求次数">
-                                <el-input-number v-model="form.f_max_requests" class="w-[220px]!"
-                                    placeholder="时间限制里最大请求次数">
-                                    <template #suffix>
-                                        <span>次</span>
                                     </template>
                                 </el-input-number>
                             </el-form-item>
@@ -439,8 +422,6 @@
                     file_cache_max_size: 0,
                     sqlite_max_connect: 0,
                     f_max_download_speed: 0,
-                    f_max_requests: 0,
-                    f_window_time: 0,
                 },
                 showPopup: false,
                 paths: []
@@ -520,8 +501,6 @@
                         file_cache: this.form.file_cache,
                         file_cache_time: this.form.file_cache_time,
                         file_cache_max_size: this.form.file_cache_max_size,
-                        f_window_time: this.form.f_window_time,
-                        f_max_requests: this.form.f_max_requests,
                         f_max_download_speed: this.form.f_max_download_speed,
                     }),
                     success: function (response) {

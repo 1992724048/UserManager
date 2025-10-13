@@ -19,7 +19,7 @@ $cookie$
 <style>
     @font-face {
         font-family: StarRail;
-        src: url('/res/font/zh-cn.woff2');
+        src: url('/res/font/zh-cn.ttf');
     }
 
     * {
@@ -63,17 +63,15 @@ $cookie$
 </style>
 
 <body class="bg-gray-100 size-full select-none p-2! pb-0! pt-14! w-full">
-    <div id="app" v-loading="loading">
-        <div class="container mx-auto p-4">
-            <h1 class="text-2xl mb-4">收入分析看板</h1>
+    <div id="app" class="w-full" v-loading="loading">
+        <div class="container mx-auto p-4 w-full">
+            <h1 class="text-2xl mb-4 w-full">收入分析看板</h1>
             
-            <!-- 总计行 -->
             <div class="total-row">
                 总销售额: ￥{{ totalSales.toFixed(2) }} &nbsp;&nbsp;|&nbsp;&nbsp;
                 总订单数: {{ totalOrders }}
             </div>
 
-            <!-- 图表容器 -->
             <el-row :gutter="20">
                 <el-col :span="12">
                     <div class="data-card">
@@ -87,7 +85,6 @@ $cookie$
                 </el-col>
             </el-row>
 
-            <!-- 数据表格 -->
             <div class="data-card">
                 <el-table :data="tableData" stripe style="width: 100%">
                     <el-table-column prop="app_name" label="应用名称"></el-table-column>
@@ -107,7 +104,6 @@ $cookie$
         </div>
     </div>
 
-    <!-- 鼠标点击音效 -->
     <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
 </body>
 <script>
@@ -160,11 +156,9 @@ $cookie$
                     this.totalOrders = this.tableData.reduce((sum, item) => sum + item.sales_quantity, 0);
                 },
                 initCharts() {
-                    // 销毁旧图表
                     if (this.pieChart) this.pieChart.dispose();
                     if (this.barChart) this.barChart.dispose();
 
-                    // 初始化饼图
                     this.pieChart = echarts.init(document.getElementById('pieChart'));
                     this.pieChart.setOption({
                         title: { text: '销售额分布', left: 'center' },
@@ -188,7 +182,6 @@ $cookie$
                         }]
                     });
 
-                    // 初始化柱状图
                     this.barChart = echarts.init(document.getElementById('barChart'));
                     this.barChart.setOption({
                         title: { text: '销售数量对比', left: 'center' },

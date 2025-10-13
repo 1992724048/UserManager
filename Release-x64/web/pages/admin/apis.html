@@ -21,7 +21,7 @@ $cookie$
 
     @font-face {
         font-family: StarRail;
-        src: url('/res/font/zh-cn.woff2');
+        src: url('/res/font/zh-cn.ttf');
     }
 
     * {
@@ -155,7 +155,6 @@ $cookie$
             </div>
         </el-dialog>
 
-        <!-- 鼠标点击音效 -->
         <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
     </div>
 </body>
@@ -170,7 +169,7 @@ $cookie$
                     { label: '禁止访问', value: 2 }
                 ],
                 dialogVisible: false,
-                currentApi: null
+                currentApi: JSON
             }
         },
         methods: {
@@ -221,7 +220,7 @@ $cookie$
                                 message: `${item.note} 获取成功`,
                                 offset: 80
                             })
-                            return res.data;
+                            return JSON.prase(res.data);
                         } else {
                             ElementPlus.ElMessage.error({
                                 message: `获取失败：${res.message}`,

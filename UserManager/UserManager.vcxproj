@@ -86,12 +86,12 @@
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <GuardEHContMetadata>
       </GuardEHContMetadata>
-      <GenerateAlternateCodePaths>ARROWLAKE</GenerateAlternateCodePaths>
-      <UseProcessorExtensions>ARROWLAKE</UseProcessorExtensions>
+      <GenerateAlternateCodePaths>ARROWLAKE-S</GenerateAlternateCodePaths>
+      <UseProcessorExtensions>ARROWLAKE-S</UseProcessorExtensions>
       <OpenMP>GenerateParallelCode</OpenMP>
       <AssemblerOutput>All</AssemblerOutput>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\UserManager\lib\jemalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,9 +101,12 @@
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>true</MapExports>
       <AdditionalLibraryDirectories>..\UserManager\lib\static\MTd;..\UserManager\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;Zycore.lib;Zydis.lib;absl.lib;re2.lib;opencv_world4100d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;absl.lib;re2.lib;mimalloc.dll.lib;aded.lib;IlmImfd.lib;ipphal.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;libwebpd.lib;opencv_world4120d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <WPOAssemblyOutput>Asm_and_MachineCode_and_Source</WPOAssemblyOutput>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)UserManager\.tools\Debug.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -123,8 +126,8 @@
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <GuardEHContMetadata>
       </GuardEHContMetadata>
-      <GenerateAlternateCodePaths>ARROWLAKE</GenerateAlternateCodePaths>
-      <UseProcessorExtensions>ARROWLAKE</UseProcessorExtensions>
+      <GenerateAlternateCodePaths>ARROWLAKE-S</GenerateAlternateCodePaths>
+      <UseProcessorExtensions>ARROWLAKE-S</UseProcessorExtensions>
       <OpenMP>GenerateParallelCode</OpenMP>
       <AssemblerOutput>All</AssemblerOutput>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -133,7 +136,7 @@
       <PGOUsePreTrainedModel>true</PGOUsePreTrainedModel>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\UserManager\lib\jemalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Link>
@@ -146,9 +149,12 @@
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>true</MapExports>
       <AdditionalLibraryDirectories>..\UserManager\lib\static\mpi;..\UserManager\lib\static\MT;..\UserManager\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;Zycore.lib;Zydis.lib;absl.lib;re2.lib;impi.lib;impicxx.lib;libmpi_ilp64.lib;opencv_world4100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Rpcrt4.lib;Crypt32.lib;sqlite3.lib;absl.lib;re2.lib;mimalloc.dll.lib;impi.lib;impicxx.lib;libmpi_ilp64.lib;ade.lib;IlmImf.lib;ipphal.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;opencv_world4120.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <WPOAssemblyOutput>Asm_and_MachineCode_and_Source</WPOAssemblyOutput>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)UserManager\.tools\Release.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Captcha.hpp" />
@@ -169,69 +175,6 @@
     <ClCompile Include="lib\events\joins\eventjoinwrapper.cpp" />
     <ClCompile Include="lib\fmt\format.cc" />
     <ClCompile Include="lib\fmt\os.cc" />
-    <ClCompile Include="lib\jemalloc\src\arena.c" />
-    <ClCompile Include="lib\jemalloc\src\background_thread.c" />
-    <ClCompile Include="lib\jemalloc\src\base.c" />
-    <ClCompile Include="lib\jemalloc\src\bin.c" />
-    <ClCompile Include="lib\jemalloc\src\bin_info.c" />
-    <ClCompile Include="lib\jemalloc\src\bitmap.c" />
-    <ClCompile Include="lib\jemalloc\src\buf_writer.c" />
-    <ClCompile Include="lib\jemalloc\src\cache_bin.c" />
-    <ClCompile Include="lib\jemalloc\src\ckh.c" />
-    <ClCompile Include="lib\jemalloc\src\counter.c" />
-    <ClCompile Include="lib\jemalloc\src\ctl.c" />
-    <ClCompile Include="lib\jemalloc\src\decay.c" />
-    <ClCompile Include="lib\jemalloc\src\div.c" />
-    <ClCompile Include="lib\jemalloc\src\ecache.c" />
-    <ClCompile Include="lib\jemalloc\src\edata.c" />
-    <ClCompile Include="lib\jemalloc\src\edata_cache.c" />
-    <ClCompile Include="lib\jemalloc\src\ehooks.c" />
-    <ClCompile Include="lib\jemalloc\src\emap.c" />
-    <ClCompile Include="lib\jemalloc\src\eset.c" />
-    <ClCompile Include="lib\jemalloc\src\exp_grow.c" />
-    <ClCompile Include="lib\jemalloc\src\extent.c" />
-    <ClCompile Include="lib\jemalloc\src\extent_dss.c" />
-    <ClCompile Include="lib\jemalloc\src\extent_mmap.c" />
-    <ClCompile Include="lib\jemalloc\src\fxp.c" />
-    <ClCompile Include="lib\jemalloc\src\hook.c" />
-    <ClCompile Include="lib\jemalloc\src\hpa.c" />
-    <ClCompile Include="lib\jemalloc\src\hpa_hooks.c" />
-    <ClCompile Include="lib\jemalloc\src\hpdata.c" />
-    <ClCompile Include="lib\jemalloc\src\inspect.c" />
-    <ClCompile Include="lib\jemalloc\src\jemalloc.c" />
-    <ClCompile Include="lib\jemalloc\src\jemalloc_cpp.cpp" />
-    <ClCompile Include="lib\jemalloc\src\large.c" />
-    <ClCompile Include="lib\jemalloc\src\log.c" />
-    <ClCompile Include="lib\jemalloc\src\malloc_io.c" />
-    <ClCompile Include="lib\jemalloc\src\mutex.c" />
-    <ClCompile Include="lib\jemalloc\src\nstime.c" />
-    <ClCompile Include="lib\jemalloc\src\pa.c" />
-    <ClCompile Include="lib\jemalloc\src\pac.c" />
-    <ClCompile Include="lib\jemalloc\src\pages.c" />
-    <ClCompile Include="lib\jemalloc\src\pai.c" />
-    <ClCompile Include="lib\jemalloc\src\pa_extra.c" />
-    <ClCompile Include="lib\jemalloc\src\peak_event.c" />
-    <ClCompile Include="lib\jemalloc\src\prof.c" />
-    <ClCompile Include="lib\jemalloc\src\prof_data.c" />
-    <ClCompile Include="lib\jemalloc\src\prof_log.c" />
-    <ClCompile Include="lib\jemalloc\src\prof_recent.c" />
-    <ClCompile Include="lib\jemalloc\src\prof_stats.c" />
-    <ClCompile Include="lib\jemalloc\src\prof_sys.c" />
-    <ClCompile Include="lib\jemalloc\src\psset.c" />
-    <ClCompile Include="lib\jemalloc\src\rtree.c" />
-    <ClCompile Include="lib\jemalloc\src\safety_check.c" />
-    <ClCompile Include="lib\jemalloc\src\san.c" />
-    <ClCompile Include="lib\jemalloc\src\san_bump.c" />
-    <ClCompile Include="lib\jemalloc\src\sc.c" />
-    <ClCompile Include="lib\jemalloc\src\sec.c" />
-    <ClCompile Include="lib\jemalloc\src\stats.c" />
-    <ClCompile Include="lib\jemalloc\src\sz.c" />
-    <ClCompile Include="lib\jemalloc\src\tcache.c" />
-    <ClCompile Include="lib\jemalloc\src\test_hooks.c" />
-    <ClCompile Include="lib\jemalloc\src\thread_event.c" />
-    <ClCompile Include="lib\jemalloc\src\ticker.c" />
-    <ClCompile Include="lib\jemalloc\src\tsd.c" />
-    <ClCompile Include="lib\jemalloc\src\witness.c" />
     <ClCompile Include="lib\openssl\applink.c" />
     <ClCompile Include="lib\zlib\adler32.c" />
     <ClCompile Include="lib\zlib\compress.c" />
@@ -667,315 +610,16 @@
     <ClInclude Include="lib\fmt\std.h" />
     <ClInclude Include="lib\fmt\xchar.h" />
     <ClInclude Include="lib\httplib.h" />
-    <ClInclude Include="lib\jemalloc\internal\activity_callback.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_inlines_a.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_inlines_b.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_stats.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_structs_a.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_structs_b.h" />
-    <ClInclude Include="lib\jemalloc\internal\arena_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\assert.h" />
-    <ClInclude Include="lib\jemalloc\internal\atomic.h" />
-    <ClInclude Include="lib\jemalloc\internal\atomic_c11.h" />
-    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_atomic.h" />
-    <ClInclude Include="lib\jemalloc\internal\atomic_gcc_sync.h" />
-    <ClInclude Include="lib\jemalloc\internal\atomic_msvc.h" />
-    <ClInclude Include="lib\jemalloc\internal\background_thread_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\background_thread_inlines.h" />
-    <ClInclude Include="lib\jemalloc\internal\background_thread_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\base.h" />
-    <ClInclude Include="lib\jemalloc\internal\base_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\base_inlines.h" />
-    <ClInclude Include="lib\jemalloc\internal\base_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\base_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\bin.h" />
-    <ClInclude Include="lib\jemalloc\internal\bin_info.h" />
-    <ClInclude Include="lib\jemalloc\internal\bin_stats.h" />
-    <ClInclude Include="lib\jemalloc\internal\bin_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\bitmap.h" />
-    <ClInclude Include="lib\jemalloc\internal\bit_util.h" />
-    <ClInclude Include="lib\jemalloc\internal\buf_writer.h" />
-    <ClInclude Include="lib\jemalloc\internal\cache_bin.h" />
-    <ClInclude Include="lib\jemalloc\internal\ckh.h" />
-    <ClInclude Include="lib\jemalloc\internal\counter.h" />
-    <ClInclude Include="lib\jemalloc\internal\ctl.h" />
-    <ClInclude Include="lib\jemalloc\internal\decay.h" />
-    <ClInclude Include="lib\jemalloc\internal\div.h" />
-    <ClInclude Include="lib\jemalloc\internal\ecache.h" />
-    <ClInclude Include="lib\jemalloc\internal\edata.h" />
-    <ClInclude Include="lib\jemalloc\internal\edata_cache.h" />
-    <ClInclude Include="lib\jemalloc\internal\ehooks.h" />
-    <ClInclude Include="lib\jemalloc\internal\emap.h" />
-    <ClInclude Include="lib\jemalloc\internal\emitter.h" />
-    <ClInclude Include="lib\jemalloc\internal\eset.h" />
-    <ClInclude Include="lib\jemalloc\internal\exp_grow.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_dss.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_inlines.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_mmap.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\extent_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\fb.h" />
-    <ClInclude Include="lib\jemalloc\internal\fxp.h" />
-    <ClInclude Include="lib\jemalloc\internal\hash.h" />
-    <ClInclude Include="lib\jemalloc\internal\hook.h" />
-    <ClInclude Include="lib\jemalloc\internal\hpa.h" />
-    <ClInclude Include="lib\jemalloc\internal\hpa_hooks.h" />
-    <ClInclude Include="lib\jemalloc\internal\hpa_opts.h" />
-    <ClInclude Include="lib\jemalloc\internal\hpdata.h" />
-    <ClInclude Include="lib\jemalloc\internal\inspect.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_decls.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_defs.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_includes.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_a.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_b.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_inlines_c.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_macros.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_internal_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\jemalloc_preamble.h" />
-    <ClInclude Include="lib\jemalloc\internal\large_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\lockedint.h" />
-    <ClInclude Include="lib\jemalloc\internal\log.h" />
-    <ClInclude Include="lib\jemalloc\internal\malloc_io.h" />
-    <ClInclude Include="lib\jemalloc\internal\mpsc_queue.h" />
-    <ClInclude Include="lib\jemalloc\internal\mutex.h" />
-    <ClInclude Include="lib\jemalloc\internal\mutex_pool.h" />
-    <ClInclude Include="lib\jemalloc\internal\mutex_prof.h" />
-    <ClInclude Include="lib\jemalloc\internal\nstime.h" />
-    <ClInclude Include="lib\jemalloc\internal\pa.h" />
-    <ClInclude Include="lib\jemalloc\internal\pac.h" />
-    <ClInclude Include="lib\jemalloc\internal\pages.h" />
-    <ClInclude Include="lib\jemalloc\internal\pai.h" />
-    <ClInclude Include="lib\jemalloc\internal\peak.h" />
-    <ClInclude Include="lib\jemalloc\internal\peak_event.h" />
-    <ClInclude Include="lib\jemalloc\internal\ph.h" />
-    <ClInclude Include="lib\jemalloc\internal\private_namespace.gen.h" />
-    <ClInclude Include="lib\jemalloc\internal\private_namespace.h" />
-    <ClInclude Include="lib\jemalloc\internal\prng.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_data.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_hook.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines_a.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_inlines_b.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_log.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_recent.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_stats.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_sys.h" />
-    <ClInclude Include="lib\jemalloc\internal\prof_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\psset.h" />
-    <ClInclude Include="lib\jemalloc\internal\public_namespace.h" />
-    <ClInclude Include="lib\jemalloc\internal\public_unnamespace.h" />
-    <ClInclude Include="lib\jemalloc\internal\ql.h" />
-    <ClInclude Include="lib\jemalloc\internal\qr.h" />
-    <ClInclude Include="lib\jemalloc\internal\quantum.h" />
-    <ClInclude Include="lib\jemalloc\internal\rb.h" />
-    <ClInclude Include="lib\jemalloc\internal\rtree.h" />
-    <ClInclude Include="lib\jemalloc\internal\rtree_tsd.h" />
-    <ClInclude Include="lib\jemalloc\internal\safety_check.h" />
-    <ClInclude Include="lib\jemalloc\internal\san.h" />
-    <ClInclude Include="lib\jemalloc\internal\san_bump.h" />
-    <ClInclude Include="lib\jemalloc\internal\sc.h" />
-    <ClInclude Include="lib\jemalloc\internal\sec.h" />
-    <ClInclude Include="lib\jemalloc\internal\sec_opts.h" />
-    <ClInclude Include="lib\jemalloc\internal\seq.h" />
-    <ClInclude Include="lib\jemalloc\internal\slab_data.h" />
-    <ClInclude Include="lib\jemalloc\internal\smoothstep.h" />
-    <ClInclude Include="lib\jemalloc\internal\spin.h" />
-    <ClInclude Include="lib\jemalloc\internal\stats.h" />
-    <ClInclude Include="lib\jemalloc\internal\sz.h" />
-    <ClInclude Include="lib\jemalloc\internal\tcache_externs.h" />
-    <ClInclude Include="lib\jemalloc\internal\tcache_inlines.h" />
-    <ClInclude Include="lib\jemalloc\internal\tcache_structs.h" />
-    <ClInclude Include="lib\jemalloc\internal\tcache_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\test_hooks.h" />
-    <ClInclude Include="lib\jemalloc\internal\thread_event.h" />
-    <ClInclude Include="lib\jemalloc\internal\ticker.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd_generic.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd_malloc_thread_cleanup.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd_tls.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd_types.h" />
-    <ClInclude Include="lib\jemalloc\internal\tsd_win.h" />
-    <ClInclude Include="lib\jemalloc\internal\typed_list.h" />
-    <ClInclude Include="lib\jemalloc\internal\util.h" />
-    <ClInclude Include="lib\jemalloc\internal\witness.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_defs.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_macros.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_mangle.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_mangle_jet.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_protos.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_protos_jet.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_rename.h" />
-    <ClInclude Include="lib\jemalloc\jemalloc_typedefs.h" />
-    <ClInclude Include="lib\jemalloc\strings.h" />
-    <ClInclude Include="lib\jemalloc\windows_extra.h" />
     <ClInclude Include="lib\json.hpp" />
-    <ClInclude Include="lib\openssl\aes.h" />
-    <ClInclude Include="lib\openssl\asn1.h" />
-    <ClInclude Include="lib\openssl\asn1err.h" />
-    <ClInclude Include="lib\openssl\asn1t.h" />
-    <ClInclude Include="lib\openssl\async.h" />
-    <ClInclude Include="lib\openssl\asyncerr.h" />
-    <ClInclude Include="lib\openssl\bio.h" />
-    <ClInclude Include="lib\openssl\bioerr.h" />
-    <ClInclude Include="lib\openssl\blowfish.h" />
-    <ClInclude Include="lib\openssl\bn.h" />
-    <ClInclude Include="lib\openssl\bnerr.h" />
-    <ClInclude Include="lib\openssl\buffer.h" />
-    <ClInclude Include="lib\openssl\buffererr.h" />
-    <ClInclude Include="lib\openssl\byteorder.h" />
-    <ClInclude Include="lib\openssl\camellia.h" />
-    <ClInclude Include="lib\openssl\cast.h" />
-    <ClInclude Include="lib\openssl\cmac.h" />
-    <ClInclude Include="lib\openssl\cmp.h" />
-    <ClInclude Include="lib\openssl\cmperr.h" />
-    <ClInclude Include="lib\openssl\cmp_util.h" />
-    <ClInclude Include="lib\openssl\cms.h" />
-    <ClInclude Include="lib\openssl\cmserr.h" />
-    <ClInclude Include="lib\openssl\comp.h" />
-    <ClInclude Include="lib\openssl\comperr.h" />
-    <ClInclude Include="lib\openssl\conf.h" />
-    <ClInclude Include="lib\openssl\conferr.h" />
-    <ClInclude Include="lib\openssl\configuration.h" />
-    <ClInclude Include="lib\openssl\conftypes.h" />
-    <ClInclude Include="lib\openssl\conf_api.h" />
-    <ClInclude Include="lib\openssl\core.h" />
-    <ClInclude Include="lib\openssl\core_dispatch.h" />
-    <ClInclude Include="lib\openssl\core_names.h" />
-    <ClInclude Include="lib\openssl\core_object.h" />
-    <ClInclude Include="lib\openssl\crmf.h" />
-    <ClInclude Include="lib\openssl\crmferr.h" />
-    <ClInclude Include="lib\openssl\crypto.h" />
-    <ClInclude Include="lib\openssl\cryptoerr.h" />
-    <ClInclude Include="lib\openssl\cryptoerr_legacy.h" />
-    <ClInclude Include="lib\openssl\ct.h" />
-    <ClInclude Include="lib\openssl\cterr.h" />
-    <ClInclude Include="lib\openssl\decoder.h" />
-    <ClInclude Include="lib\openssl\decodererr.h" />
-    <ClInclude Include="lib\openssl\des.h" />
-    <ClInclude Include="lib\openssl\dh.h" />
-    <ClInclude Include="lib\openssl\dherr.h" />
-    <ClInclude Include="lib\openssl\dsa.h" />
-    <ClInclude Include="lib\openssl\dsaerr.h" />
-    <ClInclude Include="lib\openssl\dtls1.h" />
-    <ClInclude Include="lib\openssl\ebcdic.h" />
-    <ClInclude Include="lib\openssl\ec.h" />
-    <ClInclude Include="lib\openssl\ecdh.h" />
-    <ClInclude Include="lib\openssl\ecdsa.h" />
-    <ClInclude Include="lib\openssl\ecerr.h" />
-    <ClInclude Include="lib\openssl\encoder.h" />
-    <ClInclude Include="lib\openssl\encodererr.h" />
-    <ClInclude Include="lib\openssl\engine.h" />
-    <ClInclude Include="lib\openssl\engineerr.h" />
-    <ClInclude Include="lib\openssl\err.h" />
-    <ClInclude Include="lib\openssl\ess.h" />
-    <ClInclude Include="lib\openssl\esserr.h" />
-    <ClInclude Include="lib\openssl\evp.h" />
-    <ClInclude Include="lib\openssl\evperr.h" />
-    <ClInclude Include="lib\openssl\e_os2.h" />
-    <ClInclude Include="lib\openssl\e_ostime.h" />
-    <ClInclude Include="lib\openssl\fipskey.h" />
-    <ClInclude Include="lib\openssl\fips_names.h" />
-    <ClInclude Include="lib\openssl\hmac.h" />
-    <ClInclude Include="lib\openssl\hpke.h" />
-    <ClInclude Include="lib\openssl\http.h" />
-    <ClInclude Include="lib\openssl\httperr.h" />
-    <ClInclude Include="lib\openssl\idea.h" />
-    <ClInclude Include="lib\openssl\indicator.h" />
-    <ClInclude Include="lib\openssl\kdf.h" />
-    <ClInclude Include="lib\openssl\kdferr.h" />
-    <ClInclude Include="lib\openssl\lhash.h" />
-    <ClInclude Include="lib\openssl\macros.h" />
-    <ClInclude Include="lib\openssl\md2.h" />
-    <ClInclude Include="lib\openssl\md4.h" />
-    <ClInclude Include="lib\openssl\md5.h" />
-    <ClInclude Include="lib\openssl\mdc2.h" />
-    <ClInclude Include="lib\openssl\ml_kem.h" />
-    <ClInclude Include="lib\openssl\modes.h" />
-    <ClInclude Include="lib\openssl\objects.h" />
-    <ClInclude Include="lib\openssl\objectserr.h" />
-    <ClInclude Include="lib\openssl\obj_mac.h" />
-    <ClInclude Include="lib\openssl\ocsp.h" />
-    <ClInclude Include="lib\openssl\ocsperr.h" />
-    <ClInclude Include="lib\openssl\opensslconf.h" />
-    <ClInclude Include="lib\openssl\opensslv.h" />
-    <ClInclude Include="lib\openssl\ossl_typ.h" />
-    <ClInclude Include="lib\openssl\params.h" />
-    <ClInclude Include="lib\openssl\param_build.h" />
-    <ClInclude Include="lib\openssl\pem.h" />
-    <ClInclude Include="lib\openssl\pem2.h" />
-    <ClInclude Include="lib\openssl\pemerr.h" />
-    <ClInclude Include="lib\openssl\pkcs12.h" />
-    <ClInclude Include="lib\openssl\pkcs12err.h" />
-    <ClInclude Include="lib\openssl\pkcs7.h" />
-    <ClInclude Include="lib\openssl\pkcs7err.h" />
-    <ClInclude Include="lib\openssl\proverr.h" />
-    <ClInclude Include="lib\openssl\provider.h" />
-    <ClInclude Include="lib\openssl\prov_ssl.h" />
-    <ClInclude Include="lib\openssl\quic.h" />
-    <ClInclude Include="lib\openssl\rand.h" />
-    <ClInclude Include="lib\openssl\randerr.h" />
-    <ClInclude Include="lib\openssl\rc2.h" />
-    <ClInclude Include="lib\openssl\rc4.h" />
-    <ClInclude Include="lib\openssl\rc5.h" />
-    <ClInclude Include="lib\openssl\ripemd.h" />
-    <ClInclude Include="lib\openssl\rsa.h" />
-    <ClInclude Include="lib\openssl\rsaerr.h" />
-    <ClInclude Include="lib\openssl\safestack.h" />
-    <ClInclude Include="lib\openssl\seed.h" />
-    <ClInclude Include="lib\openssl\self_test.h" />
-    <ClInclude Include="lib\openssl\sha.h" />
-    <ClInclude Include="lib\openssl\srp.h" />
-    <ClInclude Include="lib\openssl\srtp.h" />
-    <ClInclude Include="lib\openssl\ssl.h" />
-    <ClInclude Include="lib\openssl\ssl2.h" />
-    <ClInclude Include="lib\openssl\ssl3.h" />
-    <ClInclude Include="lib\openssl\sslerr.h" />
-    <ClInclude Include="lib\openssl\sslerr_legacy.h" />
-    <ClInclude Include="lib\openssl\stack.h" />
-    <ClInclude Include="lib\openssl\store.h" />
-    <ClInclude Include="lib\openssl\storeerr.h" />
-    <ClInclude Include="lib\openssl\symhacks.h" />
-    <ClInclude Include="lib\openssl\thread.h" />
-    <ClInclude Include="lib\openssl\tls1.h" />
-    <ClInclude Include="lib\openssl\trace.h" />
-    <ClInclude Include="lib\openssl\ts.h" />
-    <ClInclude Include="lib\openssl\tserr.h" />
-    <ClInclude Include="lib\openssl\txt_db.h" />
-    <ClInclude Include="lib\openssl\types.h" />
-    <ClInclude Include="lib\openssl\ui.h" />
-    <ClInclude Include="lib\openssl\uierr.h" />
-    <ClInclude Include="lib\openssl\whrlpool.h" />
-    <ClInclude Include="lib\openssl\x509.h" />
-    <ClInclude Include="lib\openssl\x509err.h" />
-    <ClInclude Include="lib\openssl\x509v3.h" />
-    <ClInclude Include="lib\openssl\x509v3err.h" />
-    <ClInclude Include="lib\openssl\x509_acert.h" />
-    <ClInclude Include="lib\openssl\x509_vfy.h" />
-    <ClInclude Include="lib\openssl\__DECC_INCLUDE_EPILOGUE.H" />
-    <ClInclude Include="lib\openssl\__DECC_INCLUDE_PROLOGUE.H" />
-    <ClInclude Include="lib\re2\filtered_re2.h" />
-    <ClInclude Include="lib\re2\re2.h" />
-    <ClInclude Include="lib\re2\set.h" />
-    <ClInclude Include="lib\re2\stringpiece.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="lib\magic_enum\magic_enum.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_all.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_containers.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_flags.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_format.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_fuse.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_iostream.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_switch.hpp" />
-    <ClInclude Include="lib\magic_enum\magic_enum_utility.hpp" />
-    <ClInclude Include="lib\MemoryPool\MemoryPool.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc-override.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc-stats.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\atomic.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\bits.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\internal.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\prim.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\track.h" />
+    <ClInclude Include="lib\minmalloc\mimalloc\types.h" />
     <ClInclude Include="lib\opencv2\calib3d.hpp" />
     <ClInclude Include="lib\opencv2\calib3d\calib3d.hpp" />
     <ClInclude Include="lib\opencv2\calib3d\calib3d_c.h" />
@@ -1044,15 +688,12 @@
     <ClInclude Include="lib\opencv2\core\hal\intrin_cpp.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_forward.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_lasx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_legacy_ops.h" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_lsx.hpp" />
+    <ClInclude Include="lib\opencv2\core\hal\intrin_math.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_msa.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_neon.hpp" />
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_rvv071.hpp" />
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_non-policy.hpp" />
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_010_compat_overloaded-non-policy.hpp" />
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_011_compat.hpp" />
-    <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_compat_overloaded.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_rvv_scalable.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_sse.hpp" />
     <ClInclude Include="lib\opencv2\core\hal\intrin_sse_em.hpp" />
@@ -1146,7 +787,6 @@
     <ClInclude Include="lib\opencv2\flann\flann_base.hpp" />
     <ClInclude Include="lib\opencv2\flann\general.h" />
     <ClInclude Include="lib\opencv2\flann\ground_truth.h" />
-    <ClInclude Include="lib\opencv2\flann\hdf5.h" />
     <ClInclude Include="lib\opencv2\flann\heap.h" />
     <ClInclude Include="lib\opencv2\flann\hierarchical_clustering_index.h" />
     <ClInclude Include="lib\opencv2\flann\index_testing.h" />
@@ -1319,7 +959,6 @@
     <ClInclude Include="lib\opencv2\stitching\warpers.hpp" />
     <ClInclude Include="lib\opencv2\video.hpp" />
     <ClInclude Include="lib\opencv2\videoio.hpp" />
-    <ClInclude Include="lib\opencv2\videoio\cap_ios.h" />
     <ClInclude Include="lib\opencv2\videoio\legacy\constants_c.h" />
     <ClInclude Include="lib\opencv2\videoio\registry.hpp" />
     <ClInclude Include="lib\opencv2\videoio\videoio.hpp" />
@@ -1330,6 +969,165 @@
     <ClInclude Include="lib\opencv2\video\tracking.hpp" />
     <ClInclude Include="lib\opencv2\video\video.hpp" />
     <ClInclude Include="lib\opencv2\world.hpp" />
+    <ClInclude Include="lib\openssl\aes.h" />
+    <ClInclude Include="lib\openssl\asn1.h" />
+    <ClInclude Include="lib\openssl\asn1err.h" />
+    <ClInclude Include="lib\openssl\asn1t.h" />
+    <ClInclude Include="lib\openssl\async.h" />
+    <ClInclude Include="lib\openssl\asyncerr.h" />
+    <ClInclude Include="lib\openssl\bio.h" />
+    <ClInclude Include="lib\openssl\bioerr.h" />
+    <ClInclude Include="lib\openssl\blowfish.h" />
+    <ClInclude Include="lib\openssl\bn.h" />
+    <ClInclude Include="lib\openssl\bnerr.h" />
+    <ClInclude Include="lib\openssl\buffer.h" />
+    <ClInclude Include="lib\openssl\buffererr.h" />
+    <ClInclude Include="lib\openssl\byteorder.h" />
+    <ClInclude Include="lib\openssl\camellia.h" />
+    <ClInclude Include="lib\openssl\cast.h" />
+    <ClInclude Include="lib\openssl\cmac.h" />
+    <ClInclude Include="lib\openssl\cmp.h" />
+    <ClInclude Include="lib\openssl\cmperr.h" />
+    <ClInclude Include="lib\openssl\cmp_util.h" />
+    <ClInclude Include="lib\openssl\cms.h" />
+    <ClInclude Include="lib\openssl\cmserr.h" />
+    <ClInclude Include="lib\openssl\comp.h" />
+    <ClInclude Include="lib\openssl\comperr.h" />
+    <ClInclude Include="lib\openssl\conf.h" />
+    <ClInclude Include="lib\openssl\conferr.h" />
+    <ClInclude Include="lib\openssl\configuration.h" />
+    <ClInclude Include="lib\openssl\conftypes.h" />
+    <ClInclude Include="lib\openssl\conf_api.h" />
+    <ClInclude Include="lib\openssl\core.h" />
+    <ClInclude Include="lib\openssl\core_dispatch.h" />
+    <ClInclude Include="lib\openssl\core_names.h" />
+    <ClInclude Include="lib\openssl\core_object.h" />
+    <ClInclude Include="lib\openssl\crmf.h" />
+    <ClInclude Include="lib\openssl\crmferr.h" />
+    <ClInclude Include="lib\openssl\crypto.h" />
+    <ClInclude Include="lib\openssl\cryptoerr.h" />
+    <ClInclude Include="lib\openssl\cryptoerr_legacy.h" />
+    <ClInclude Include="lib\openssl\ct.h" />
+    <ClInclude Include="lib\openssl\cterr.h" />
+    <ClInclude Include="lib\openssl\decoder.h" />
+    <ClInclude Include="lib\openssl\decodererr.h" />
+    <ClInclude Include="lib\openssl\des.h" />
+    <ClInclude Include="lib\openssl\dh.h" />
+    <ClInclude Include="lib\openssl\dherr.h" />
+    <ClInclude Include="lib\openssl\dsa.h" />
+    <ClInclude Include="lib\openssl\dsaerr.h" />
+    <ClInclude Include="lib\openssl\dtls1.h" />
+    <ClInclude Include="lib\openssl\ebcdic.h" />
+    <ClInclude Include="lib\openssl\ec.h" />
+    <ClInclude Include="lib\openssl\ecdh.h" />
+    <ClInclude Include="lib\openssl\ecdsa.h" />
+    <ClInclude Include="lib\openssl\ecerr.h" />
+    <ClInclude Include="lib\openssl\encoder.h" />
+    <ClInclude Include="lib\openssl\encodererr.h" />
+    <ClInclude Include="lib\openssl\engine.h" />
+    <ClInclude Include="lib\openssl\engineerr.h" />
+    <ClInclude Include="lib\openssl\err.h" />
+    <ClInclude Include="lib\openssl\ess.h" />
+    <ClInclude Include="lib\openssl\esserr.h" />
+    <ClInclude Include="lib\openssl\evp.h" />
+    <ClInclude Include="lib\openssl\evperr.h" />
+    <ClInclude Include="lib\openssl\e_os2.h" />
+    <ClInclude Include="lib\openssl\e_ostime.h" />
+    <ClInclude Include="lib\openssl\fipskey.h" />
+    <ClInclude Include="lib\openssl\fips_names.h" />
+    <ClInclude Include="lib\openssl\hmac.h" />
+    <ClInclude Include="lib\openssl\hpke.h" />
+    <ClInclude Include="lib\openssl\http.h" />
+    <ClInclude Include="lib\openssl\httperr.h" />
+    <ClInclude Include="lib\openssl\idea.h" />
+    <ClInclude Include="lib\openssl\indicator.h" />
+    <ClInclude Include="lib\openssl\kdf.h" />
+    <ClInclude Include="lib\openssl\kdferr.h" />
+    <ClInclude Include="lib\openssl\lhash.h" />
+    <ClInclude Include="lib\openssl\macros.h" />
+    <ClInclude Include="lib\openssl\md2.h" />
+    <ClInclude Include="lib\openssl\md4.h" />
+    <ClInclude Include="lib\openssl\md5.h" />
+    <ClInclude Include="lib\openssl\mdc2.h" />
+    <ClInclude Include="lib\openssl\ml_kem.h" />
+    <ClInclude Include="lib\openssl\modes.h" />
+    <ClInclude Include="lib\openssl\objects.h" />
+    <ClInclude Include="lib\openssl\objectserr.h" />
+    <ClInclude Include="lib\openssl\obj_mac.h" />
+    <ClInclude Include="lib\openssl\ocsp.h" />
+    <ClInclude Include="lib\openssl\ocsperr.h" />
+    <ClInclude Include="lib\openssl\opensslconf.h" />
+    <ClInclude Include="lib\openssl\opensslv.h" />
+    <ClInclude Include="lib\openssl\ossl_typ.h" />
+    <ClInclude Include="lib\openssl\params.h" />
+    <ClInclude Include="lib\openssl\param_build.h" />
+    <ClInclude Include="lib\openssl\pem.h" />
+    <ClInclude Include="lib\openssl\pem2.h" />
+    <ClInclude Include="lib\openssl\pemerr.h" />
+    <ClInclude Include="lib\openssl\pkcs12.h" />
+    <ClInclude Include="lib\openssl\pkcs12err.h" />
+    <ClInclude Include="lib\openssl\pkcs7.h" />
+    <ClInclude Include="lib\openssl\pkcs7err.h" />
+    <ClInclude Include="lib\openssl\proverr.h" />
+    <ClInclude Include="lib\openssl\provider.h" />
+    <ClInclude Include="lib\openssl\prov_ssl.h" />
+    <ClInclude Include="lib\openssl\quic.h" />
+    <ClInclude Include="lib\openssl\rand.h" />
+    <ClInclude Include="lib\openssl\randerr.h" />
+    <ClInclude Include="lib\openssl\rc2.h" />
+    <ClInclude Include="lib\openssl\rc4.h" />
+    <ClInclude Include="lib\openssl\rc5.h" />
+    <ClInclude Include="lib\openssl\ripemd.h" />
+    <ClInclude Include="lib\openssl\rsa.h" />
+    <ClInclude Include="lib\openssl\rsaerr.h" />
+    <ClInclude Include="lib\openssl\safestack.h" />
+    <ClInclude Include="lib\openssl\seed.h" />
+    <ClInclude Include="lib\openssl\self_test.h" />
+    <ClInclude Include="lib\openssl\sha.h" />
+    <ClInclude Include="lib\openssl\srp.h" />
+    <ClInclude Include="lib\openssl\srtp.h" />
+    <ClInclude Include="lib\openssl\ssl.h" />
+    <ClInclude Include="lib\openssl\ssl2.h" />
+    <ClInclude Include="lib\openssl\ssl3.h" />
+    <ClInclude Include="lib\openssl\sslerr.h" />
+    <ClInclude Include="lib\openssl\sslerr_legacy.h" />
+    <ClInclude Include="lib\openssl\stack.h" />
+    <ClInclude Include="lib\openssl\store.h" />
+    <ClInclude Include="lib\openssl\storeerr.h" />
+    <ClInclude Include="lib\openssl\symhacks.h" />
+    <ClInclude Include="lib\openssl\thread.h" />
+    <ClInclude Include="lib\openssl\tls1.h" />
+    <ClInclude Include="lib\openssl\trace.h" />
+    <ClInclude Include="lib\openssl\ts.h" />
+    <ClInclude Include="lib\openssl\tserr.h" />
+    <ClInclude Include="lib\openssl\txt_db.h" />
+    <ClInclude Include="lib\openssl\types.h" />
+    <ClInclude Include="lib\openssl\ui.h" />
+    <ClInclude Include="lib\openssl\uierr.h" />
+    <ClInclude Include="lib\openssl\whrlpool.h" />
+    <ClInclude Include="lib\openssl\x509.h" />
+    <ClInclude Include="lib\openssl\x509err.h" />
+    <ClInclude Include="lib\openssl\x509v3.h" />
+    <ClInclude Include="lib\openssl\x509v3err.h" />
+    <ClInclude Include="lib\openssl\x509_acert.h" />
+    <ClInclude Include="lib\openssl\x509_vfy.h" />
+    <ClInclude Include="lib\openssl\__DECC_INCLUDE_EPILOGUE.H" />
+    <ClInclude Include="lib\openssl\__DECC_INCLUDE_PROLOGUE.H" />
+    <ClInclude Include="lib\re2\filtered_re2.h" />
+    <ClInclude Include="lib\re2\re2.h" />
+    <ClInclude Include="lib\re2\set.h" />
+    <ClInclude Include="lib\re2\stringpiece.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="lib\magic_enum\magic_enum.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_all.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_containers.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_flags.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_format.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_fuse.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_iostream.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_switch.hpp" />
+    <ClInclude Include="lib\magic_enum\magic_enum_utility.hpp" />
+    <ClInclude Include="lib\MemoryPool\MemoryPool.h" />
     <ClInclude Include="lib\parallel_hashmap\btree.h" />
     <ClInclude Include="lib\parallel_hashmap\meminfo.h" />
     <ClInclude Include="lib\parallel_hashmap\phmap.h" />

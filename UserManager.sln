@@ -5,8 +5,6 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserManager", "UserManager\UserManager.vcxproj", "{223FE908-F0AB-4932-8885-9B260D13692F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Daemon", "Daemon\Daemon.vcxproj", "{E71364AE-F8FA-4947-8792-0D625A825B1C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,14 +21,6 @@ Global
 		{223FE908-F0AB-4932-8885-9B260D13692F}.Release|Any CPU.Build.0 = Release|x64
 		{223FE908-F0AB-4932-8885-9B260D13692F}.Release|x64.ActiveCfg = Release|x64
 		{223FE908-F0AB-4932-8885-9B260D13692F}.Release|x64.Build.0 = Release|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Debug|Any CPU.Build.0 = Debug|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Debug|x64.ActiveCfg = Debug|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Debug|x64.Build.0 = Debug|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Release|Any CPU.ActiveCfg = Release|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Release|Any CPU.Build.0 = Release|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Release|x64.ActiveCfg = Release|x64
-		{E71364AE-F8FA-4947-8792-0D625A825B1C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

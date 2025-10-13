@@ -38,3 +38,11 @@
 /Debug-x64/BuildTemp
 /Debug-x64/logs
 /Release-x64/BuildTemp
+/Release-x64/logs
+*.pdb
+*.map
+*.pdb
+*.exp
+Debug-x64/Server.exp
+Debug-x64/Server.map
+/Debug-x64

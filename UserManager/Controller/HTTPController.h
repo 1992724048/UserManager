@@ -46,7 +46,7 @@ namespace httplib {
 
         static auto registerMethod() -> void {
             const Service& instance = Service::Instance();
-            std::ifstream file(util::AppPath() / "url.json", std::ios::in);
+            std::ifstream file(util::app_path() / "url.json", std::ios::in);
             if (file) {
                 file >> api_json;
                 file.close();
@@ -60,11 +60,6 @@ namespace httplib {
                 }
 
                 auto lambda = [&](const Request& req, Response& res) {
-                    if (!Service::rate_limiter.allow_request(req.remote_addr)) {
-                        res.status = 429;
-                        return;
-                    }
-
                     if (controller.request == NOACCESS) {
                         LOG_CRIT << fmt::format("{}:{} 访问禁止访问资源!", req.remote_addr, req.remote_port);
                         res.status = 403;
@@ -96,7 +91,7 @@ namespace httplib {
                 }
             }
 
-            std::ofstream file_out(util::AppPath() / "url.json", std::ios::out);
+            std::ofstream file_out(util::app_path() / "url.json", std::ios::out);
             file_out << api_json;
             file_out.close();
         }
@@ -107,7 +102,7 @@ namespace httplib {
                 controllers[name].request = type;
             }
 
-            std::ofstream file_out(util::AppPath() / "url.json", std::ios::out);
+            std::ofstream file_out(util::app_path() / "url.json", std::ios::out);
             file_out << api_json;
             file_out.close();
         }
