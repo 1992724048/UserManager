@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统终端</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+</head>
+<style>
+    @font-face {
+        font-family: StarRail;
+        src: url('/res/font/zh-cn.woff2');
+    }
+    * {
+        cursor: url('/res/image/webview_cursor_default.png'), auto;
+        font-family: StarRail, serif;
+    }
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3F9EFF;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(22, 79, 250);
+    }
+    .font-mono {
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .whitespace-pre-wrap {
+        white-space: pre-wrap;
+    }
+    input::placeholder {
+        color: #718096;
+    }
+</style>
+<body class="bg-gray-100 size-full select-none p-2! pb-0! pt-16! w-full">
+    <div id="app">
+        <div class="flex flex-col h-[calc(100vh-70px)]">
+            <!-- 输出区域 -->
+            <div ref="outputContainer" class="flex-1 bg-black text-white p-4 overflow-y-auto font-mono">
+                <div v-for="(item, index) in history" :key="index" class="mb-4">
+                    <div class="text-green-400">$ {{ item.command }}</div>
+                    <pre class="text-gray-300 whitespace-pre-wrap" v-if="item.output">{{ item.output }}</pre>
+                    <pre class="text-red-400 whitespace-pre-wrap" v-if="item.error">{{ item.error }}</pre>
+                </div>
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="bg-black p-4 flex items-center border-t border-gray-700">
+                <span class="text-green-400 mr-2">$</span>
+                <input 
+                    v-model.trim="currentCommand"
+                    @keyup.enter="executeCommand"
+                    placeholder="输入PowerShell命令..."
+                    class="flex-1 bg-transparent text-white focus:outline-none"
+                >
+            </div>
+        </div>
+    </div>
+    
+    <!-- 鼠标点击音效 -->
+    <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+
+    <script>
+        const { createApp } = Vue;
+        const app = createApp({
+            data() {
+                return {
+                    history: [],
+                    currentCommand: ''
+                }
+            },
+            methods: {
+                async executeCommand() {
+                    if (!this.currentCommand.trim()) return;
+                    if (this.currentCommand === 'clear') {
+                        this.history = [];
+                        this.currentCommand = '';
+                    }
+
+                    // 添加一条历史记录项，初始化输出为空
+                    this.history.push({
+                        command: this.currentCommand,
+                        output: '',
+                        error: null
+                    });
+                    const historyIndex = this.history.length - 1;
+                    try {
+                        const response = await fetch('/api/command', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ command: this.currentCommand })
+                        });
+                        // 根据 Content-Type 判断返回是否为 JSON（错误时）或者是流式文本输出
+                        const contentType = response.headers.get("Content-Type");
+                        if (contentType && contentType.includes("application/json")) {
+                            // 如果返回 JSON，则直接处理错误或输出内容
+                            const json = await response.json();
+                            this.history[historyIndex].error = json.error;
+                            this.history[historyIndex].output = json.output;
+                        } else {
+                            // 流式读取输出
+                            const reader = response.body.getReader();
+                            const decoder = new TextDecoder();
+                            let output = "";
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+                                output += decoder.decode(value, { stream: true });
+                                // 实时更新当前命令的输出
+                                this.history[historyIndex].output = output;
+                            }
+                        }
+                        this.currentCommand = '';
+                        // 滚动到底部显示最新输出
+                        this.$nextTick(() => {
+                            const container = this.$refs.outputContainer;
+                            container.scrollTop = container.scrollHeight;
+                        });
+                    } catch (error) {
+                        ElementPlus.ElMessage.error({
+                            message: '请求失败: ' + error.message,
+                            offset: 80
+                        });
+                    }
+                }
+            },
+            mounted() {
+                this.history.push({
+                    command: '注意!',
+                    output: '每次执行命令都会创建一个新的PowerShell，因此该终端不支持命令历史记录，例如cd命令不支持下文使用。',
+                    error: null
+                });
+                this.history.push({
+                    command: '使用方式:',
+                    output: '输入命令后，按回车键执行。',
+                    error: null
+                });
+            }
+        });
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+</html>

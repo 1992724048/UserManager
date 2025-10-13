@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "browser",
+            "name": "Edge",
+            "url": "https://localhost/WEB/",
+               "browserKind": "edge"
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助手册</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+    <style>
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="p-2 mt-15!">
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+</body>
+
+<script>
+    const app = Vue.createApp({
+
+    });
+
+    app.use(ElementPlus);
+    app.mount('#app');
+</script>
+
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>用户管理</title>
+
+    <!-- 引入样式库 -->
+    <script src="/res/js/tailwind.js"></script>
+
+    <!-- 引入脚本库 -->
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+
+    <style>
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+
+        .el-form--inline .el-form-item {
+            display: inline-flex;
+            margin-right: 5px;
+            vertical-align: middle;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 size-full select-none p-2! pb-0! pt-14! w-full">
+    <div id="app" class="w-full">
+        <div class="w-full mb-0!">
+            <div class="w-auto mb-0! rounded p-3 pb-1! pl-0 flex">
+                <div class="bg-white flex p-3 rounded mr-1">
+                    <el-button type="primary" @click="refreshUserList"
+                        class="text-sm px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <el-icon style="vertical-align: middle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                <path
+                                    d="M16 4C9.382813 4 4 9.382813 4 16L6 16C6 10.484375 10.484375 6 16 6C19.695313 6 22.925781 8.011719 24.65625 11L21 11L21 13L28 13L28 6L26 6L26 9.40625C23.855469 6.152344 20.179688 4 16 4 Z M 26 16C26 21.515625 21.515625 26 16 26C12.304688 26 9.074219 23.988281 7.34375 21L11 21L11 19L4 19L4 26L6 26L6 22.59375C8.144531 25.847656 11.820313 28 16 28C22.617188 28 28 22.617188 28 16Z" />
+                            </svg>
+                        </el-icon>
+                        <span style="vertical-align: middle">刷新表格</span>
+                    </el-button>
+                </div>
+
+                <div class="bg-white flex p-3 rounded mr-1">
+                    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+                        <el-form-item label="">
+                            <el-input v-model="searchForm.username" placeholder="用户名" class="w-[120px]">
+                                <template #prefix>
+                                    <el-icon class="el-input__icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M16 5C12.144531 5 9 8.144531 9 12C9 14.410156 10.230469 16.550781 12.09375 17.8125C8.527344 19.34375 6 22.882813 6 27L8 27C8 24.109375 9.527344 21.59375 11.8125 20.1875C12.484375 21.835938 14.121094 23 16 23C17.878906 23 19.515625 21.835938 20.1875 20.1875C22.472656 21.59375 24 24.109375 24 27L26 27C26 22.882813 23.472656 19.34375 19.90625 17.8125C21.769531 16.550781 23 14.410156 23 12C23 8.144531 19.855469 5 16 5 Z M 16 7C18.773438 7 21 9.226563 21 12C21 14.773438 18.773438 17 16 17C13.226563 17 11 14.773438 11 12C11 9.226563 13.226563 7 16 7 Z M 16 19C16.820313 19 17.601563 19.117188 18.34375 19.34375C17.996094 20.308594 17.089844 21 16 21C14.910156 21 14.003906 20.308594 13.65625 19.34375C14.398438 19.117188 15.179688 19 16 19Z" />
+                                        </svg>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="searchUser">
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M19 3C13.488281 3 9 7.488281 9 13C9 15.394531 9.839844 17.589844 11.25 19.3125L3.28125 27.28125L4.71875 28.71875L12.6875 20.75C14.410156 22.160156 16.605469 23 19 23C24.511719 23 29 18.511719 29 13C29 7.488281 24.511719 3 19 3 Z M 19 5C23.429688 5 27 8.570313 27 13C27 17.429688 23.429688 21 19 21C14.570313 21 11 17.429688 11 13C11 8.570313 14.570313 5 19 5Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">搜索</span>
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+
+                <div class="bg-white flex p-3 rounded mr-1">
+                    <el-form :inline="true" :model="newUser" class="demo-form-inline">
+                        <el-form-item label="">
+                            <el-input v-model="newUser.username" placeholder="用户名" class="w-[120px]">
+                                <template #prefix>
+                                    <el-icon class="el-input__icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M16 5C12.144531 5 9 8.144531 9 12C9 14.410156 10.230469 16.550781 12.09375 17.8125C8.527344 19.34375 6 22.882813 6 27L8 27C8 24.109375 9.527344 21.59375 11.8125 20.1875C12.484375 21.835938 14.121094 23 16 23C17.878906 23 19.515625 21.835938 20.1875 20.1875C22.472656 21.59375 24 24.109375 24 27L26 27C26 22.882813 23.472656 19.34375 19.90625 17.8125C21.769531 16.550781 23 14.410156 23 12C23 8.144531 19.855469 5 16 5 Z M 16 7C18.773438 7 21 9.226563 21 12C21 14.773438 18.773438 17 16 17C13.226563 17 11 14.773438 11 12C11 9.226563 13.226563 7 16 7 Z M 16 19C16.820313 19 17.601563 19.117188 18.34375 19.34375C17.996094 20.308594 17.089844 21 16 21C14.910156 21 14.003906 20.308594 13.65625 19.34375C14.398438 19.117188 15.179688 19 16 19Z" />
+                                        </svg>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item label="">
+                            <el-input v-model="newUser.password" placeholder="密码" class="w-[120px]">
+                                <template #prefix>
+                                    <el-icon class="el-input__icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M16 3C12.144531 3 9 6.144531 9 10L9 13L6 13L6 29L26 29L26 13L23 13L23 10C23 6.144531 19.855469 3 16 3 Z M 16 5C18.773438 5 21 7.226563 21 10L21 13L11 13L11 10C11 7.226563 13.226563 5 16 5 Z M 8 15L24 15L24 27L8 27 Z M 12 20C11.449219 20 11 20.449219 11 21C11 21.550781 11.449219 22 12 22C12.550781 22 13 21.550781 13 21C13 20.449219 12.550781 20 12 20 Z M 16 20C15.449219 20 15 20.449219 15 21C15 21.550781 15.449219 22 16 22C16.550781 22 17 21.550781 17 21C17 20.449219 16.550781 20 16 20 Z M 20 20C19.449219 20 19 20.449219 19 21C19 21.550781 19.449219 22 20 22C20.550781 22 21 21.550781 21 21C21 20.449219 20.550781 20 20 20Z" />
+                                        </svg>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button type="success" @click="createNewUser">
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M4 5L4 27L16.59375 27C17.789063 29.917969 20.660156 32 24 32C28.40625 32 32 28.40625 32 24C32 21.050781 30.386719 18.480469 28 17.09375L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 16.28125C25.355469 16.113281 24.695313 16 24 16C21.984375 16 20.128906 16.761719 18.71875 18L13 18L13 20L17.09375 20C16.40625 21.179688 16 22.542969 16 24C16 24.339844 16.019531 24.667969 16.0625 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 23 20L23 23L20 23L20 25L23 25L23 28L25 28L25 25L28 25L28 23L25 23L25 20Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">添加用户</span>
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full! m-4 mt-0! ml-0 p-4 bg-white rounded">
+            <div class="w-full! mb-4 flex justify-between items-center">
+                <div class="flex w-full! items-center">
+                    <el-button :disabled="pagination.currentPage === 1" @click="goToPreviousPage">上一页</el-button>
+                    <span class="mx-2 text-sm text-center">第
+                        <el-input v-model="pagination.currentPage" class="w-[80px]!" placeholder="页数"></el-input>
+                        页，共 {{ pagination.totalPages }} 页</span>
+                    <el-button :disabled="pagination.currentPage === pagination.totalPages"
+                        @click="goToNextPage">下一页</el-button>
+                    <span class="mx-2 text-sm text-center flex w-auto items-center">
+                        <el-input v-model="pagination.pageSize" class="w-[60px]!" placeholder="数量"></el-input>
+                        /页
+                    </span>
+                </div>
+                <div class="text-sm text-end w-100">总记录数：{{ pagination.totalUsers }}</div>
+            </div>
+
+            <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+
+            <div class="h-[calc(100vh-240px)] overflow-y-auto">
+                <el-table :data="userList" style="width: 100%" stripe height="100%">
+                    <el-table-column prop="username" label="用户名" align="center">
+                        <template #default="scope">
+                            <div class="whitespace-nowrap select-text">{{ scope.row.username }}</div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="password" label="密码" align="center">
+                        <template #default="scope">
+                            <div class="whitespace-nowrap select-text">{{ scope.row.password }}</div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="是否封禁" align="center">
+                        <template #default="scope">
+                            <el-tag v-if="scope.row.is_ban" type="danger">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M7.21875 5.78125L5.78125 7.21875L14.5625 16L5.78125 24.78125L7.21875 26.21875L16 17.4375L24.78125 26.21875L26.21875 24.78125L17.4375 16L26.21875 7.21875L24.78125 5.78125L16 14.5625Z" />
+                                    </svg>
+                                </el-icon>
+                                封禁
+                            </el-tag>
+                            <el-tag v-else type="success">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M28.28125 6.28125L11 23.5625L3.71875 16.28125L2.28125 17.71875L10.28125 25.71875L11 26.40625L11.71875 25.71875L29.71875 7.71875Z" />
+                                    </svg>
+                                </el-icon>
+                                正常
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="创建时间" align="center">
+                        <template #default="scope">
+                            <div style="display: flex; align-items: center;" class="justify-center">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                    </svg>
+                                </el-icon>
+                                {{ formatTimestamp(scope.row.create_time) }}
+                            </div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="操作" align="center">
+                        <template #default="scope">
+                            <el-button size="small" @click="editUser(scope.row)" type="primary" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M4 5L4 27L17.0625 27L16.375 30.46875L16.0625 31.9375L17.53125 31.625L21.0625 30.9375L21.375 30.875L31.125 21.125C32.285156 19.964844 32.285156 18.035156 31.125 16.875C30.542969 16.292969 29.769531 16 29 16C28.65625 16 28.328125 16.070313 28 16.1875L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 17.75L18.75 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 13 18L13 20L19 20L19 18 Z M 29 18C29.253906 18 29.519531 18.082031 29.71875 18.28125C30.117188 18.679688 30.117188 19.289063 29.71875 19.6875L20.375 29.03125L18.59375 29.40625L18.96875 27.625L28.3125 18.28125C28.511719 18.082031 28.746094 18 29 18Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">修改</span>
+                            </el-button>
+
+                            <el-popconfirm width="220" icon-color="#626AEF" title="确定要删除该用户吗? (会删除与应用关联的一切数据)" confirm-button-text="确定"
+                                cancel-button-text="取消" @confirm="deleteUser(scope.row.username)" @cancel="">
+                                <template #reference>
+                                    <el-button size="small" type="danger" plain>
+                                        <el-icon style="vertical-align: middle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                                <path
+                                                    d="M4 5L4 27L16.59375 27C17.789063 29.917969 20.660156 32 24 32C28.40625 32 32 28.40625 32 24C32 21.050781 30.386719 18.480469 28 17.09375L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 16.28125C25.355469 16.113281 24.695313 16 24 16C21.984375 16 20.128906 16.761719 18.71875 18L13 18L13 20L17.09375 20C16.40625 21.179688 16 22.542969 16 24C16 24.339844 16.019531 24.667969 16.0625 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 21.71875 20.28125L20.28125 21.71875L22.5625 24L20.28125 26.28125L21.71875 27.71875L24 25.4375L26.28125 27.71875L27.71875 26.28125L25.4375 24L27.71875 21.71875L26.28125 20.28125L24 22.5625Z" />
+                                            </svg>
+                                        </el-icon>
+                                        <span style="vertical-align: middle">删除</span>
+                                    </el-button>
+                                </template>
+                            </el-popconfirm>
+
+                            <el-button v-if="scope.row.is_ban" size="small" type="success" @click="banUser(scope.row)"
+                                plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16L27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5C19.875 5 23.261719 6.984375 25.21875 10L20 10L20 12L28 12L28 4L26 4L26 7.71875C23.617188 4.84375 20.019531 3 16 3Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">解封</span>
+                            </el-button>
+
+                            <el-button v-else size="small" type="warning" @click="banUser(scope.row)" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16C29 8.832031 23.167969 3 16 3 Z M 16 5C22.085938 5 27 9.914063 27 16C27 18.726563 26.011719 21.207031 24.375 23.125L9.03125 7.46875C10.925781 5.917969 13.351563 5 16 5 Z M 7.625 8.875L22.96875 24.53125C21.074219 26.082031 18.648438 27 16 27C9.914063 27 5 22.085938 5 16C5 13.273438 5.988281 10.792969 7.625 8.875Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">封禁</span>
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <!-- 修改用户信息弹窗 -->
+        <el-dialog v-model="isEditPopupVisible" class="w-[300px]!" title="修改用户信息" :close-on-click-modal="false">
+            <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+            <el-form :model="editingUser" label-width="80px">
+                <el-form-item label="用户名">
+                    <el-input v-model="editingUser.username" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="editingUser.password"></el-input>
+                </el-form-item>
+                <el-form-item label="是否封禁">
+                    <el-switch v-model="editingUser.is_ban" active-text="封禁" inactive-text="正常" :active-value="1"
+                        :inactive-value="0" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <el-button @click="isEditPopupVisible = false">取消</el-button>
+                <el-button type="primary" @click="updateUser">确定</el-button>
+            </template>
+        </el-dialog>
+    </div>
+</body>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                userList: [],
+                pagination: {
+                    currentPage: 1,
+                    pageSize: 50,
+                    totalUsers: 0,
+                    totalPages: 1
+                },
+                searchForm: {
+                    username: ""
+                },
+                newUser: {
+                    username: "",
+                    password: ""
+                },
+                editingUser: {
+                    username: "",
+                    password: "",
+                    is_ban: 0
+                },
+                deletingUser: {
+                    username: ""
+                },
+                isEditPopupVisible: false,
+                isDeletePopupVisible: false
+            };
+        },
+        watch: {
+            'pagination.pageSize'() {
+                if (this.pagination.pageSize >= 1) {
+                    this.pagination.currentPage = 1;
+                    this.refreshUserList();
+                }
+            },
+            'pagination.currentPage'() {
+                if (this.pagination.currentPage >= 1) {
+                    if (this.pagination.currentPage > this.pagination.totalPages) {
+                        this.pagination.currentPage = this.pagination.totalPages;
+                    }
+                    this.refreshUserList();
+                }
+            }
+        },
+        mounted() {
+            this.refreshUserList();
+        },
+        methods: {
+            refreshUserList() {
+                const requestData = {
+                    current_page: parseInt(this.pagination.currentPage),
+                    page_size: parseInt(this.pagination.pageSize)
+                };
+
+                $.post("/users/get_all", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.pagination.totalUsers = response.pagination.total_users;
+                            this.pagination.totalPages = response.pagination.total_pages;
+                            this.userList = response.data;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            goToPreviousPage() {
+                if (this.pagination.currentPage > 1) {
+                    this.pagination.currentPage--;
+                }
+            },
+            goToNextPage() {
+                if (this.pagination.currentPage < this.pagination.totalPages) {
+                    this.pagination.currentPage++;
+                }
+            },
+            handlePageChange(page) {
+                this.pagination.currentPage = page;
+                this.refreshUserList();
+            },
+            editUser(user) {
+                this.editingUser.username = user.username;
+                this.editingUser.password = user.password;
+                this.editingUser.is_ban = user.is_ban;
+                this.isEditPopupVisible = true;
+            },
+            updateUser() {
+                if (this.editingUser.password === "") {
+                    showNotification("密码不能为空!", false);
+                    return;
+                }
+
+                const data = {
+                    username: this.editingUser.username,
+                    password: this.editingUser.password,
+                    is_ban: this.editingUser.is_ban
+                };
+
+                $.post("/users/user_updata", JSON.stringify(data))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refreshUserList();
+                            this.isEditPopupVisible = false;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification("修改失败!\n" + response.message, false);
+                        }
+                    }).fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            deleteUser(username) {
+                this.deletingUser.username = username;
+                if (this.deletingUser.username === "") {
+                    showNotification("用户名不能为空!", false);
+                    return;
+                }
+
+                const data = {
+                    username: this.deletingUser.username,
+                };
+
+                $.post("/users/user_delete", JSON.stringify(data))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refreshUserList();
+                            this.isDeletePopupVisible = false;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification("删除失败!\n" + response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            banUser(user) {
+                const data = {
+                    username: user.username,
+                    password: user.password,
+                    is_ban: !parseInt(user.is_ban),
+                };
+
+                $.post("/users/user_updata", JSON.stringify(data))
+                    .done((response) => {
+                        if (response.success) {
+                            user.is_ban = !user.is_ban;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification("操作失败!\n" + response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            createNewUser() {
+                const data = {
+                    username: this.newUser.username,
+                    password: this.newUser.password
+                };
+
+                if (data.username === "" || data.password === "") {
+                    showNotification("用户名和密码不能为空!", false);
+                    return;
+                }
+
+                $.post("/users/user_add", JSON.stringify(data))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refreshUserList();
+                            this.newUser.username = "";
+                            this.newUser.password = "";
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            searchUser() {
+                if (this.searchForm.username === "") {
+                    showNotification("用户名不能为空!", false);
+                    return;
+                }
+
+                const requestData = {
+                    username: this.searchForm.username,
+                };
+
+                $.post("/users/user_get", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.pagination.totalUsers = response.pagination.total_users;
+                            this.pagination.totalPages = response.pagination.total_pages;
+                            this.userList = response.data;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp * 1000);
+                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+            }
+        }
+    });
+
+    function showNotification(message, success) {
+        const type = success ? "success" : "error";
+        ElementPlus.ElNotification({
+            title: success ? "成功" : "失败",
+            message: message,
+            type: type,
+            duration: 2000,
+            offset: 60
+        });
+    }
+
+    app.use(ElementPlus);
+    app.mount('#app');
+</script>
+
+</html>

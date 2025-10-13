@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件中心</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+    <style>
+        @import url("/res/css/all.css");
+
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+    
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+    
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+    
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 鼠标点击音效 -->
+    <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+
+    <div id="app" class="p-4">
+        <!-- 顶部信息栏 -->
+        <div class="bg-white p-4 mb-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-gray-700">文件共享中心</h1>
+                <p class="text-sm text-gray-500 mt-1">仅支持查看和下载操作</p>
+            </div>
+            <el-button type="primary" @click="refresh" plain>
+                <el-icon style="vertical-align: middle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                        <path
+                            d="M16 4C9.382813 4 4 9.382813 4 16L6 16C6 10.484375 10.484375 6 16 6C19.695313 6 22.925781 8.011719 24.65625 11L21 11L21 13L28 13L28 6L26 6L26 9.40625C23.855469 6.152344 20.179688 4 16 4 Z M 26 16C26 21.515625 21.515625 26 16 26C12.304688 26 9.074219 23.988281 7.34375 21L11 21L11 19L4 19L4 26L6 26L6 22.59375C8.144531 25.847656 11.820313 28 16 28C22.617188 28 28 22.617188 28 16Z" />
+                    </svg>
+                </el-icon>
+                <span style="vertical-align: middle">刷新</span>
+            </el-button>
+        </div>
+
+        <!-- 路径导航 -->
+        <el-breadcrumb class="bg-white p-3 mb-4">
+            <el-breadcrumb-item @click="navigateToRoot" class="cursor-pointer hover:text-blue-500">
+                <span style="vertical-align: middle" class="text-blue-500 hover:text-blue-600">根目录</span>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item v-for="(part, index) in pathParts" :key="index" @click="navigateTo(index)"
+                class="cursor-pointer hover:text-blue-500">
+                <span style="vertical-align: middle" class="text-blue-500 hover:text-blue-600">{{ part }}</span>
+            </el-breadcrumb-item>
+        </el-breadcrumb>
+
+        <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+
+        <!-- 文件列表 -->
+        <div class="bg-white p-4">
+            <div v-if="loading" class="text-center py-8">
+                <el-icon class="is-loading" size="24">
+                    <svg viewBox="0 0 1024 1024">
+                        <path
+                            d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" />
+                    </svg>
+                </el-icon>
+                <p class="mt-2 text-gray-500">正在加载文件列表...</p>
+            </div>
+
+            <div v-else class="h-[calc(100vh-235px)] overflow-y-auto rounded">
+                <el-table :data="fileList" stripe style="width: 100%">
+                    <el-table-column prop="filename" label="文件名">
+                        <template #default="{ row }">
+                            <div class="flex items-center">
+                                <img v-if="row.is_directory" src="/res/image/folder.svg"
+                                    class="size-[15px]! object-cover mr-1!">
+                                <img v-else src="/res/image/file.svg" class="size-[15px]! object-cover mr-1!">
+                                <span @click="row.is_directory && enterDirectory(row.filename)"
+                                    :class="{'cursor-pointer text-blue-500 hover:underline': row.is_directory}">
+                                    {{ row.filename }}
+                                </span>
+                            </div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="size" align="center" label="大小" width="120"
+                        :formatter="formatSize"></el-table-column>
+
+                    <el-table-column prop="type" align="center" label="类型" width="120"></el-table-column>
+
+                    <el-table-column prop="modification_time" align="center" label="修改时间" width="200">
+                        <template #default="{ row }">
+                            <div v-if="!row.is_directory" style="display: flex; align-items: center;"
+                                class="justify-center">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">{{ formatTimestamp(row.modification_time) }}</span>
+                            </div>
+                            <div v-else>
+                                -
+                            </div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="操作" align="center" class="flex" width="100">
+                        <template #default="{ row }">
+                            <div class="flex justify-center">
+                                <div v-if="!row.is_directory">
+                                    <el-button type="info" class="ml-1!" size="small"
+                                        @click="downloadFile(row.filename)" plain>
+                                        <el-icon style="vertical-align: middle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                                <path
+                                                    d="M15 4L15 20.5625L9.71875 15.28125L8.28125 16.71875L15.28125 23.71875L16 24.40625L16.71875 23.71875L23.71875 16.71875L22.28125 15.28125L17 20.5625L17 4 Z M 7 26L7 28L25 28L25 26Z" />
+                                            </svg>
+                                        </el-icon>
+                                        <span style="vertical-align: middle">下载</span>
+                                    </el-button>
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <div v-if="!loading && fileList.length === 0" class="text-center py-8 text-gray-500">
+                当前目录为空
+            </div>
+        </div>
+
+        <!-- 水印信息 -->
+        <div class="watermark select-none">
+            真白管理面板 V1.0 Alpha
+            <br>
+            ©2025 遂沫 - 开发&维护
+        </div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    currentPath: '',
+                    fileList: [],
+                    loading: false,
+                    csrfToken: document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ''
+                }
+            },
+            computed: {
+                pathParts() {
+                    return this.currentPath.split('/').filter(p => p)
+                }
+            },
+            methods: {
+                async fetchFiles() {
+                    this.loading = true
+                    $.post('/file/enum_path', JSON.stringify({ path: this.currentPath })).done((res) => {
+                        if (res.success) {
+                            this.fileList = res.data;
+                            this.loading = false
+                        } else {
+                            this.loading = false
+                            ElementPlus.ElMessage.error({
+                                message: res.message,
+                                offset: 80
+                            })
+                        }
+                    }).fail(() => {
+                        this.loading = false
+                        ElementPlus.ElMessage.error({
+                            message: '获取文件列表失败',
+                            offset: 80
+                        })
+                    })
+                },
+                formatSize(size) {
+                    if (size === 0) return '-'
+                    const units = ['B', 'KB', 'MB', 'GB']
+                    let i = 0
+                    while (size >= 1024 && i < units.length - 1) {
+                        size /= 1024
+                        i++
+                    }
+                    return `${size.toFixed(1)} ${units[i]}`
+                },
+                formatDate(timestamp) {
+                    const date = new Date(timestamp * 1000)
+                    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+                },
+                enterDirectory(name) {
+                    this.currentPath = this.currentPath ?
+                        `${this.currentPath}/${name}` : name
+                    this.fetchFiles()
+                },
+                navigateTo(index) {
+                    this.currentPath = this.pathParts.slice(0, index + 1).join('/')
+                    this.fetchFiles()
+                },
+                navigateToRoot() {
+                    this.currentPath = ''
+                    this.fetchFiles()
+                },
+                refresh() {
+                    this.fetchFiles()
+                },
+                formatSize(row, column, size) {
+                    if (row.is_directory) return '-';
+                    const units = ['B', 'KB', 'MB', 'GB'];
+                    let i = 0;
+                    while (size >= 1024 && i < units.length - 1) {
+                        size /= 1024;
+                        i++;
+                    }
+                    return `${size.toFixed(2)} ${units[i]}`;
+                },
+                formatTimestamp(timestamp) {
+                    const date = new Date(timestamp * 1000);
+                    const pad = n => n.toString().padStart(2, '0'); // 补零函数
+
+                    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                        `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+                },
+                downloadFile(filename) {
+                    const fullPath = this.currentPath ? `${this.currentPath}/${filename}` : filename;
+                    try {
+                        // 构造下载地址
+                        const url = `/file/download?path=${encodeURIComponent(fullPath)}&csrf=${this.csrfToken}`;
+
+                        // 创建中间页
+                        const closeScript = `
+                            <script>
+                                let count = 0;
+                                // 监听可见性变化（适用于后台下载）
+                                document.addEventListener('visibilitychange', () => {
+                                    if (document.hidden && count++ === 0) {
+                                        setTimeout(window.close, 3000) // 3秒后关闭
+                                    }
+                                });
+                                // 定时关闭保底
+                                setTimeout(window.close, 10000) // 30秒超时关闭
+                            <\/script>
+                        `;
+
+                        // 打开新窗口并写入内容
+                        const win = window.open('about:blank', '_blank');
+                        win.document.write(`
+                            <html>
+                                <body>
+                                    文件下载中...
+                                    <iframe src="${url}" style="display:none"></iframe>
+                                    ${closeScript}
+                                </body>
+                            </html>
+                        `);
+
+                        // 处理弹窗拦截
+                        if (!win || win.closed) {
+                            throw new Error('请允许弹出窗口以完成下载');
+                        }
+                    } catch (error) {
+                        ElementPlus.ElMessage.error(error.message);
+                    }
+                }
+            },
+            mounted() {
+                this.fetchFiles()
+            }
+        })
+
+        app.use(ElementPlus)
+        app.mount('#app')
+    </script>
+</body>
+
+</html>

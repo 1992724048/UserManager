@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端设置</title>
+
+    <script src="/res/js/tailwind.js"></script>
+
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+</head>
+<style>
+    @import url("/res/css/all.css");
+
+    @font-face {
+        font-family: StarRail;
+        src: url('/res/font/zh-cn.woff2');
+    }
+
+    * {
+        cursor: url('/res/image/webview_cursor_default.png'), auto;
+        font-family: StarRail, serif;
+    }
+
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3F9EFF;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(22, 79, 250);
+    }
+
+    .api-card {
+        break-inside: avoid;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(5px);
+    }
+
+    .api-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s;
+    }
+
+    .api-item:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+    }
+
+    .url-text {
+        font-family: Monaco, Consolas, monospace;
+        color: #666;
+        font-size: 0.8em;
+    }
+
+    .columns-layout {
+        columns: 3;
+    }
+
+    .param-detail {
+        @apply space-y-1 text-sm;
+    }
+    
+    pre {
+        font-family: Monaco, Consolas, monospace;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>
+<body>
+    <div id="app" class="p-2! pt-14!">
+        <div class="m-4 ml-0 mt-3">
+            <div class="columns-layout">
+                <template v-for="(group, name) in api_list" :key="name">
+                    <el-card class="api-card shadow-none!">
+                        <template #header>
+                            <div class="card-header flex justify-between items-center" :id="`${name}`">
+                                <span>{{ name }}</span>
+                                <span class="text-sm text-gray-500">{{ group.length }}个接口</span>
+                            </div>
+                        </template>
+
+                        <div v-for="item in group" :key="item.url" class="api-item">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="font-medium">{{ item.note }}</div>
+                                        <div class="url-text">{{ item.url }}</div>
+                                    </div>
+                                    <div>
+                                        <el-select class="mr-1" v-model="item.type" @change="updateSetting(item)"
+                                            size="small" style="width: 120px" :title="getTypeLabel(item.type)">
+                                            <el-option v-for="opt in typeOptions" :key="opt.value" :label="opt.label"
+                                                :value="opt.value" />
+                                        </el-select>
+                                        <el-button plain size="small" @click="showApiDoc(item)">
+                                            查看文档
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-card>
+                </template>
+            </div>
+        </div>
+        <el-anchor class="anchor-nav w-[60px]!" type="underline" :offset="70" direction="vertical" :mark="true"
+            :container="scrollContainer" style="position: fixed; right: 250px; top: 100px;">
+            <el-anchor-link v-for="(group, name) in api_list" :key="name" :href="`#${name}`" :title="name" />
+        </el-anchor>
+
+        <el-dialog v-model="dialogVisible" :title="currentApi?.note" width="800px" destroy-on-close>
+            <div v-if="currentApi" class="space-y-4">
+                <div>
+                    <label class="text-gray-600">接口路径：</label>
+                    <div class="url-text">{{ currentApi.url }}</div>
+                </div>
+
+                <div>
+                    <label class="text-gray-600">请求方法：</label>
+                    <el-tag type="info">{{ currentApi.method }}</el-tag>
+                </div>
+
+                <div v-if="currentApi.desc">
+                    <label class="text-gray-600">接口说明：</label>
+                    <p class="text-gray-800">{{ currentApi.desc }}</p>
+                </div>
+
+                <el-descriptions title="请求参数" border column="1">
+                    <el-descriptions-item v-for="(param, name) in currentApi.params" :key="name" :label="name">
+                        <div class="param-detail">
+                            <div>类型：{{ param.type }}</div>
+                            <div v-if="param.required" class="text-red-500">必填</div>
+                            <div v-else class="text-gray-500">可选</div>
+                            <div class="text-gray-600">{{ param.desc }}</div>
+                        </div>
+                    </el-descriptions-item>
+                </el-descriptions>
+            </div>
+        </el-dialog>
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+</body>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                api_list: {},
+                typeOptions: [
+                    { label: '完全开放', value: 0 },
+                    { label: '需要验证', value: 1 },
+                    { label: '禁止访问', value: 2 }
+                ],
+                dialogVisible: false,
+                currentApi: null
+            }
+        },
+        methods: {
+            getTypeLabel(type) {
+                return this.typeOptions.find(o => o.value === type)?.label || '未知'
+            },
+            updateSetting(item) {
+                $.ajax({
+                    url: '/api/set_api',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: item.name,
+                        type: item.type
+                    }),
+                    success: (res) => {
+                        if (res.success) {
+                            ElementPlus.ElMessage.success({
+                                message: `${item.note} 设置已更新`,
+                                offset: 80
+                            })
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: `更新失败：${res.message}`,
+                                offset: 80
+                            })
+                        }
+                    },
+                    error: () => {
+                        ElementPlus.ElMessage.error({
+                            message: '网络请求失败，请检查连接',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+            getDoc(item) {
+                $.ajax({
+                    url: '/api/get_doc',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: item.name,
+                    }),
+                    success: (res) => {
+                        if (res.success) {
+                            ElementPlus.ElMessage.success({
+                                message: `${item.note} 获取成功`,
+                                offset: 80
+                            })
+                            return res.data;
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: `获取失败：${res.message}`,
+                                offset: 80
+                            })
+                        }
+                    },
+                    error: () => {
+                        ElementPlus.ElMessage.error({
+                            message: '网络请求失败，请检查连接',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+            showApiDoc(item) {
+                this.currentApi = this.getDoc(item)
+                this.dialogVisible = true
+            },
+        },
+        mounted() {
+            $.get('/api/get_all')
+                .done(res => {
+                    if (res.success) {
+                        this.api_list = res.data
+                        ElementPlus.ElMessage.success({
+                            message: '接口列表加载完成',
+                            offset: 80
+                        })
+                    }
+                })
+                .fail(() => {
+                    ElementPlus.ElMessage.error({
+                        message: '接口列表加载失败',
+                        offset: 80
+                    })
+                })
+        }
+    })
+
+    app.use(ElementPlus)
+    app.mount('#app')
+</script>
+
+</html>

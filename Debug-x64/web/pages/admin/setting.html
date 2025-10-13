@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/res/image/favicon.ico">
+    <title>后端设置</title>
+
+    <!-- 引入样式库 -->
+    <script src="/res/js/tailwind.js"></script>
+
+    <!-- 引入脚本库 -->
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+</head>
+<style>
+    /* 引入全局样式 */
+    @import url("/res/css/all.css");
+
+    /* 定义字体 */
+    @font-face {
+        font-family: StarRail;
+        src: url('/res/font/zh-cn.woff2');
+    }
+
+    /* 全局样式设置 */
+    * {
+        cursor: url('/res/image/webview_cursor_default.png'), auto;
+        font-family: StarRail, serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* 弹窗样式 */
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        height: 600px;
+        overflow-y: scroll;
+    }
+
+    /* 背景遮罩样式 */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    /* 卡片标题样式 */
+    .card-header {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+    }
+
+    /* 表单提示信息样式 */
+    .tips {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+
+    /* 警告信息样式 */
+    .warning {
+        font-size: 12px;
+        color: #ff4d4f;
+        margin-top: 5px;
+    }
+
+    /* 使用 columns 布局 */
+    .columns-layout {
+        columns: auto;
+        /* 定义4列 */
+        gap: 10px;
+        /* 列之间的间距 */
+    }
+
+    .column-item {
+        break-inside: avoid;
+        /* 防止元素被拆分到不同的列 */
+        margin-bottom: 8px;
+        /* 元素底部间距 */
+    }
+
+    form {
+        width: 450px !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3F9EFF;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(22, 79, 250);
+    }
+</style>
+
+<body>
+    <div id="app" class="p-2! pt-17!">
+        <div class="m-4 ml-0 mt-3">
+            <!-- 使用 columns 布局 -->
+            <div class="columns-layout">
+                <!-- 服务器设置 -->
+                <div class="column-item" id="server">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>服务器设置</span>
+                            </div>
+                        </template>
+                        <el-form :model="form" label-width="150px">
+                            <el-form-item label="服务器端口">
+                                <el-input-number v-model="form.server_port"
+                                    placeholder="请输入服务器的端口号，默认为443。"></el-input-number>
+                            </el-form-item>
+
+                            <el-form-item label="域名">
+                                <el-input v-model="form.domain" placeholder="请输入服务器的域名，用于访问服务器。">
+                                    <template #prepend>https://</template>
+                                    <template #append>/</template>
+                                </el-input>
+                            </el-form-item>
+
+                            <el-form-item label="TBB模式">
+                                <el-switch v-model="form.tbb_mode" active-text="启用" inactive-text="禁用"></el-switch>
+                                <div class="tips">启用Intel® TBB线程池模式可以提高服务器的性能</div>
+                                <div class="warning">*需要手动重启服务器后端以完成设置</div>
+                            </el-form-item>
+
+                            <el-form-item label="内存缓存">
+                                <el-switch v-model="form.file_cache" active-text="启用" inactive-text="禁用"></el-switch>
+                                <div class="tips">启用内存缓存可以提高IO性能, 但可能增加资源占用</div>
+                            </el-form-item>
+
+                            <el-form-item label="缓存时间">
+                                <el-input-number v-model="form.file_cache_time" class="w-[220px]!"
+                                    placeholder="单位: 秒 服务器文件缓存在内存中的时间">
+                                    <template #suffix>
+                                        <span>秒</span>
+                                    </template>
+                                </el-input-number>
+                            </el-form-item>
+
+                            <el-form-item label="缓存大小">
+                                <el-input-number v-model="form.file_cache_max_size" class="w-[220px]!"
+                                    placeholder="单位: 字节 服务器文件缓存在内存中的最大大小">
+                                    <template #suffix>
+                                        <span>字节</span>
+                                    </template>
+                                </el-input-number>
+                            </el-form-item>
+
+                            <el-form-item label="时间限制">
+                                <el-input-number v-model="form.f_window_time" class="w-[220px]!" placeholder="单位: 秒">
+                                    <template #suffix>
+                                        <span>秒</span>
+                                    </template>
+                                </el-input-number>
+                            </el-form-item>
+
+                            <el-form-item label="最大请求次数">
+                                <el-input-number v-model="form.f_max_requests" class="w-[220px]!"
+                                    placeholder="时间限制里最大请求次数">
+                                    <template #suffix>
+                                        <span>次</span>
+                                    </template>
+                                </el-input-number>
+                            </el-form-item>
+
+                            <el-form-item label="文件下载速度">
+                                <el-input-number v-model="form.f_max_download_speed" class="w-[220px]!"
+                                    placeholder="单位: 字节 服务器共享文件最大下载速度">
+                                    <template #suffix>
+                                        <span>字节</span>
+                                    </template>
+                                </el-input-number>
+                            </el-form-item>
+
+                            <el-form-item>
+                                <el-button type="primary" @click="saveServerSettings">
+                                    <el-icon style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M5 5L5 27L27 27L27 9.59375L26.71875 9.28125L22.71875 5.28125L22.40625 5 Z M 7 7L10 7L10 13L22 13L22 7.4375L25 10.4375L25 25L23 25L23 16L9 16L9 25L7 25 Z M 12 7L16 7L16 9L18 9L18 7L20 7L20 11L12 11 Z M 11 18L21 18L21 25L11 25Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">保存设置</span>
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+
+                <!-- 面板设置 -->
+                <div class="column-item" id="panel">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>面板设置</span>
+                            </div>
+                        </template>
+                        <el-form :model="form" label-width="150px">
+                            <el-form-item label="用户名">
+                                <el-input v-model="form.username" placeholder="请输入用于登录面板的用户名。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码">
+                                <el-input v-model="form.password" type="password"
+                                    placeholder="请输入用于登录面板的密码，至少8位字符。"></el-input>
+                                <div class="warning">*忘记密码需要重置请前往配置文件修改</div>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="savePanelSettings"><el-icon
+                                        style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M5 5L5 27L27 27L27 9.59375L26.71875 9.28125L22.71875 5.28125L22.40625 5 Z M 7 7L10 7L10 13L22 13L22 7.4375L25 10.4375L25 25L23 25L23 16L9 16L9 25L7 25 Z M 12 7L16 7L16 9L18 9L18 7L20 7L20 11L12 11 Z M 11 18L21 18L21 25L11 25Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">保存设置</span></el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+
+                <!-- 文件设置 -->
+                <div class="column-item" id="file">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>文件设置</span>
+                            </div>
+                        </template>
+                        <el-form :model="form" class="w-full!" label-width="150px">
+                            <el-form-item label="证书路径">
+                                <el-input v-model="form.cert_path" placeholder="请输入SSL证书的路径，用于启用HTTPS。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密钥路径">
+                                <el-input v-model="form.key_path" placeholder="请输入SSL密钥的路径，用于启用HTTPS。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="SQL路径">
+                                <el-input v-model="form.sql_path" placeholder="请输入SQL文件的路径，用于数据库操作。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Web文件路径">
+                                <el-input v-model="form.web_files" placeholder="请输入Web文件的路径，用于托管网站。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Web错误页面">
+                                <el-input v-model="form.web_error_page"
+                                    placeholder="请输入Web错误页面的路径，用于显示自定义的错误页面。"></el-input>
+                            </el-form-item>
+                            <el-form-item label="共享文件">
+                                <el-input v-model="form.f_files_path" placeholder="共享文件路径，用于提供文件下载服务"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="saveFileSettings"><el-icon
+                                        style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M5 5L5 27L27 27L27 9.59375L26.71875 9.28125L22.71875 5.28125L22.40625 5 Z M 7 7L10 7L10 13L22 13L22 7.4375L25 10.4375L25 25L23 25L23 16L9 16L9 25L7 25 Z M 12 7L16 7L16 9L18 9L18 7L20 7L20 11L12 11 Z M 11 18L21 18L21 25L11 25Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">保存设置</span></el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+
+                <!-- 日志设置 -->
+                <div class="column-item" id="log">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>日志设置</span>
+                            </div>
+                        </template>
+                        <el-form :model="form" label-width="150px">
+                            <el-form-item label="日志级别">
+                                <el-select v-model="form.log_level" placeholder="选择日志级别">
+                                    <el-option label="Trace" value="Trace"></el-option>
+                                    <el-option label="Debug" value="Debug"></el-option>
+                                    <el-option label="Info" value="Info"></el-option>
+                                    <el-option label="Warning" value="Warning"></el-option>
+                                    <el-option label="Error" value="Error"></el-option>
+                                    <el-option label="Critical" value="Critical"></el-option>
+                                    <el-option label="None" value="None"></el-option>
+                                </el-select>
+                                <div class="tips">选择日志级别，用于控制日志的详细程度。</div>
+                            </el-form-item>
+                            <el-form-item label="日志类型">
+                                <el-select v-model="form.log_type" placeholder="选择日志类型">
+                                    <el-option label="ConsoleLogger" value="ConsoleLogger"></el-option>
+                                    <el-option label="FileLogger" value="FileLogger"></el-option>
+                                    <el-option label="Any" value="Any"></el-option>
+                                </el-select>
+                                <div class="tips">选择日志类型，用于指定日志的输出方式。</div>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="saveLogSettings"><el-icon
+                                        style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M5 5L5 27L27 27L27 9.59375L26.71875 9.28125L22.71875 5.28125L22.40625 5 Z M 7 7L10 7L10 13L22 13L22 7.4375L25 10.4375L25 25L23 25L23 16L9 16L9 25L7 25 Z M 12 7L16 7L16 9L18 9L18 7L20 7L20 11L12 11 Z M 11 18L21 18L21 25L11 25Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">保存设置</span></el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+
+                <!-- 数据库设置 -->
+                <div class="column-item" id="database">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>数据库设置</span>
+                            </div>
+                        </template>
+                        <el-form :model="form" label-width="150px">
+                            <el-form-item label="连接池">
+                                <el-input-number v-model="form.sqlite_max_connect"
+                                    placeholder="连接池内最大数量限制 (占用内存资源较多)"></el-input-number>
+                                <div class="warning">*需要手动重启服务器后端以完成设置</div>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="saveDatabaseSettings"><el-icon
+                                        style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M5 5L5 27L27 27L27 9.59375L26.71875 9.28125L22.71875 5.28125L22.40625 5 Z M 7 7L10 7L10 13L22 13L22 7.4375L25 10.4375L25 25L23 25L23 16L9 16L9 25L7 25 Z M 12 7L16 7L16 9L18 9L18 7L20 7L20 11L12 11 Z M 11 18L21 18L21 25L11 25Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">保存设置</span></el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="column-item" id="operation">
+                    <el-card class="box-card shadow-none!">
+                        <template #header>
+                            <div class="card-header">
+                                <span>执行操作</span>
+                            </div>
+                        </template>
+                        <div style="text-align: center;">
+                            <el-button type="primary" @click="clearMemoryCache"
+                                style="margin-left: 10px;">清空内存缓存</el-button>
+                            <el-button type="primary" @click="popupmsg">查看缓存路径</el-button>
+                        </div>
+                    </el-card>
+                </div>
+            </div>
+
+            <el-anchor type="underline" :offset="70" direction="vertical" marker="true"
+                style="position: fixed; right: 20px; top: 100px;" container="HTMLElement">
+                <el-anchor-link href="#server" title="服务器设置"></el-anchor-link>
+                <el-anchor-link href="#panel" title="面板设置"></el-anchor-link>
+                <el-anchor-link href="#file" title="文件设置"></el-anchor-link>
+                <el-anchor-link href="#log" title="日志设置"></el-anchor-link>
+                <el-anchor-link href="#database" title="数据库设置"></el-anchor-link>
+                <el-anchor-link href="#operation" title="执行操作"></el-anchor-link>
+            </el-anchor>
+        </div>
+
+        <!-- 缓存路径弹窗 -->
+        <el-dialog v-model="showPopup" title="缓存路径" width="50%" style="height: 62%;">
+            <el-table :data="paths" class="overflow-y-scroll!" style="width: 100%; height: 50vh;">
+                <el-table-column prop="file_path" label="文件路径" width="300"></el-table-column>
+                <el-table-column prop="file_size" label="文件大小" width="120">
+                    <template #default="scope">
+                        {{ formatFileSize(scope.row.file_size) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="file_read_count" label="读取次数" width="100"></el-table-column>
+                <el-table-column prop="file_read_time" label="最后读取时间">
+                    <template #default="scope">
+                        {{ formatTimestamp(scope.row.file_read_time) }}
+                    </template>
+                </el-table-column>
+            </el-table>
+            <template #footer>
+                <div style="text-align: right;">
+                    <el-button type="danger" @click="showPopup = false">确定</el-button>
+                </div>
+            </template>
+        </el-dialog>
+
+        <el-backtop :right="50" :bottom="100" />
+    </div>
+
+    <!-- 鼠标点击音效 -->
+    <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+</body>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                form: {
+                    server_port: 0,
+                    tbb_mode: false,
+                    username: '',
+                    password: '',
+                    domain: '',
+                    cert_path: '',
+                    key_path: '',
+                    sql_path: '',
+                    web_files: '',
+                    web_error_page: '',
+                    f_files_path: '',
+                    log_level: '',
+                    log_type: '',
+                    file_cache: false,
+                    file_cache_time: 0,
+                    file_cache_max_size: 0,
+                    sqlite_max_connect: 0,
+                    f_max_download_speed: 0,
+                    f_max_requests: 0,
+                    f_window_time: 0,
+                },
+                showPopup: false,
+                paths: []
+            };
+        },
+        mounted() {
+            // 页面加载时获取设置
+            $.get('/setting/get')
+                .done(response => {
+                    this.form.server_port = parseInt(response["server_port"]);
+                    this.form.f_window_time = parseInt(response["f_window_time"]);
+                    this.form.f_max_requests = parseInt(response["f_max_requests"]);
+                    this.form.f_max_download_speed = parseInt(response["f_max_download_speed"]);
+                    this.form.tbb_mode = response["tbb_mode"];
+                    this.form.username = response["username"];
+                    this.form.password = response["password"];
+                    this.form.domain = response["domain"];
+                    this.form.cert_path = response["cert_path"];
+                    this.form.key_path = response["key_path"];
+                    this.form.sql_path = response["sql_path"];
+                    this.form.web_files = response["web_files"];
+                    this.form.web_error_page = response["web_error_page"];
+                    this.form.f_files_path = response["f_files_path"];
+                    this.form.log_level = response["log_level"];
+                    this.form.log_type = response["log_type"];
+                    this.form.file_cache = response["file_cache"];
+                    this.form.file_cache_time = parseInt(response["file_cache_time"]);
+                    this.form.file_cache_max_size = parseInt(response["file_cache_max_size"]);
+                    this.form.sqlite_max_connect = parseInt(response["sqlite_max_connect"]);
+                    ElementPlus.ElMessage.success({
+                        message: '获取成功!',
+                        offset: 80
+                    });
+                }).fail(() => {
+                    ElementPlus.ElMessage.error({
+                        message: '获取失败!',
+                        offset: 80
+                    });
+                });
+        },
+        methods: {
+            formatFileSize(size) {
+                if (size < 1024) {
+                    return size + " B";
+                } else if (size < 1024 * 1024) {
+                    return (size / 1024).toFixed(2) + " KB";
+                } else if (size < 1024 * 1024 * 1024) {
+                    return (size / 1024 / 1024).toFixed(2) + " MB";
+                } else {
+                    return (size / 1024 / 1024 / 1024).toFixed(2) + " GB";
+                }
+            },
+            // 保存服务器设置
+            saveServerSettings() {
+                if (this.form.server_port < 1 || this.form.server_port > 65535) {
+                    ElementPlus.ElMessage.error({
+                        message: '服务器端口必须在1到65535之间!',
+                        offset: 80
+                    });
+                }
+
+                if (this.form.domain.length < 1) {
+                    ElementPlus.ElMessage.error({
+                        message: '域名不能为空!',
+                        offset: 80
+                    });
+                }
+
+                $.ajax({
+                    url: '/setting/set_server',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        server_port: this.form.server_port,
+                        tbb_mode: this.form.tbb_mode,
+                        domain: this.form.domain,
+                        file_cache: this.form.file_cache,
+                        file_cache_time: this.form.file_cache_time,
+                        file_cache_max_size: this.form.file_cache_max_size,
+                        f_window_time: this.form.f_window_time,
+                        f_max_requests: this.form.f_max_requests,
+                        f_max_download_speed: this.form.f_max_download_speed,
+                    }),
+                    success: function (response) {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '保存成功!',
+                                offset: 80
+                            });
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '保存失败!',
+                                offset: 80
+                            });
+                        }
+                    },
+                    error: function () {
+                        ElementPlus.ElMessage.error({
+                            message: '保存失败!',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+
+            // 保存面板设置
+            savePanelSettings() {
+                if (!this.form.username || !this.form.password) {
+                    ElementPlus.ElMessage.error({
+                        message: '用户名和密码不能为空!',
+                        offset: 80
+                    });
+                    return;
+                }
+
+                if (this.form.password.length < 8) {
+                    ElementPlus.ElMessage.error({
+                        message: '密码至少拥有8位字符!',
+                        offset: 80
+                    });
+                    return;
+                }
+
+                // 发送数据到后端
+                $.ajax({
+                    url: '/setting/set_panel',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        username: this.form.username,
+                        password: this.form.password
+                    }),
+                    success: function (response) {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '保存成功!',
+                                offset: 80
+                            });
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '保存失败!',
+                                offset: 80
+                            });
+                        }
+                    },
+                    error: function () {
+                        ElementPlus.ElMessage.error({
+                            message: '保存失败!',
+                            offset: 80
+                        });
+                    }
+                });
+            },
+
+            // 保存文件设置
+            saveFileSettings() {
+                if (!this.form.cert_path || !this.form.key_path) {
+                    ElementPlus.ElMessage.error({
+                        message: '证书路径和密钥路径不能为空!',
+                        offset: 80
+                    });
+                }
+                if (!this.form.sql_path) {
+                    ElementPlus.ElMessage.error({
+                        message: 'SQL路径不能为空!',
+                        offset: 80
+                    });
+                }
+                if (!this.form.web_files) {
+                    ElementPlus.ElMessage.error({
+                        message: 'Web文件路径不能为空!',
+                        offset: 80
+                    });
+                }
+                if (!this.form.web_error_page) {
+                    ElementPlus.ElMessage.error({
+                        message: 'Web错误页面不能为空!',
+                        offset: 80
+                    });
+                }
+
+                $.ajax({
+                    url: '/setting/set_file',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        cert_path: this.form.cert_path,
+                        key_path: this.form.key_path,
+                        sql_path: this.form.sql_path,
+                        web_files: this.form.web_files,
+                        web_error_page: this.form.web_error_page,
+                        f_files_path: this.form.f_files_path
+                    }),
+                    success: function (response) {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '保存成功!',
+                                offset: 80
+                            });
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '保存失败!',
+                                offset: 80
+                            });
+                        }
+                    },
+                    error: function () {
+                        ElementPlus.ElMessage.error({
+                            message: '保存失败!',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+
+            // 保存日志设置
+            saveLogSettings() {
+                $.ajax({
+                    url: '/setting/set_log',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        log_level: this.form.log_level,
+                        log_type: this.form.log_type
+                    }),
+                    success: function (response) {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '保存成功!',
+                                offset: 80
+                            })
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '保存失败!',
+                                offset: 80
+                            })
+                        }
+                    },
+                    error: function () {
+                        ElementPlus.ElMessage.error({
+                            message: '保存失败!',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+
+            // 保存数据库设置
+            saveDatabaseSettings() {
+                $.ajax({
+                    url: '/setting/set_sql',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        sqlite_max_connect: this.form.sqlite_max_connect
+                    }),
+                    success: function (response) {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '保存成功!',
+                                offset: 80
+                            })
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '保存失败!',
+                                offset: 80
+                            })
+                        }
+                    },
+                    error: function () {
+                        ElementPlus.ElMessage.error({
+                            message: '保存失败!',
+                            offset: 80
+                        })
+                    }
+                })
+            },
+
+            // 清空内存缓存
+            clearMemoryCache() {
+                $.get('/file/clear_memory_cache')
+                    .done(response => {
+                        if (response["success"]) {
+                            ElementPlus.ElMessage.success({
+                                message: '清空成功!',
+                                offset: 80
+                            });
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '清空失败!',
+                                offset: 80
+                            });
+                        }
+                    }).fail(() => {
+                        ElementPlus.ElMessage.error({
+                            message: '清空失败!',
+                            offset: 80
+                        });
+                    });
+            },
+            popupmsg() {
+                $.get('/file/get_cache_paths')
+                    .done(response => {
+                        if (response["success"]) {
+                            this.showPopup = true;
+                            this.paths = response["data"];
+                            ElementPlus.ElMessage.success({
+                                message: '获取成功!',
+                                offset: 80
+                            });
+                        } else {
+                            ElementPlus.ElMessage.error({
+                                message: '获取失败!',
+                                offset: 80
+                            });
+                        }
+                    }).fail(() => {
+                        ElementPlus.ElMessage.error({
+                            message: '获取失败!',
+                            offset: 80
+                        });
+                    });
+            },
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp / 10000);
+                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+            }
+        }
+    });
+
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+
+</html>

@@ -1,0 +1,9 @@
+.watermark {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    color: rgba(0, 0, 0, 1);
+    font-size: 14px;
+    opacity: 0.5;
+    z-index: 1000;
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端设置</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/axios.min.js"></script>
+    <script src="/res/js/echarts.min.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+</head>
+<style>
+    @font-face {
+        font-family: StarRail;
+        src: url('/res/font/zh-cn.woff2');
+    }
+
+    * {
+        cursor: url('/res/image/webview_cursor_default.png'), auto;
+        font-family: StarRail, serif;
+    }
+
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3F9EFF;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(22, 79, 250);
+    }
+
+    .chart-container {
+        height: 400px;
+        width: 100%;
+    }
+
+    .data-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .total-row {
+        font-size: 18px;
+        color: #409EFF;
+        margin: 15px 0;
+    }
+</style>
+
+<body class="bg-gray-100 size-full select-none p-2! pb-0! pt-14! w-full">
+    <div id="app" v-loading="loading">
+        <div class="container mx-auto p-4">
+            <h1 class="text-2xl mb-4">收入分析看板</h1>
+            
+            <!-- 总计行 -->
+            <div class="total-row">
+                总销售额: ￥{{ totalSales.toFixed(2) }} &nbsp;&nbsp;|&nbsp;&nbsp;
+                总订单数: {{ totalOrders }}
+            </div>
+
+            <!-- 图表容器 -->
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <div class="data-card">
+                        <div id="pieChart" class="chart-container"></div>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="data-card">
+                        <div id="barChart" class="chart-container"></div>
+                    </div>
+                </el-col>
+            </el-row>
+
+            <!-- 数据表格 -->
+            <div class="data-card">
+                <el-table :data="tableData" stripe style="width: 100%">
+                    <el-table-column prop="app_name" label="应用名称"></el-table-column>
+                    <el-table-column prop="price_summary" label="销售额">
+                        <template #default="{row}">
+                            ￥{{ row.price_summary.toFixed(2) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="sales_quantity" label="销售数量"></el-table-column>
+                    <el-table-column label="占比">
+                        <template #default="{row}">
+                            {{ ((row.price_summary / totalSales) * 100).toFixed(1) }}%
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 鼠标点击音效 -->
+    <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+</body>
+<script>
+    const { createApp } = Vue;
+        const app = createApp({
+            data() {
+                return {
+                    tableData: [],
+                    totalSales: 0,
+                    totalOrders: 0,
+                    loading: false,
+                    pieChart: null,
+                    barChart: null
+                }
+            },
+            mounted() {
+                this.fetchData();
+                window.addEventListener('resize', this.handleResize);
+            },
+            beforeUnmount() {
+                window.removeEventListener('resize', this.handleResize);
+            },
+            methods: {
+                async fetchData() {
+                    try {
+                        this.loading = true;
+                        const response = await axios.get('/key/calc');
+                        
+                        if (!response.data.success) {
+                            throw new Error(response.data.message);
+                        }
+
+                        this.tableData = response.data.data;
+                        this.calcTotals();
+                        
+                        this.$nextTick(() => {
+                            this.initCharts();
+                        });
+                    } catch (error) {
+                        ElementPlus.ElMessage.error({
+                            message: '数据加载失败: ' + error.message,
+                            offset: 80
+                        });
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                calcTotals() {
+                    this.totalSales = this.tableData.reduce((sum, item) => sum + item.price_summary, 0);
+                    this.totalOrders = this.tableData.reduce((sum, item) => sum + item.sales_quantity, 0);
+                },
+                initCharts() {
+                    // 销毁旧图表
+                    if (this.pieChart) this.pieChart.dispose();
+                    if (this.barChart) this.barChart.dispose();
+
+                    // 初始化饼图
+                    this.pieChart = echarts.init(document.getElementById('pieChart'));
+                    this.pieChart.setOption({
+                        title: { text: '销售额分布', left: 'center' },
+                        tooltip: { trigger: 'item' },
+                        legend: { orient: 'vertical', left: 'left' },
+                        series: [{
+                            name: '销售额',
+                            type: 'pie',
+                            radius: '50%',
+                            data: this.tableData.map(item => ({
+                                name: item.app_name,
+                                value: item.price_summary
+                            })),
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }]
+                    });
+
+                    // 初始化柱状图
+                    this.barChart = echarts.init(document.getElementById('barChart'));
+                    this.barChart.setOption({
+                        title: { text: '销售数量对比', left: 'center' },
+                        tooltip: { trigger: 'axis' },
+                        xAxis: {
+                            type: 'category',
+                            data: this.tableData.map(item => item.app_name)
+                        },
+                        yAxis: { type: 'value' },
+                        series: [{
+                            name: '销售数量',
+                            type: 'bar',
+                            data: this.tableData.map(item => item.sales_quantity),
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#83bff6' },
+                                    { offset: 0.5, color: '#188df0' },
+                                    { offset: 1, color: '#188df0' }
+                                ])
+                            }
+                        }]
+                    });
+                },
+                handleResize() {
+                    if (this.pieChart) this.pieChart.resize();
+                    if (this.barChart) this.barChart.resize();
+                }
+            }
+        });
+
+        app.use(ElementPlus);
+        app.mount('#app');
+</script>
+
+</html>

@@ -1,0 +1,12 @@
+{
+    "current_profile": "",
+    "profiles": null,
+    "shared": {
+        "admin": {
+            "password": "12345678"
+        },
+        "server": {
+            "max_download_speed": 819200
+        }
+    }
+}

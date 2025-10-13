@@ -1,0 +1,4 @@
+[13:11:07] [DEBUG] [Service.cpp:64] Cert 路径: E:\CODE\UserManager\Release-x64\SSL\cert.pem
+[13:11:07] [DEBUG] [Service.cpp:65] Key  路径: E:\CODE\UserManager\Release-x64\SSL\key.pem
+[13:11:07] [DEBUG] [Dao.h:489] 数据库路径: E:\CODE\UserManager\Release-x64\SQL\sqlite.db
+[13:11:07] [DEBUG] [Service.cpp:178] 服务器网址: https://localhost:443/

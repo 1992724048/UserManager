@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+    <style>
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="p-2 mt-15!">
+        <div class="mb-2 flex items-center gap-2">
+
+            <div class="bg-white p-3 rounded mr-1">
+                <el-button type="primary" @click="refresh">
+                    <el-icon style="vertical-align: middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                            <path
+                                d="M16 4C9.382813 4 4 9.382813 4 16L6 16C6 10.484375 10.484375 6 16 6C19.695313 6 22.925781 8.011719 24.65625 11L21 11L21 13L28 13L28 6L26 6L26 9.40625C23.855469 6.152344 20.179688 4 16 4 Z M 26 16C26 21.515625 21.515625 26 16 26C12.304688 26 9.074219 23.988281 7.34375 21L11 21L11 19L4 19L4 26L6 26L6 22.59375C8.144531 25.847656 11.820313 28 16 28C22.617188 28 28 22.617188 28 16Z" />
+                        </svg>
+                    </el-icon>
+                    <span style="vertical-align: middle">刷新</span>
+                </el-button>
+            </div>
+        </div>
+
+        <div class="h-[calc(100vh-150px)] overflow-y-auto rounded w-full!">
+            <el-table :data="list" stripe class="w-full! h-full!" style="width: 100%">
+                <el-table-column prop="name" align="center" label="名称"></el-table-column>
+
+                <el-table-column prop="type" align="center" label="类型"></el-table-column>
+
+                <el-table-column prop="note" align="center" label="问题"></el-table-column>
+
+                <el-table-column prop="suggestion" align="center" label="建议"></el-table-column>
+            </el-table>
+        </div>
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+</body>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                list: [],
+            }
+        },
+        methods: {
+            fetch() {
+                $.get('/api/check').done((res) => {
+                    if (res.success) {
+                        this.list = res.data;
+                    } else {
+                        ElementPlus.ElMessage.error({
+                            message: res.message,
+                            offset: 80
+                        })
+                    }
+                }).fail(() => {
+                    ElementPlus.ElMessage.error({
+                        message: '获取失败',
+                        offset: 80
+                    })
+                })
+            },
+            refresh() {
+                this.fetch();
+                ElementPlus.ElMessage.success({
+                    message: '刷新成功!',
+                    offset: 80
+                })
+            }
+        },
+        mounted() {
+            this.fetch();
+        }
+    });
+
+    app.use(ElementPlus);
+    app.mount('#app');
+</script>
+
+</html>

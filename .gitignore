@@ -33,6 +33,8 @@
 /.vs
 /_ReSharper.Caches
 /.vscode
-/Debug-x64
-/Release-x64
 /UserManager/lib/static
+/Debug-x64/apache-jmeter-5.6.3
+/Debug-x64/BuildTemp
+/Debug-x64/logs
+/Release-x64/BuildTemp

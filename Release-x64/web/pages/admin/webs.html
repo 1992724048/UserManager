@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/axios.min.js"></script>
+    <script src="/res/js/echarts.min.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+    <style>
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        .stat-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .header-controls {
+            float: right;
+            display: flex;
+            gap: 15px;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .el-statistic__content {
+            margin-top: 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="p-2 mt-10!">
+        <el-card class="stat-container" shadow="never">
+            <template #header>网站访问统计</template>
+            <div slot="header" class="clearfix">
+                <div class="header-controls">
+                    <el-select v-model="days" placeholder="选择天数" @change="loadData" style="width: 120px">
+                        <el-option v-for="item in dayOptions" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-switch v-model="showDetail" active-text="详细模式" @change="toggleDetail" :disabled="this.chartData.map(d => d.count) <= 1">
+                    </el-switch>
+                </div>
+            </div>
+
+            <!-- 核心统计信息 -->
+            <el-row :gutter="20" v-loading="loading">
+                <el-col :span="8">
+                    <el-statistic title="总访问量" :value="totalVisits" :precision="0"
+                        value-style="color: #409EFF; font-size: 36px">
+                        <template slot="suffix">次</template>
+                    </el-statistic>
+                </el-col>
+
+                <el-col :span="8">
+                    <el-statistic title="日均访问" :value="dailyAverage" :precision="1"
+                        value-style="color: #67C23A; font-size: 36px">
+                        <template slot="suffix">次/天</template>
+                    </el-statistic>
+                </el-col>
+
+                <el-col :span="8">
+                    <el-statistic title="峰值访问量" :value="peakVisits" :precision="0"
+                        value-style="color: #E6A23C; font-size: 36px">
+                        <template slot="suffix">次</template>
+                    </el-statistic>
+                </el-col>
+            </el-row>
+
+            <!-- 趋势图表 -->
+            <div v-show="showDetail" class="chart-container">
+                <div id="visitChart" style="height: 400px; margin-top: 20px"></div>
+            </div>
+
+            <!-- 错误提示 -->
+            <el-alert v-if="error" :title="error" type="error" show-icon style="margin-top: 20px">
+            </el-alert>
+        </el-card>
+
+        <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+
+        <div class="mb-2 flex items-center gap-2">
+            <div class="bg-white p-3 rounded mr-1">
+                <el-button type="primary" @click="refresh">
+                    <el-icon style="vertical-align: middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                            <path
+                                d="M16 4C9.382813 4 4 9.382813 4 16L6 16C6 10.484375 10.484375 6 16 6C19.695313 6 22.925781 8.011719 24.65625 11L21 11L21 13L28 13L28 6L26 6L26 9.40625C23.855469 6.152344 20.179688 4 16 4 Z M 26 16C26 21.515625 21.515625 26 16 26C12.304688 26 9.074219 23.988281 7.34375 21L11 21L11 19L4 19L4 26L6 26L6 22.59375C8.144531 25.847656 11.820313 28 16 28C22.617188 28 28 22.617188 28 16Z" />
+                        </svg>
+                    </el-icon>
+                    <span style="vertical-align: middle">刷新</span>
+                </el-button>
+            </div>
+
+            <div class="bg-white p-3 rounded mr-1 flex">
+                <el-button type="success" @click="showDialog('file')">
+                    <el-icon style="vertical-align: middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                            <path
+                                d="M6 3L6 29L17.78125 29C19.25 30.828125 21.480469 32 24 32C28.40625 32 32 28.40625 32 24C32 20.289063 29.4375 17.179688 26 16.28125L26 9.59375L25.71875 9.28125L19.71875 3.28125L19.40625 3 Z M 8 5L18 5L18 11L24 11L24 16C19.59375 16 16 19.59375 16 24C16 25.066406 16.210938 26.070313 16.59375 27L8 27 Z M 20 6.4375L22.5625 9L20 9 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 23 20L23 23L20 23L20 25L23 25L23 28L25 28L25 25L28 25L28 23L25 23L25 20Z" />
+                        </svg>
+                    </el-icon>
+                    <span style="vertical-align: middle">新建文件</span>
+                </el-button>
+                <el-button type="success" @click="showDialog('directory')">
+                    <el-icon style="vertical-align: middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                            <path
+                                d="M5 3L5 29L17.771484 29C19.240982 30.824972 21.488603 32 24 32C28.4 32 32 28.4 32 24C32 19.939374 28.931363 16.567445 25 16.070312L25 15.414062L27 13.414062L27 3L23 3L22 3L5 3 z M 7 5L21 5L21 13.414062L23 15.414062L23 16.070312C19.068637 16.567445 16 19.939374 16 24C16 25.06037 16.212827 26.071744 16.591797 27L7 27L7 5 z M 23 5L25 5L25 12.585938L24 13.585938L23 12.585938L23 5 z M 24 18C27.3 18 30 20.7 30 24C30 27.3 27.3 30 24 30C20.7 30 18 27.3 18 24C18 20.7 20.7 18 24 18 z M 23 20L23 23L20 23L20 25L23 25L23 28L25 28L25 25L28 25L28 23L25 23L25 20L23 20 z" />
+                        </svg>
+                    </el-icon>
+                    <span style="vertical-align: middle">新建目录</span>
+                </el-button>
+                <el-button type="success" @click="pasteFile" :disabled="!clipboard">
+                    <el-icon style="vertical-align: middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                            <path
+                                d="M15 3C13.742188 3 12.847656 3.890625 12.40625 5L5 5L5 28L13 28L13 30L27 30L27 14L25 14L25 5L17.59375 5C17.152344 3.890625 16.257813 3 15 3 Z M 15 5C15.554688 5 16 5.445313 16 6L16 7L19 7L19 9L11 9L11 7L14 7L14 6C14 5.445313 14.445313 5 15 5 Z M 7 7L9 7L9 11L21 11L21 7L23 7L23 14L13 14L13 26L7 26 Z M 15 16L25 16L25 28L15 28Z" />
+                        </svg>
+                    </el-icon>
+                    <span style="vertical-align: middle">{{ clipboard ? '粘贴' : '无内容' }}</span>
+                </el-button>
+
+                <el-upload class="ml-3!" :action="uploadUrl" :headers="{ 'X-CSRF-Token': csrfToken }"
+                    :data="{ path: currentPath }" :show-file-list="false" :on-success="handleUploadSuccess"
+                    :on-error="handleUploadError" :before-upload="beforeUpload" :disabled="isUploading"
+                    :on-progress="handleUploadProgress">
+                    <el-button type="primary" plain>
+                        <el-icon style="vertical-align: middle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                <path
+                                    d="M11 3L11 6L9 6C7.355469 6 6 7.355469 6 9L6 25C6 26.644531 7.355469 28 9 28L23 28C24.644531 28 26 26.644531 26 25L26 9C26 7.355469 24.644531 6 23 6L21 6L21 3ZM12 5L20 5L20 6L12 6ZM9 8L23 8C23.566406 8 24 8.433594 24 9L24 25C24 25.566406 23.566406 26 23 26L9 26C8.433594 26 8 25.566406 8 25L8 9C8 8.433594 8.433594 8 9 8ZM15 11L15 15L11 15L11 17L15 17L15 21L17 21L17 17L21 17L21 15L17 15L17 11Z" />
+                            </svg>
+                        </el-icon>
+                        <span style="vertical-align: middle">上传文件</span>
+                    </el-button>
+                </el-upload>
+            </div>
+        </div>
+
+        <el-breadcrumb separator="/" class="mb-2 bg-white p-3 rounded">
+            <el-breadcrumb-item @click="navigateTo(index)" class="cursor-pointer hover:text-blue-500">
+                <span style="vertical-align: middle" class="text-blue-500 hover:text-blue-600">根目录</span>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item v-for="(part, index) in pathParts" :key="index" @click="navigateTo(index)"
+                class="cursor-pointer hover:text-blue-500">
+                <span style="vertical-align: middle" class="text-blue-500 hover:text-blue-600">{{ part }}</span>
+            </el-breadcrumb-item>
+        </el-breadcrumb>
+
+        <div v-if="clipboard" class="mb-2 p-2 bg-blue-100 text-blue-800 rounded">
+            当前剪贴板: {{ clipboard.action === 'copy' ? '复制' : '剪切' }}操作 - {{ clipboard.path }}
+        </div>
+
+        <div v-if="isUploading" class="mb-2 p-2 bg-blue-100 text-blue-800 rounded w-full! flex justify-center">
+            <div class="w-[100px]" style="vertical-align: middle">
+                <el-icon style="vertical-align: middle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                        <path
+                            d="M16 3.59375L15.28125 4.28125L8.28125 11.28125L9.71875 12.71875L15 7.4375L15 24L17 24L17 7.4375L22.28125 12.71875L23.71875 11.28125L16.71875 4.28125 Z M 7 26L7 28L25 28L25 26Z" />
+                    </svg>
+                </el-icon>
+                <span style="vertical-align: middle">上传中...</span>
+            </div>
+            <el-progress class="w-full!" :percentage="uploadProgress" :stroke-width="16" striped
+                style="width: 200px; margin-left: 10px;">
+            </el-progress>
+        </div>
+
+        <div class="h-[calc(100vh-190px)] overflow-y-auto rounded">
+            <el-table :data="fileList" stripe style="width: 100%">
+                <el-table-column prop="filename" label="文件名">
+                    <template #default="{ row }">
+                        <div class="flex items-center">
+                            <img v-if="row.is_directory" src="/res/image/folder.svg"
+                                class="size-[15px]! object-cover mr-1!">
+                            <img v-else src="/res/image/file.svg" class="size-[15px]! object-cover mr-1!">
+                            <span @click="row.is_directory && enterDirectory(row.filename)"
+                                :class="{'cursor-pointer text-blue-500 hover:underline': row.is_directory}">
+                                {{ row.filename }}
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="size" align="center" label="大小" width="120"
+                    :formatter="formatSize"></el-table-column>
+
+                <el-table-column prop="type" align="center" label="类型" width="120"></el-table-column>
+
+                <el-table-column prop="creation_time" align="center" label="创建时间" width="200">
+                    <template #default="{ row }">
+                        <div v-if="!row.is_directory" style="display: flex; align-items: center;"
+                            class="justify-center">
+                            <el-icon>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                    <path
+                                        d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                </svg>
+                            </el-icon>
+                            <span style="vertical-align: middle">{{ formatTimestamp(row.creation_time) }}</span>
+                        </div>
+                        <div v-else>
+                            -
+                        </div>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="modification_time" align="center" label="修改时间" width="200">
+                    <template #default="{ row }">
+                        <div v-if="!row.is_directory" style="display: flex; align-items: center;"
+                            class="justify-center">
+                            <el-icon>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                    <path
+                                        d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                </svg>
+                            </el-icon>
+                            <span style="vertical-align: middle">{{ formatTimestamp(row.modification_time) }}</span>
+                        </div>
+                        <div v-else>
+                            -
+                        </div>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="access_time" align="center" label="访问时间" width="200">
+                    <template #default="{ row }">
+                        <div v-if="!row.is_directory" style="display: flex; align-items: center;"
+                            class="justify-center">
+                            <el-icon>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                    <path
+                                        d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                </svg>
+                            </el-icon>
+                            <span style="vertical-align: middle">{{ formatTimestamp(row.access_time) }}</span>
+                        </div>
+                        <div v-else>
+                            -
+                        </div>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="操作" align="center" class="flex" width="380">
+                    <template #default="{ row }">
+                        <div class="flex justify-center">
+                            <div v-if="!row.is_directory">
+                                <el-popconfirm width="220" icon-color="#626AEF" title="确定要删除该文件吗?"
+                                    confirm-button-text="确定" cancel-button-text="取消" @confirm="deleteFile(row.filename)"
+                                    @cancel="">
+                                    <template #reference>
+                                        <el-button size="small" type="danger" plain>
+                                            <el-icon style="vertical-align: middle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                                    <path
+                                                        d="M6 3L6 29L17.78125 29C19.25 30.828125 21.480469 32 24 32C28.40625 32 32 28.40625 32 24C32 20.289063 29.4375 17.179688 26 16.28125L26 9.59375L25.71875 9.28125L19.71875 3.28125L19.40625 3 Z M 8 5L18 5L18 11L24 11L24 16C19.59375 16 16 19.59375 16 24C16 25.066406 16.210938 26.070313 16.59375 27L8 27 Z M 20 6.4375L22.5625 9L20 9 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 21.71875 20.28125L20.28125 21.71875L22.5625 24L20.28125 26.28125L21.71875 27.71875L24 25.4375L26.28125 27.71875L27.71875 26.28125L25.4375 24L27.71875 21.71875L26.28125 20.28125L24 22.5625Z" />
+                                                </svg>
+                                            </el-icon>
+                                            <span style="vertical-align: middle">删除文件</span>
+                                        </el-button>
+                                    </template>
+                                </el-popconfirm>
+                            </div>
+
+                            <div v-else>
+                                <el-popconfirm width="220" icon-color="#626AEF" title="确定要删除该目录吗?"
+                                    confirm-button-text="确定" cancel-button-text="取消"
+                                    @confirm="deleteDirectory(row.filename)" @cancel="">
+                                    <template #reference>
+                                        <el-button size="small" type="danger" plain>
+                                            <el-icon style="vertical-align: middle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                                    <path
+                                                        d="M5 3L5 29L17.765625 29C19.234375 30.824219 21.484375 32 24 32C28.40625 32 32 28.40625 32 24C32 19.933594 28.9375 16.5625 25 16.066406L25 13.414063L27 11.414063L27 3 Z M 7 5L21 5L21 11.417969L23 13.414063L23 16.066406C19.0625 16.5625 16 19.933594 16 24C16 25.058594 16.210938 26.074219 16.589844 27L7 27 Z M 23 5L25 5L25 10.585938L24 11.585938L23 10.589844 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 21.707031 20.292969L20.292969 21.707031L22.585938 24L20.292969 26.292969L21.707031 27.707031L24 25.414063L26.292969 27.707031L27.707031 26.292969L25.414063 24L27.707031 21.707031L26.292969 20.292969L24 22.585938Z" />
+                                                </svg>
+                                            </el-icon>
+                                            <span style="vertical-align: middle">删除目录</span>
+                                        </el-button>
+                                    </template>
+                                </el-popconfirm>
+                            </div>
+
+                            <el-button type="primary" class="ml-1!" size="small" @click="showDialog2(row.filename)"
+                                plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M17 4L17 6C18.464844 6 19.5625 6.289063 20.25 6.625C20.59375 6.792969 20.855469 6.980469 20.96875 7.09375C20.992188 7.117188 20.992188 7.109375 21 7.125L21 24.875C20.992188 24.890625 20.992188 24.882813 20.96875 24.90625C20.855469 25.019531 20.59375 25.207031 20.25 25.375C19.5625 25.710938 18.464844 26 17 26L17 28C18.734375 28 20.113281 27.648438 21.125 27.15625C21.464844 26.992188 21.742188 26.789063 22 26.59375C22.257813 26.789063 22.535156 26.992188 22.875 27.15625C23.886719 27.648438 25.265625 28 27 28L27 26C25.535156 26 24.4375 25.710938 23.75 25.375C23.40625 25.207031 23.144531 25.019531 23.03125 24.90625C23.007813 24.882813 23.007813 24.890625 23 24.875L23 7.125C23.007813 7.109375 23.007813 7.117188 23.03125 7.09375C23.144531 6.980469 23.40625 6.792969 23.75 6.625C24.4375 6.289063 25.535156 6 27 6L27 4C25.265625 4 23.886719 4.351563 22.875 4.84375C22.535156 5.007813 22.257813 5.210938 22 5.40625C21.742188 5.210938 21.464844 5.007813 21.125 4.84375C20.113281 4.351563 18.734375 4 17 4 Z M 1 10L1 22L19 22L19 20L3 20L3 12L19 12L19 10 Z M 25 10L25 12L29 12L29 20L25 20L25 22L31 22L31 10 Z M 5 14L5 18L13 18L13 14Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">重命名</span>
+                            </el-button>
+
+                            <el-button type="success" class="ml-1!" size="small" @click="copyFile(row.filename)" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M14 2L14 7L16 9L16 4L23 4L23 9L28 9L28 22L20 22L20 24L30 24L30 7.578125L29.777344 7.3125L24.972656 2.238281L24.722656 2 Z M 25.199219 4.90625L27.25 7.078125L25.199219 7.078125 Z M 2 8L2 30L18 30L18 13.578125L17.777344 13.3125L13 8 Z M 4 10L11 10L11 15L16 15L16 28L4 28 Z M 13.199219 10.90625L15.25 13.078125L13.199219 13.078125 Z M 20 12L20 14L26 14L26 12 Z M 20 16L20 18L26 18L26 16 Z M 6 18L6 20L14 20L14 18 Z M 6 22L6 24L14 24L14 22Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">复制</span>
+                            </el-button>
+
+                            <el-button type="warning" class="ml-1!" size="small" @click="cutFile(row.filename)" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M6 3L6 29L17.771484 29C19.240982 30.824972 21.488603 32 24 32C28.4 32 32 28.4 32 24C32 20.291044 29.438915 17.160607 26 16.265625L26 9.5859375L19.414062 3L6 3 z M 8 5L18 5L18 11L24 11L24 16C22.603791 16 21.290169 16.364481 20.144531 17L11 17L11 19L17.771484 19C17.286859 19.601857 16.887802 20.274959 16.591797 21L11 21L11 23L16.070312 23C16.028764 23.32857 16 23.660626 16 24C16 25.06037 16.212827 26.071744 16.591797 27L8 27L8 5 z M 20 6.4140625L22.585938 9L20 9L20 6.4140625 z M 11 13L11 15L21 15L21 13L11 13 z M 24 18C27.3 18 30 20.7 30 24C30 27.3 27.3 30 24 30C20.7 30 18 27.3 18 24C18 20.7 20.7 18 24 18 z M 20 23L20 25L28 25L28 23L20 23 z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">剪切</span>
+                            </el-button>
+
+                            <div v-if="!row.is_directory">
+                                <el-button type="info" class="ml-1!" size="small" @click="downloadFile(row.filename)"
+                                    plain>
+                                    <el-icon style="vertical-align: middle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M15 4L15 20.5625L9.71875 15.28125L8.28125 16.71875L15.28125 23.71875L16 24.40625L16.71875 23.71875L23.71875 16.71875L22.28125 15.28125L17 20.5625L17 4 Z M 7 26L7 28L25 28L25 26Z" />
+                                        </svg>
+                                    </el-icon>
+                                    <span style="vertical-align: middle">下载</span>
+                                </el-button>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+        </div>
+
+        <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%">
+            <el-input v-model="newName" placeholder="请输入名称"></el-input>
+            <template #footer>
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmCreate">确定</el-button>
+            </template>
+        </el-dialog>
+
+        <el-dialog v-model="dialogVisible2" :title="重命名" width="30%">
+            <el-input v-model="newName2" placeholder="请输入新名称"></el-input>
+            <template #footer>
+                <el-button @click="dialogVisible2 = false">取消</el-button>
+                <el-button type="primary" @click="confirmRename">确定</el-button>
+            </template>
+        </el-dialog>
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+</body>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                currentPath: '',
+                fileList: [],
+                dialogVisible: false,
+                dialogVisible2: false,
+                dialogType: 'file',
+                newName: '',
+                newName2: '',
+                clipboard: null,
+                uploadUrl: '/web_file/upload',
+                csrfToken: document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '',
+                uploadProgress: 0,
+                isUploading: false,
+                days: 7,
+                dayOptions: [
+                    { value: 3, label: '最近3天' },
+                    { value: 7, label: '最近7天' },
+                    { value: 30, label: '最近30天' }
+                ],
+                showDetail: false,
+                loading: false,
+                error: null,
+                totalVisits: 0,
+                peakVisits: 0,
+                dailyAverage: 0,
+                chartInstance: null,
+                chartData: []
+            }
+        },
+        computed: {
+            pathParts() {
+                return this.currentPath.split('/').filter(p => p);
+            }
+        },
+        methods: {
+            fetchFiles() {
+                $.post('/web_file/enum_path', JSON.stringify({ path: this.currentPath })).done((res) => {
+                    if (res.success) {
+                        this.fileList = res.data;
+                    } else {
+                        ElementPlus.ElMessage.error({
+                            message: res.message,
+                            offset: 80
+                        })
+                    }
+                }).fail(() => {
+                    ElementPlus.ElMessage.error({
+                        message: '获取文件列表失败',
+                        offset: 80
+                    })
+                })
+            },
+            formatSize(row, column, size) {
+                if (row.is_directory) return '-';
+                const units = ['B', 'KB', 'MB', 'GB'];
+                let i = 0;
+                while (size >= 1024 && i < units.length - 1) {
+                    size /= 1024;
+                    i++;
+                }
+                return `${size.toFixed(2)} ${units[i]}`;
+            },
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp * 1000);
+                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+            },
+            enterDirectory(name) {
+                this.currentPath = this.currentPath ?
+                    `${this.currentPath}/${name}` : name;
+                this.fetchFiles();
+            },
+            navigateTo(index) {
+                this.currentPath = this.pathParts.slice(0, index + 1).join('/');
+                this.fetchFiles();
+            },
+            goToPath() {
+                this.fetchFiles();
+            },
+            showDialog(type) {
+                this.dialogType = type;
+                this.dialogVisible = true;
+                this.newName = '';
+            },
+            showDialog2(name) {
+                this.newName = name;
+                this.dialogVisible2 = true;
+                this.newName2 = name;
+            },
+            confirmCreate() {
+                const path = this.currentPath ?
+                    `${this.currentPath}/${this.newName}` : this.newName;
+                const api = this.dialogType === 'file' ?
+                    '/web_file/create_file' : '/web_file/create_directory';
+
+                $.post(api, JSON.stringify({ path: path })).done((res) => {
+                    if (res.success) {
+                        ElementPlus.ElMessage.success({
+                            message: res.message,
+                            offset: 80
+                        });
+                        this.fetchFiles();
+                        this.dialogVisible = false;
+                    } else {
+                        ElementPlus.ElMessage.error({
+                            message: res.message,
+                            offset: 80
+                        });
+                    }
+                }).fail(function () {
+                    ElementPlus.ElMessage.error({
+                        message: '操作失败',
+                        offset: 80
+                    });
+                })
+            },
+            confirmRename() {
+                const path = this.currentPath ? `${this.currentPath}/${this.newName}` : this.newName;
+                $.post('/web_file/rename', JSON.stringify({ path: path, new_path: this.newName2 })).done((res) => {
+                    if (res.success) {
+                        ElementPlus.ElMessage.success({
+                            message: res.message,
+                            offset: 80
+                        });
+                        this.fetchFiles();
+                        this.dialogVisible2 = false;
+                    } else {
+                        ElementPlus.ElMessage.error({
+                            message: res.message,
+                            offset: 80
+                        });
+                    }
+                }).fail(function () {
+                    ElementPlus.ElMessage.error({
+                        message: '操作失败',
+                        offset: 80
+                    });
+                })
+            },
+            deleteFile(name) {
+                this.confirmDelete(name, '/web_file/remove_file', '文件');
+            },
+            deleteDirectory(name) {
+                this.confirmDelete(name, '/web_file/remove_directory', '目录');
+            },
+            confirmDelete(name, api, type) {
+                const path = this.currentPath ?
+                    `${this.currentPath}/${name}` : name;
+                $.post(api, JSON.stringify({ path: path })).done((res) => {
+                    if (res.success) {
+                        ElementPlus.ElMessage.success({
+                            message: res.message,
+                            offset: 80
+                        });
+                        this.fetchFiles();
+                    } else {
+                        ElementPlus.ElMessage.error({
+                            message: res.message,
+                            offset: 80
+                        });
+                    }
+                }).fail(function () {
+                    ElementPlus.ElMessage.error({
+                        message: '操作失败',
+                        offset: 80
+                    });
+                });
+            },
+            refresh() {
+                this.fetchFiles();
+                ElementPlus.ElMessage.success({
+                    message: '刷新成功!',
+                    offset: 80
+                })
+            },
+            copyFile(filename) {
+                const path = this.currentPath ? `${this.currentPath}/${filename}` : filename;
+                this.clipboard = { action: 'copy', path };
+                ElementPlus.ElMessage.success('已复制到剪贴板');
+            },
+            cutFile(filename) {
+                const path = this.currentPath ? `${this.currentPath}/${filename}` : filename;
+                this.clipboard = { action: 'cut', path };
+                ElementPlus.ElMessage.success('已剪切到剪贴板');
+            },
+            pasteFile() {
+                if (!this.clipboard) {
+                    ElementPlus.ElMessage.warning('剪贴板为空');
+                    return;
+                }
+
+                const fileName = this.clipboard.path.split('/').pop();
+                const newPath = this.currentPath ? `${this.currentPath}/${fileName}` : fileName;
+
+                $.post(`/web_file/${this.clipboard.action}`, JSON.stringify({
+                    path: this.clipboard.path,
+                    new_path: newPath
+                })).done((res) => {
+                    if (res.success) {
+                        ElementPlus.ElMessage.success(res.message);
+                        this.fetchFiles();
+                        // 剪切操作后清空剪贴板
+                        if (this.clipboard.action === 'cut') this.clipboard = null;
+                    } else {
+                        ElementPlus.ElMessage.error(res.message);
+                    }
+                }).fail(() => {
+                    ElementPlus.ElMessage.error('操作失败');
+                });
+            },
+            handleUploadProgress(event, file) {
+                this.uploadProgress = Math.floor(event.percent)
+            },
+            beforeUpload(file) {
+                this.isUploading = true;
+                this.uploadProgress = 0;
+                if (file.size > 500 * 1024 * 1024) {
+                    ElementPlus.ElMessage.error('文件大小不能超过500MB');
+                    return false;
+                }
+                return true;
+            },
+            handleUploadSuccess(response, file) {
+                this.isUploading = false;
+                if (response.success) {
+                    ElementPlus.ElMessage.success('上传成功');
+                    this.fetchFiles();
+                } else {
+                    ElementPlus.ElMessage.error(response.message);
+                }
+            },
+            handleUploadError(err) {
+                this.isUploading = false
+                this.uploadProgress = 0
+                ElementPlus.ElMessage.error(`上传失败: ${err.message}`);
+            },
+            downloadFile(filename) {
+                const fullPath = this.currentPath ? `${this.currentPath}/${filename}` : filename;
+                try {
+                    // 构造下载地址
+                    const url = `/web_file/download?path=${encodeURIComponent(fullPath)}&csrf=${this.csrfToken}`;
+
+                    // 创建中间页
+                    const closeScript = `
+                        <script>
+                            let count = 0;
+                            // 监听可见性变化（适用于后台下载）
+                            document.addEventListener('visibilitychange', () => {
+                                if (document.hidden && count++ === 0) {
+                                    setTimeout(window.close, 3000) // 3秒后关闭
+                                }
+                            });
+                            // 定时关闭保底
+                            setTimeout(window.close, 10000) // 30秒超时关闭
+                        <\/script>
+                    `;
+
+                    // 打开新窗口并写入内容
+                    const win = window.open('about:blank', '_blank');
+                    win.document.write(`
+                        <html>
+                            <body>
+                                <iframe src="${url}" style="display:none"></iframe>
+                                ${closeScript}
+                            </body>
+                        </html>
+                    `);
+
+                    // 处理弹窗拦截
+                    if (!win || win.closed) {
+                        throw new Error('请允许弹出窗口以完成下载');
+                    }
+                } catch (error) {
+                    ElementPlus.ElMessage.error(error.message);
+                }
+            },
+            async loadData() {
+                this.loading = true
+                this.error = null
+
+                try {
+                    const response = await axios.get('/web_file/user_view_count', {
+                        params: {
+                            days: this.days,
+                        }
+                    })
+
+                    if (response.data.success) {
+                        const data = response.data.data
+                        this.totalVisits = data.unique_visitors
+                        this.dailyAverage = this.totalVisits / this.days
+
+                        if (data.daily) {
+                            this.chartData = data.daily
+                            this.peakVisits = Math.max(...data.daily.map(d => d.count))
+                            this.updateChart()
+                        }
+                    } else {
+                        this.error = response.data.error || '请求数据失败'
+                    }
+                } catch (err) {
+                    this.error = `网络错误：${err.message}`
+                    console.error(err)
+                } finally {
+                    this.loading = false
+                }
+            },
+            initChart() {
+                this.chartInstance = echarts.init(document.getElementById('visitChart'))
+                const option = {
+                    title: { text: '每日访问趋势', left: 'center' },
+                    tooltip: { trigger: 'axis' },
+                    xAxis: {
+                        type: 'category',
+                        data: [],
+                        axisLabel: {
+                            formatter: value => {
+                                const date = new Date(value * 1000)
+                                return `${date.getMonth() + 1}/${date.getDate()}`
+                            }
+                        }
+                    },
+                    yAxis: { type: 'value' },
+                    series: [{
+                        data: [],
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: { color: 'rgba(64, 158, 255, 0.1)' }
+                    }]
+                }
+                this.chartInstance.setOption(option)
+                this.updateChart()
+            },
+            updateChart() {
+                const dates = this.chartData.map(d => d.date)
+                const counts = this.chartData.map(d => d.count)
+
+                this.chartInstance.setOption({
+                    xAxis: { data: dates },
+                    series: [{ data: counts }]
+                })
+            },
+            toggleDetail() {
+                if (this.showDetail) {
+                    this.loadData()
+                    this.updateChart()
+                }
+            }
+        },
+        mounted() {
+            this.fetchFiles();
+            this.loadData()
+            this.initChart()
+            setInterval(() => {
+                this.loadData()
+                this.updateChart()
+            }, 3000)
+        }
+    });
+
+    app.use(ElementPlus);
+    app.mount('#app');
+</script>
+
+</html>

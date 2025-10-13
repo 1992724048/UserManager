@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端设置</title>
+
+    <!-- 引入样式库 -->
+    <script src="/res/js/tailwind.js"></script>
+
+    <!-- 引入脚本库 -->
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+</head>
+<style>
+    @import url("/res/css/all.css");
+
+    @font-face {
+        font-family: StarRail;
+        src: url('/res/font/zh-cn.woff2');
+    }
+
+    * {
+        cursor: url('/res/image/webview_cursor_default.png'), auto;
+        font-family: StarRail, serif;
+    }
+
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3F9EFF;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(22, 79, 250);
+    }
+
+    .el-form--inline .el-form-item {
+        display: inline-flex;
+        margin-right: 5px;
+        vertical-align: middle;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+</style>
+
+<body class="bg-gray-100 size-full select-none p-2! pb-0! pt-14! w-full">
+    <div id="app" class="w-full">
+        <div class="w-full mb-0!">
+            <div class="w-auto mb-0! rounded p-3 pb-1! pl-0 flex">
+                <div class="bg-white flex p-3 pb-1! rounded mr-1">
+                    <el-button type="primary" @click="refresh_app_list"
+                        class="text-sm px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <el-icon style="vertical-align: middle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                <path
+                                    d="M16 4C9.382813 4 4 9.382813 4 16L6 16C6 10.484375 10.484375 6 16 6C19.695313 6 22.925781 8.011719 24.65625 11L21 11L21 13L28 13L28 6L26 6L26 9.40625C23.855469 6.152344 20.179688 4 16 4 Z M 26 16C26 21.515625 21.515625 26 16 26C12.304688 26 9.074219 23.988281 7.34375 21L11 21L11 19L4 19L4 26L6 26L6 22.59375C8.144531 25.847656 11.820313 28 16 28C22.617188 28 28 22.617188 28 16Z" />
+                            </svg>
+                        </el-icon>
+                        <span style="vertical-align: middle">刷新表格</span>
+                    </el-button>
+                </div>
+
+                <div class="bg-white flex p-3 pb-1! rounded mr-1">
+                    <el-form :inline="true" class="demo-form-inline">
+                        <el-form-item label="">
+                            <el-input v-model="search_app" placeholder="应用" class="w-[120px]">
+                                <template #prefix>
+                                    <el-icon class="el-input__icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                            <path
+                                                d="M16 4C9.382813 4 4 9.382813 4 16C4 22.617188 9.382813 28 16 28C22.617188 28 28 22.617188 28 16C28 9.382813 22.617188 4 16 4 Z M 16 6C21.535156 6 26 10.464844 26 16C26 21.535156 21.535156 26 16 26C10.464844 26 6 21.535156 6 16C6 10.464844 10.464844 6 16 6 Z M 15.65625 8.8125C15.582031 8.792969 15.511719 8.804688 15.4375 8.84375C15.292969 8.921875 15.214844 9.097656 15.28125 9.25C15.75 10.351563 17.398438 14.140625 18.78125 16.6875L20.0625 16C18.746094 13.460938 16.480469 9.929688 15.84375 8.9375C15.796875 8.867188 15.730469 8.832031 15.65625 8.8125 Z M 15.375 11C15.042969 10.957031 14.707031 11.101563 14.53125 11.40625L16 12.28125C16.234375 11.871094 16.09375 11.328125 15.6875 11.09375C15.585938 11.035156 15.484375 11.015625 15.375 11 Z M 14.40625 11.625L13.625 12.96875L15.125 13.8125L15.875 12.5 Z M 13.53125 13.125L10.40625 18.5625L11.875 19.40625L15 14 Z M 9.46875 15.03125L9.46875 17.59375L10.59375 17.59375L12.09375 15.03125 Z M 14.75 15.03125L13.28125 17.59375L19 17.59375L18.625 17.03125C18.601563 16.996094 18.515625 16.875 18.5 16.84375C18.195313 16.285156 17.90625 15.671875 17.59375 15.03125 Z M 19.875 15.03125C20.035156 15.324219 20.203125 15.601563 20.34375 15.875C20.359375 15.902344 20.421875 16.023438 20.4375 16.0625L21.09375 17.59375L22.65625 17.59375L22.65625 15.03125 Z M 20.15625 16.1875L18.875 16.875L19.84375 18.375L20.84375 17.8125 Z M 20.9375 18.0625L20 18.5625L21 20.9375C21.175781 21.355469 21.660156 21.558594 22.0625 21.34375C22.464844 21.128906 22.59375 20.597656 22.34375 20.21875 Z M 10.28125 18.75L9.75 21.28125L9.875 21.34375L11.78125 19.625Z" />
+                                        </svg>
+                                    </el-icon>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="post_search_app">
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M19 3C13.488281 3 9 7.488281 9 13C9 15.394531 9.839844 17.589844 11.25 19.3125L3.28125 27.28125L4.71875 28.71875L12.6875 20.75C14.410156 22.160156 16.605469 23 19 23C24.511719 23 29 18.511719 29 13C29 7.488281 24.511719 3 19 3 Z M 19 5C23.429688 5 27 8.570313 27 13C27 17.429688 23.429688 21 19 21C14.570313 21 11 17.429688 11 13C11 8.570313 14.570313 5 19 5Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">搜索</span>
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+
+                <div class="bg-white flex p-3 pb-1! rounded mr-1">
+                    <label class="block text-sm font-medium mb-2 text-gray-600">
+                        <el-input v-model="new_app.app_name" class="text-sm w-[180px]! mr-1" placeholder="名称" type="text"
+                            required>
+                            <template #prefix>
+                                <el-icon class="el-input__icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M16 4C9.382813 4 4 9.382813 4 16C4 22.617188 9.382813 28 16 28C22.617188 28 28 22.617188 28 16C28 9.382813 22.617188 4 16 4 Z M 16 6C21.535156 6 26 10.464844 26 16C26 21.535156 21.535156 26 16 26C10.464844 26 6 21.535156 6 16C6 10.464844 10.464844 6 16 6 Z M 15.65625 8.8125C15.582031 8.792969 15.511719 8.804688 15.4375 8.84375C15.292969 8.921875 15.214844 9.097656 15.28125 9.25C15.75 10.351563 17.398438 14.140625 18.78125 16.6875L20.0625 16C18.746094 13.460938 16.480469 9.929688 15.84375 8.9375C15.796875 8.867188 15.730469 8.832031 15.65625 8.8125 Z M 15.375 11C15.042969 10.957031 14.707031 11.101563 14.53125 11.40625L16 12.28125C16.234375 11.871094 16.09375 11.328125 15.6875 11.09375C15.585938 11.035156 15.484375 11.015625 15.375 11 Z M 14.40625 11.625L13.625 12.96875L15.125 13.8125L15.875 12.5 Z M 13.53125 13.125L10.40625 18.5625L11.875 19.40625L15 14 Z M 9.46875 15.03125L9.46875 17.59375L10.59375 17.59375L12.09375 15.03125 Z M 14.75 15.03125L13.28125 17.59375L19 17.59375L18.625 17.03125C18.601563 16.996094 18.515625 16.875 18.5 16.84375C18.195313 16.285156 17.90625 15.671875 17.59375 15.03125 Z M 19.875 15.03125C20.035156 15.324219 20.203125 15.601563 20.34375 15.875C20.359375 15.902344 20.421875 16.023438 20.4375 16.0625L21.09375 17.59375L22.65625 17.59375L22.65625 15.03125 Z M 20.15625 16.1875L18.875 16.875L19.84375 18.375L20.84375 17.8125 Z M 20.9375 18.0625L20 18.5625L21 20.9375C21.175781 21.355469 21.660156 21.558594 22.0625 21.34375C22.464844 21.128906 22.59375 20.597656 22.34375 20.21875 Z M 10.28125 18.75L9.75 21.28125L9.875 21.34375L11.78125 19.625Z" />
+                                    </svg>
+                                </el-icon>
+                            </template>
+                        </el-input>
+
+                        <el-button type="success" @click="create_app">
+                            <el-icon style="vertical-align: middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                    <path
+                                        d="M4 5L4 27L16.59375 27C17.789063 29.917969 20.660156 32 24 32C28.40625 32 32 28.40625 32 24C32 21.050781 30.386719 18.480469 28 17.09375L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 16.28125C25.355469 16.113281 24.695313 16 24 16C21.984375 16 20.128906 16.761719 18.71875 18L13 18L13 20L17.09375 20C16.40625 21.179688 16 22.542969 16 24C16 24.339844 16.019531 24.667969 16.0625 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 23 20L23 23L20 23L20 25L23 25L23 28L25 28L25 25L28 25L28 23L25 23L25 20Z" />
+                                </svg>
+                            </el-icon>
+                            <span style="vertical-align: middle">添加应用</span>
+                        </el-button>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full! m-4 mt-0! ml-0 p-4 bg-white rounded">
+            <div class="w-full! mb-4 flex justify-between items-center">
+                <div class="flex w-full! items-center">
+                    <el-button :disabled="pagination.current_page === 1" @click="go_to_previous_page">上一页</el-button>
+                    <span class="mx-2 text-sm text-center">第
+                        <el-input v-model="pagination.current_page" class="w-[80px]!" placeholder="页数"></el-input>
+                        页，共 {{ pagination.total_pages }} 页</span>
+                    <el-button :disabled="pagination.current_page === pagination.total_pages"
+                        @click="go_to_next_page">下一页</el-button>
+                    <span class="mx-2 text-sm text-center flex w-auto items-center">
+                        <el-input v-model="pagination.page_size" class="w-[60px]!" placeholder="数量"></el-input>
+                        /页
+                    </span>
+                </div>
+                <div class="text-sm text-end w-100">总记录数：{{ pagination.total_apps }}</div>
+            </div>
+
+            <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+
+            <div class="h-[calc(100vh-240px)] overflow-y-auto">
+                <el-table :data="app_list" style="width: 100%" stripe height="100%">
+                    <el-table-column prop="app_name" label="应用" align="center" width="565" class="flex-shrink-0!">
+                        <template #default="scope">
+                            <div class="whitespace-nowrap select-text">{{ scope.row.app_name }}</div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="是否停用" width="180" align="center">
+                        <template #default="scope">
+                            <el-tag v-if="scope.row.is_stop" type="danger">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M7.21875 5.78125L5.78125 7.21875L14.5625 16L5.78125 24.78125L7.21875 26.21875L16 17.4375L24.78125 26.21875L26.21875 24.78125L17.4375 16L26.21875 7.21875L24.78125 5.78125L16 14.5625Z" />
+                                    </svg>
+                                </el-icon>
+                                已停用
+                            </el-tag>
+                            <el-tag v-else type="success">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M28.28125 6.28125L11 23.5625L3.71875 16.28125L2.28125 17.71875L10.28125 25.71875L11 26.40625L11.71875 25.71875L29.71875 7.71875Z" />
+                                    </svg>
+                                </el-icon>
+                                未停用
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="创建时间" align="center">
+                        <template #default="scope">
+                            <div style="display: flex; align-items: center;" class="justify-center">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M9 4L9 5L5 5L5 27L27 27L27 5L23 5L23 4L21 4L21 5L11 5L11 4 Z M 7 7L9 7L9 8L11 8L11 7L21 7L21 8L23 8L23 7L25 7L25 9L7 9 Z M 7 11L25 11L25 25L7 25 Z M 13 13L13 15L15 15L15 13 Z M 17 13L17 15L19 15L19 13 Z M 21 13L21 15L23 15L23 13 Z M 9 17L9 19L11 19L11 17 Z M 13 17L13 19L15 19L15 17 Z M 17 17L17 19L19 19L19 17 Z M 21 17L21 19L23 19L23 17 Z M 9 21L9 23L11 23L11 21 Z M 13 21L13 23L15 23L15 21 Z M 17 21L17 23L19 23L19 21Z" />
+                                    </svg>
+                                </el-icon>
+                                {{ formatTimestamp(scope.row.create_time) }}
+                            </div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="users" label="用户数量" align="center"></el-table-column>
+                    <el-table-column prop="keys" label="密钥数量" align="center"></el-table-column>
+
+                    <el-table-column label="操作" width="300" align="center">
+                        <template #default="scope">
+                            <el-button size="small" @click="edit_app_popup(scope.row)" type="primary" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M4 5L4 27L17.0625 27L16.375 30.46875L16.0625 31.9375L17.53125 31.625L21.0625 30.9375L21.375 30.875L31.125 21.125C32.285156 19.964844 32.285156 18.035156 31.125 16.875C30.542969 16.292969 29.769531 16 29 16C28.65625 16 28.328125 16.070313 28 16.1875L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 17.75L18.75 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 13 18L13 20L19 20L19 18 Z M 29 18C29.253906 18 29.519531 18.082031 29.71875 18.28125C30.117188 18.679688 30.117188 19.289063 29.71875 19.6875L20.375 29.03125L18.59375 29.40625L18.96875 27.625L28.3125 18.28125C28.511719 18.082031 28.746094 18 29 18Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">修改</span>
+                            </el-button>
+
+                            <el-popconfirm width="220" icon-color="#626AEF" title="确定要删除该应用吗? (会删除与应用关联的一切数据)" confirm-button-text="确定"
+                                cancel-button-text="取消" @confirm="delete_app_popup(scope.row.app_name)" @cancel="">
+                                <template #reference>
+                                    <el-button size="small" type="danger" plain>
+                                        <el-icon style="vertical-align: middle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                                <path
+                                                    d="M4 5L4 27L16.59375 27C17.789063 29.917969 20.660156 32 24 32C28.40625 32 32 28.40625 32 24C32 21.050781 30.386719 18.480469 28 17.09375L28 5 Z M 6 7L26 7L26 9L6 9 Z M 6 11L26 11L26 16.28125C25.355469 16.113281 24.695313 16 24 16C21.984375 16 20.128906 16.761719 18.71875 18L13 18L13 20L17.09375 20C16.40625 21.179688 16 22.542969 16 24C16 24.339844 16.019531 24.667969 16.0625 25L6 25 Z M 9 14L9 16L11 16L11 14 Z M 13 14L13 16L23 16L23 14 Z M 9 18L9 20L11 20L11 18 Z M 24 18C27.324219 18 30 20.675781 30 24C30 27.324219 27.324219 30 24 30C20.675781 30 18 27.324219 18 24C18 20.675781 20.675781 18 24 18 Z M 21.71875 20.28125L20.28125 21.71875L22.5625 24L20.28125 26.28125L21.71875 27.71875L24 25.4375L26.28125 27.71875L27.71875 26.28125L25.4375 24L27.71875 21.71875L26.28125 20.28125L24 22.5625Z" />
+                                            </svg>
+                                        </el-icon>
+                                        <span style="vertical-align: middle">删除</span>
+                                    </el-button>
+                                </template>
+                            </el-popconfirm>
+
+                            <el-button v-if="scope.row.is_stop" size="small" type="success" @click="stop_app(scope.row)"
+                                plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16L27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5C19.875 5 23.261719 6.984375 25.21875 10L20 10L20 12L28 12L28 4L26 4L26 7.71875C23.617188 4.84375 20.019531 3 16 3Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">恢复</span>
+                            </el-button>
+                            <el-button v-else size="small" type="warning" @click="stop_app(scope.row)" plain>
+                                <el-icon style="vertical-align: middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M9 2.59375L9 28.15625L10.65625 26.78125L14.6875 23.40625L16.71875 27.4375L17.15625 28.34375L18.0625 27.875L21.15625 26.28125L22.03125 25.84375L21.59375 24.9375L19.75 21.3125L24.8125 20.6875L26.84375 20.4375L25.40625 19L10.71875 4.28125 Z M 11 7.4375L22.5625 18.96875L18.0625 19.5L16.65625 19.6875L17.3125 20.96875L19.375 24.96875L18.0625 25.65625L15.90625 21.34375L15.3125 20.21875L14.34375 21.03125L11 23.84375Z" />
+                                    </svg>
+                                </el-icon>
+                                <span style="vertical-align: middle">停用</span>
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <!-- 修改弹窗内容 -->
+        <el-dialog v-model="edit_popup_visible" title="修改应用" width="350px" :close-on-click-modal="false">
+            <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
+            <el-form :model="edit_app" label-width="100px">
+                <el-form-item label="停用状态">
+                    <el-switch v-model="edit_app.is_stop" active-text="已停用" inactive-text="未停用" :active-value="1"
+                        :inactive-value="0" />
+                </el-form-item>
+            </el-form>
+
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="edit_popup_visible = false">取消</el-button>
+                    <el-button type="primary" @click="post_update_app">保存</el-button>
+                </span>
+            </template>
+        </el-dialog>
+
+        <!-- 背景遮罩 -->
+        <div class="overlay" v-if="edit_popup_visible"></div>
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+</body>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                app_list: [],
+                search_app: "",
+                pagination: {
+                    current_page: 1,
+                    page_size: 50,
+                    total_apps: 0,
+                    total_pages: 1
+                },
+                new_app: {
+                    app_name: '',
+                },
+                edit_popup_visible: false,
+                edit_app: {
+                    app_name: "",
+                    is_stop: 0
+                }
+            }
+        },
+        watch: {
+            'pagination.page_size'() {
+                if (this.pagination.page_size >= 1) {
+                    this.pagination.current_page = 1;
+                    this.refresh_app_list();
+                }
+            },
+            'pagination.current_page'() {
+                if (this.pagination.current_page >= 1) {
+                    if (this.pagination.current_page > this.pagination.total_pages) {
+                        this.pagination.current_page = this.pagination.total_pages;
+                    }
+                    this.refresh_app_list();
+                }
+            }
+        },
+        mounted() {
+            this.refresh_app_list();
+        },
+        methods: {
+            refresh_app_list() {
+                if (this.pagination.page_size < 1) {
+                    this.pagination.page_size = 1;
+                }
+
+                const requestData = {
+                    current_page: parseInt(this.pagination.current_page),
+                    page_size: parseInt(this.pagination.page_size)
+                };
+
+                $.post("/app/get_all", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.pagination.total_apps = response.pagination.total_apps;
+                            this.pagination.total_pages = response.pagination.total_pages;
+                            this.app_list = response.data;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            go_to_previous_page() {
+                if (this.pagination.current_page > 1) {
+                    this.pagination.current_page--;
+                }
+            },
+            go_to_next_page() {
+                if (this.pagination.current_page < this.pagination.total_pages) {
+                    this.pagination.current_page++;
+                }
+            },
+            post_search_app() {
+                const requestData = {
+                    search_app: this.search_app
+                };
+            },
+            create_app() {
+                if (this.new_app.app_name == "") {
+                    showNotification("应用名不能为空!", false);
+                    return;
+                }
+
+                const requestData = {
+                    app_name: this.new_app.app_name,
+                };
+
+                $.post("/app/create_app", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refresh_app_list();
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            post_search_app() {
+                if (this.search_app == "") {
+                    showNotification("搜索应用不能为空!", false);
+                    return;
+                }
+
+                const requestData = {
+                    app_name: this.search_app
+                }
+                $.post("/app/get_app", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.pagination.total_apps = response.pagination.total_apps;
+                            this.pagination.total_pages = response.pagination.total_pages;
+                            this.app_list = response.data;
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            delete_app_popup(app) {
+                const requestData = {
+                    app_name: app
+                };
+                $.post("/app/delete_app", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refresh_app_list();
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            edit_app_popup(app) {
+                this.edit_app.app_name = app.app_name;
+                this.edit_app.is_stop = app.is_stop;
+                this.edit_popup_visible = true;
+            },
+            post_update_app() {
+                const requestData = {
+                    app_name: this.edit_app.app_name,
+                    is_stop: this.edit_app.is_stop
+                };
+
+                $.post("/app/update_app", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refresh_app_list();
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+                this.edit_popup_visible = false;
+            },
+            stop_app(app) {
+                const requestData = {
+                    app_name: app.app_name,
+                    is_stop: !parseInt(app.is_stop)
+                };
+
+                $.post("/app/update_app", JSON.stringify(requestData))
+                    .done((response) => {
+                        if (response.success) {
+                            this.refresh_app_list();
+                            showNotification(response.message, true);
+                        } else {
+                            showNotification(response.message, false);
+                        }
+                    })
+                    .fail(() => {
+                        showNotification("服务器连接失败!", false);
+                    });
+            },
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp  * 1000);
+                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+            },
+        },
+        computed: {
+            total_pages() {
+                return Math.ceil(this.pagination.total_apps / this.pagination.total_pages);
+            }
+        }
+    });
+
+    function showNotification(message, success) {
+        const type = success ? "success" : "error";
+        ElementPlus.ElNotification({
+            title: success ? "成功" : "失败",
+            message: message,
+            type: type,
+            duration: 2000,
+            offset: 60
+        });
+    }
+
+    app.use(ElementPlus);
+    app.mount('#app');
+</script>
+
+</html>

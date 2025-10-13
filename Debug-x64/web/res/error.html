@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+$cookie$
+<html lang="zh-cn">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="https://$http$/res/image/favicon.ico">
+        <title>$status$ $message$</title>
+
+        <!-- 引入样式库 -->
+        <script src="https://$http$/res/js/tailwind.js"></script>
+
+        <style>
+            @import url("https://$http$/res/css/all.css");
+
+            @font-face {
+                font-family: StarRail;
+                src: url('https://$http$/res/font/zh-cn.woff2');
+            }
+
+            * {
+                cursor: url('https://$http$/res/image/webview_cursor_default.png'), auto;
+                font-family: StarRail, serif;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #ffffff;
+                margin: 0;
+                padding: 0;
+                display: grid;
+                place-items: center;
+                min-height: 100vh;
+            }
+            .error-container {
+                background-color: #ffffff;
+                padding: 2rem;
+                text-align: center;
+                justify-items: center;
+                width: 90%;
+                max-width: 600px;
+            }
+            h1 {
+                color: #448DFF;
+                margin-bottom: 1rem;
+            }
+            p {
+                color: #666666;
+                margin: 5px;
+            }
+            .button {
+                display: block;
+                color: white;
+                padding: 0.75rem 2rem;
+                border: none;
+                border-radius: 5px;
+                text-decoration: none;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-top: 2em;
+            }
+
+            #errorCode {
+                font-size: 30px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="select-none error-container align-items-center justify-content-center">
+            <img src="https://$http$/res/image/error.webp" style=" background-size: cover; object-fit: cover; width: 90%; max-width: 600px;">
+            <h1 id="errorCode" class="mb-1 mt-1">$status$ $message$</h1>
+            <p id="errorDescription"></p>
+            <p>请求路径: $path$</p>
+            <p>时间: $time$</p>
+            <p>你的IP: $ip$</p>
+            <a href="https://$http$/$home$" class="button bg-blue-300 hover:bg-blue-400 text-white" target="_blank">返回首页</a>
+        </div>
+
+        <script>
+            const errorMessages = {
+                400: '请求无效，服务器无法理解客户端请求。',
+                401: '未经授权，需要用户身份验证才能访问该资源。',
+                402: '保留状态码，用于未来可能的使用（通常未实现）。',
+                403: '拒绝访问，用户无权访问请求的资源。',
+                404: '请求的资源未找到。',
+                405: '请求方法不允许，指定的 HTTP 方法不适用于请求资源。',
+                406: '不接受，服务器无法提供客户端请求的资源表示。',
+                407: '需要代理身份验证，代理服务器要求身份验证。',
+                408: '请求超时，客户端在服务器可接受的时间内未完成请求。',
+                409: '冲突，请求与资源的当前状态发生冲突。',
+                410: '消失，请求的资源已被永久删除。',
+                411: '长度要求，必须指定 Content-Length 头。',
+                412: '前提条件失败，请求中包含的条件头未满足。',
+                413: '负载过大，请求实体太大，服务器无法处理。',
+                414: 'URI 太长，请求 URI 太长，服务器无法处理。',
+                415: '不支持的媒体类型，请求的媒体类型不受服务器支持。',
+                416: '请求范围不符合要求，无法满足请求的范围。',
+                417: '预期失败，服务器无法满足"Expect"请求头指定的值。',
+                418: '我是一个茶壶（非标准），HTTP 服务器拒绝泡茶。',
+                421: '错误的请求，请求针对的服务器无法在该主机上建立连接。',
+                422: '无法处理，请求格式正确，但无法处理。',
+                423: '锁定，服务器锁定请求的资源，无法处理请求。',
+                424: '失败依赖，服务器处理请求时依赖的资源出现问题，无法完成请求。',
+                425: '太早（非标准），服务器拒绝风险请求。',
+                426: '升级需要，客户端应切换到不同的协议。',
+                428: '必须进行前提条件（非标准），服务器要求客户端发送前提条件请求。',
+                429: '太多请求，用户在给定时间内发送了太多请求。',
+                431: '请求头字段太大，服务器拒绝处理请求，因为请求头字段太大。',
+                451: '不可用（法律原因），服务器拒绝访问请求的资源，因为资源可能受到法律限制。',
+                499: '客户端关闭请求（非标准），客户端关闭了连接，导致服务器无法完成请求。',
+                500: '服务器内部错误，服务器遇到意料之外的情况，无法完成请求。',
+                501: '未实现，服务器不支持请求的功能。',
+                502: '网关错误，服务器作为网关或代理时，收到的上游服务器响应无效。',
+                503: '服务不可用，服务器当前无法处理请求。',
+                504: '网关超时，服务器作为网关或代理时，上游服务器未在合理时间内响应。',
+                505: 'HTTP 版本不受支持，服务器不支持请求的 HTTP 协议版本。',
+                506: '变体协商（非标准），服务器的位置部分是透明的。',
+                507: '存储空间不足（WebDAV），服务器无法完成请求，因为没有足够的存储空间。',
+                508: '循环检测（WebDAV），服务器在操作期间检测到无限循环。',
+                509: '带宽超出限制（非标准），服务器没有足够的带宽处理请求。',
+                510: '不愿响应（非标准），服务器无法使用与请求者的客户端协商的策略。',
+                511: '需要认证（非标准），客户端需要进行身份验证才能访问网络资源。',
+                598: '网络读取超时错误（非标准），客户端与服务器之间超时发生。',
+                599: '网络连接超时错误（非标准），客户端与服务器之间的连接超时。',
+                Default: '发生了一个未知错误，请稍后再试或联系管理员。'
+            };
+
+            // 获取 <h1> 的内容
+            const errorCodeElement = document.getElementById('errorCode');
+            const errorDescriptionElement = document.getElementById('errorDescription');
+
+            // 获取错误码
+            let errorCode = errorCodeElement.textContent.trim();
+
+            // 去掉 "Not Found" 或其他描述，只保留数字部分
+            errorCode = errorCode.match(/\d+/)?.[0] || 'Default';
+
+            // 显示对应的提示信息
+            errorDescriptionElement.textContent = errorMessages[errorCode] || errorMessages['Default'];
+        </script>
+    </body>
+</html>

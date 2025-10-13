@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实用工具网址导航</title>
+    <script src="/res/js/tailwind.js"></script>
+    <script src="/res/js/jquery-3.7.1.min.js"></script>
+    <script src="/res/js/vue.global.js"></script>
+    <script src="/res/js/all.js"></script>
+    <script src="/res/js/element-plus.js"></script>
+    <link rel="stylesheet" href="/res/css/element-plus.css">
+    <style>
+        @font-face {
+            font-family: StarRail;
+            src: url("/res/font/zh-cn.woff2");
+        }
+
+        * {
+            cursor: url("/res/image/webview_cursor_default.png"), auto;
+            font-family: StarRail, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3F9EFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(22, 79, 250);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="p-2 mt-15!">
+        <div class="h-[calc(100vh-150px)] overflow-y-auto rounded w-full!">
+            <el-table :data="list" stripe class="w-full! h-full!" style="width: 100%" @row-click="handleRowClick">
+                <el-table-column prop="name" align="center" label="名称"></el-table-column>
+                <el-table-column prop="type" align="center" label="类型"></el-table-column>
+                <el-table-column prop="url" align="center" label="网址"></el-table-column>
+                <el-table-column label="操作" align="center" width="120">
+                    <template #default="scope">
+                        <el-button type="primary" size="small" @click.stop="openLink(scope.row.url)">访问</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+
+        <!-- 添加工具的对话框 -->
+        <el-dialog v-model="dialogVisible" title="添加工具" width="30%">
+            <el-form :model="newTool" label-width="80px">
+                <el-form-item label="名称">
+                    <el-input v-model="newTool.name"></el-input>
+                </el-form-item>
+                <el-form-item label="类型">
+                    <el-input v-model="newTool.type"></el-input>
+                </el-form-item>
+                <el-form-item label="网址">
+                    <el-input v-model="newTool.url"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="addTool">确定</el-button>
+                </div>
+            </template>
+        </el-dialog>
+
+        <!-- 鼠标点击音效 -->
+        <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
+    </div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    list: [
+                        { name: '亿图图示', type: '图形处理', url: 'https://www.edrawsoft.cn/' },
+                        { name: '创客贴', type: '图形处理', url: 'https://www.chuangkit.com/' },
+                        { name: 'Pixso', type: '原型设计', url: 'https://pixso.design/' },
+                        { name: 'MindMaster', type: '思维导图', url: 'https://www.edrawsoft.cn/mindmaster/' },
+                        { name: 'Photopea', type: '图片编辑', url: 'https://www.photopea.com/' },
+                        { name: 'DeepL翻译', type: '翻译工具', url: 'https://www.deepl.com/translator' },
+                        { name: 'Sci-hub', type: '学术文献', url: 'https://sci-hub.se/' },
+                        { name: 'B站学习', type: '在线学习', url: 'https://www.bilibili.com/' },
+                        { name: '百度站长工具', type: '站长工具', url: 'https://ziyuan.baidu.com/' },
+                        { name: 'Google Search Console', type: '站长工具', url: 'https://search.google.com/search-console/' },
+                        { name: '站长之家工具箱', type: '站长工具', url: 'https://tool.chinaz.com/' },
+                        { name: '站长工具', type: '站长工具', url: 'https://cn.bing.com/webmaster/' },
+                        { name: '爱站网', type: '站长工具', url: 'https://www.aizhan.com/' },
+                        { name: 'SEO综合查询', type: '站长工具', url: 'https://seo.chinaz.com/' },
+                        { name: '站长资源平台', type: '站长工具', url: 'https://www.admin10000.com/' }
+                    ],
+                    dialogVisible: false,
+                    newTool: {
+                        name: '',
+                        type: '',
+                        url: ''
+                    }
+                }
+            },
+            methods: {
+                openLink(url) {
+                    window.open(url, '_blank');
+                    const clickSound = document.getElementById('click-sound');
+                    clickSound.play().catch(e => console.log('自动播放音效被阻止'));
+                },
+                addTool() {
+                    if (!this.newTool.name || !this.newTool.type || !this.newTool.url) {
+                        this.$message.error('请填写完整信息');
+                        return;
+                    }
+                    this.list.push({ ...this.newTool });
+                    this.dialogVisible = false;
+                    this.newTool = { name: '', type: '', url: '' };
+                    this.$message.success('添加成功');
+                }
+            },
+            mounted() {
+                // 页面加载完成后，尝试自动播放音效
+                const clickSound = document.getElementById('click-sound');
+                clickSound.play().catch(e => console.log('自动播放音效被阻止'));
+            }
+        });
+
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
