@@ -9,6 +9,7 @@ namespace controller {
         try {
             int page = json["current_page"];
             int page_size = json["page_size"];
+            std::string search_app = json["search_app"];
             json.clear();
 
             page = std::max(page, 1);
@@ -16,7 +17,7 @@ namespace controller {
                 throw std::runtime_error("页面显示数量过大或过小!");
             }
 
-            const std::vector<Key> keys = KeyDao::GetByPage(page, page_size);
+            const std::vector<Key> keys = KeyDao::GetByPage(page, page_size, search_app);
             int total_keys = KeyDao::GetCount();
 
             const int total_pages = total_keys > 0 ? (total_keys + page_size - 1) / page_size : 0;
@@ -44,10 +45,6 @@ namespace controller {
         try {
             const std::string key = json["search_key"];
             json.clear();
-
-            if (key.empty()) {
-                throw std::runtime_error("密钥不能为空!");
-            }
 
             const auto key_ = KeyDao::Get(key);
             if (!key_) {

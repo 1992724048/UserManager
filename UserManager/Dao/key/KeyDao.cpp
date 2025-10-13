@@ -9,9 +9,7 @@ auto KeyDao::Get(const std::string& key) -> std::optional<Key> {
 
     SQLiteWrapper::SQLBuilder builder;
 
-    const auto sql = builder.select({
-        "*"
-    }).from("keys").where("key_str = ?").build();
+    const auto sql = builder.select({"*"}).from("keys").where("key_str = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql, key);
@@ -78,12 +76,7 @@ auto KeyDao::Update(const std::string& key, int is_use, int price, int add_time,
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.update("keys").set({
-        "is_use",
-        "price",
-        "add_time",
-        "app_id"
-    }).where("key_str = ?").build();
+    const auto sql = builder.update("keys").set({"is_use", "price", "add_time", "app_id"}).where("key_str = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     return sqlite_wrapper->execute(sql, is_use, price, add_time, app_id, key);
@@ -101,14 +94,7 @@ auto KeyDao::Add(float price, int add_time, const std::string& app_id, int count
     Key key;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.insert("keys").columns({
-        "key_str",
-        "is_use",
-        "app_id",
-        "create_time",
-        "add_time",
-        "price"
-    }).build();
+    const auto sql = builder.insert("keys").columns({"key_str", "is_use", "app_id", "create_time", "add_time", "price"}).build();
 
     key.add_time = add_time;
     key.app_id = app_id;
@@ -132,10 +118,15 @@ auto KeyDao::Add(float price, int add_time, const std::string& app_id, int count
 
 auto KeyDao::ClearUse() -> int {
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.del("keys").where("is_use = ?").build();
+    const auto sql = builder.select({"*"}).from("keys").where("is_use = ?").build();
 
+    int num{};
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, 1);
+    const auto stmt = sqlite_wrapper->query(sql, 1);
+    while (stmt.step()) {
+        num += Delete(bind(stmt).key_str);
+    }
+    return num;
 }
 
 auto KeyDao::GetUseKeys() -> std::vector<Key> {
@@ -145,12 +136,13 @@ auto KeyDao::GetUseKeys() -> std::vector<Key> {
     std::vector<Key> keys;
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql, 1);
-    while (stmt.step())
+    while (stmt.step()) {
         keys.push_back(bind(stmt));
+    }
     return keys;
 }
 
-auto KeyDao::GetByPage(const int page, const int page_size) -> std::vector<Key> {
+auto KeyDao::GetByPage(const int page, const int page_size, const std::string& app) -> std::vector<Key> {
     std::vector<Key> keys;
 
     if (page < 1 || page_size <= 0) {
@@ -160,14 +152,15 @@ auto KeyDao::GetByPage(const int page, const int page_size) -> std::vector<Key> 
     const int offset = (page - 1) * page_size;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.select({
-        "*"
-    }).from("keys").limit(page_size).offset(offset).build();
+    const auto sql = app.empty()
+                         ? builder.select({"*"}).from("keys").limit(page_size).offset(offset).build()
+                         : builder.select({"*"}).from("keys").where("app_id = ?").limit(page_size).offset(offset).build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    const auto stmt = sqlite_wrapper->query(sql);
-    while (stmt.step())
+    const auto stmt = app.empty() ? sqlite_wrapper->query(sql) : sqlite_wrapper->query(sql, app);
+    while (stmt.step()) {
         keys.push_back(bind(stmt));
+    }
     return keys;
 }
 

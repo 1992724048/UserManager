@@ -12,7 +12,7 @@ public:
     static auto Add(float price, int add_time, const std::string& app_id, int count) -> int;
     static auto ClearUse() -> int;
     static auto GetUseKeys() -> std::vector<Key>;
-    static auto GetByPage(int page, int page_size = 50) -> std::vector<Key>;
+    static auto GetByPage(int page, int page_size = 50, const std::string& app = "") -> std::vector<Key>;
     static auto GetCount() -> int;
 private:
     static auto bind(const SQLiteWrapper::SQLiteStatement& stmt) -> Key;

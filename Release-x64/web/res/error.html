@@ -7,22 +7,18 @@ $cookie$
         <link rel="shortcut icon" href="https://$http$/res/image/favicon.ico">
         <title>$status$ $message$</title>
 
-        <!-- 引入样式库 -->
         <script src="https://$http$/res/js/tailwind.js"></script>
 
         <style>
             @import url("https://$http$/res/css/all.css");
-
             @font-face {
                 font-family: StarRail;
-                src: url('https://$http$/res/font/zh-cn.woff2');
+                src: url('https://$http$/res/font/zh-cn.ttf');
             }
-
             * {
                 cursor: url('https://$http$/res/image/webview_cursor_default.png'), auto;
                 font-family: StarRail, serif;
             }
-
             body {
                 font-family: Arial, sans-serif;
                 background-color: #ffffff;
@@ -41,7 +37,7 @@ $cookie$
                 max-width: 600px;
             }
             h1 {
-                color: #448DFF;
+                color: #CC5F61;
                 margin-bottom: 1rem;
             }
             p {
@@ -59,7 +55,6 @@ $cookie$
                 transition: background-color 0.3s ease;
                 margin-top: 2em;
             }
-
             #errorCode {
                 font-size: 30px;
             }
@@ -68,13 +63,13 @@ $cookie$
     </head>
     <body>
         <div class="select-none error-container align-items-center justify-content-center">
-            <img src="https://$http$/res/image/error.webp" style=" background-size: cover; object-fit: cover; width: 90%; max-width: 600px;">
+            <img src="https://$http$/res/image/cyy.gif" style=" background-size: cover; object-fit: cover; width: 90%; max-width: 600px;">
             <h1 id="errorCode" class="mb-1 mt-1">$status$ $message$</h1>
             <p id="errorDescription"></p>
             <p>请求路径: $path$</p>
             <p>时间: $time$</p>
-            <p>你的IP: $ip$</p>
-            <a href="https://$http$/$home$" class="button bg-blue-300 hover:bg-blue-400 text-white" target="_blank">返回首页</a>
+            <p>IP: $ip$</p>
+            <a href="https://$http$/$home$" class="button bg-red-300 hover:bg-red-400 text-white" target="_blank">返回首页</a>
         </div>
 
         <script>
@@ -126,17 +121,11 @@ $cookie$
                 Default: '发生了一个未知错误，请稍后再试或联系管理员。'
             };
 
-            // 获取 <h1> 的内容
             const errorCodeElement = document.getElementById('errorCode');
             const errorDescriptionElement = document.getElementById('errorDescription');
 
-            // 获取错误码
             let errorCode = errorCodeElement.textContent.trim();
-
-            // 去掉 "Not Found" 或其他描述，只保留数字部分
             errorCode = errorCode.match(/\d+/)?.[0] || 'Default';
-
-            // 显示对应的提示信息
             errorDescriptionElement.textContent = errorMessages[errorCode] || errorMessages['Default'];
         </script>
     </body>

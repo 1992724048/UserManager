@@ -15,6 +15,7 @@ public:
     static auto SubUser(const std::string& app_name) -> int;
     static auto AddUser(const std::string& app_name) -> int;
     static auto GetByPage(int page, int page_size = 50) -> std::vector<App>;
+    static auto GetAll() -> std::vector<App>;
     static auto GetCount() -> int;
 private:
     static auto bind(const SQLiteWrapper::SQLiteStatement& stmt) -> App;

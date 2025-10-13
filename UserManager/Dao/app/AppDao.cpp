@@ -11,9 +11,7 @@ auto AppDao::Get(const std::string& app) -> std::optional<App> {
 
     SQLiteWrapper::SQLBuilder builder;
 
-    const auto sql = builder.select({
-        "*"
-    }).from("apps").where("app_name = ?").build();
+    const auto sql = builder.select({"*"}).from("apps").where("app_name = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql, app);
@@ -45,9 +43,7 @@ auto AppDao::Update(const std::string& app, bool is_stop) -> int {
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.update("apps").set({
-        "is_stop",
-    }).where("app_name = ?").build();
+    const auto sql = builder.update("apps").set({"is_stop",}).where("app_name = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     return sqlite_wrapper->execute(sql, is_stop, app);
@@ -59,10 +55,7 @@ auto AppDao::Update(const std::string& _app, int _users, int _keys) -> int {
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.update("apps").set({
-        "users",
-        "keys"
-    }).where("app_name = ?").build();
+    const auto sql = builder.update("apps").set({"users", "keys"}).where("app_name = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     return sqlite_wrapper->execute(sql, _users, _keys, _app);
@@ -76,13 +69,7 @@ auto AppDao::Add(const std::string& app_name) -> int {
     App app;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.insert("apps").columns({
-        "app_name",
-        "create_time",
-        "users",
-        "is_stop",
-        "keys"
-    }).build();
+    const auto sql = builder.insert("apps").columns({"app_name", "create_time", "users", "is_stop", "keys"}).build();
 
     app.app_name = app_name;
     app.create_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -100,7 +87,7 @@ auto AppDao::SubKey(const std::string& app_name) -> int {
         return 0;
     }
 
-    return Update(app_name, app->users, --app->keys);
+    return Update(app_name, app->users, app->keys > 0 ? --app->keys : 0);
 }
 
 auto AppDao::AddKey(const std::string& app_name) -> int {
@@ -140,14 +127,27 @@ auto AppDao::GetByPage(const int page, const int page_size) -> std::vector<App> 
     const int offset = (page - 1) * page_size;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.select({
-        "*"
-    }).from("apps").limit(page_size).offset(offset).build();
+    const auto sql = builder.select({"*"}).from("apps").limit(page_size).offset(offset).build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql);
-    while (stmt.step())
+    while (stmt.step()) {
         apps.push_back(bind(stmt));
+    }
+    return apps;
+}
+
+auto AppDao::GetAll() -> std::vector<App> {
+    std::vector<App> apps;
+
+    SQLiteWrapper::SQLBuilder builder;
+    const auto sql = builder.select({"*"}).from("apps").build();
+
+    const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
+    const auto stmt = sqlite_wrapper->query(sql);
+    while (stmt.step()) {
+        apps.push_back(bind(stmt));
+    }
     return apps;
 }
 

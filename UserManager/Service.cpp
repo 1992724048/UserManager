@@ -131,7 +131,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
             {
                 "$home$",
                 [&] -> std::string {
-                    return f_web_files.value().filename().string() + "/web/";
+                    return f_web_files.value().filename().string() + "/";
                 }
             },
             {
