@@ -142,4 +142,45 @@ namespace tp {
         std::mutex mtx_;
         std::condition_variable cv_;
     };
+
+    /**
+     * @brief 时间守护结构体，用于记录和计算时间持续
+     */
+    struct TimeGuard {
+        /**
+         * @brief 使用std::chrono::steady_clock作为时钟
+         */
+        using Clock = std::chrono::steady_clock;
+        /**
+         * @brief 时间点类型
+         */
+        using TimePoint = Clock::time_point;
+
+        /**
+         * @brief 构造函数，初始化时间守护并记录起始时间
+         */
+        TimeGuard() : start(Clock::now()) {}
+
+        /**
+         * @brief 更新起始时间点为当前时间
+         */
+        auto update_start() -> void {
+            start = Clock::now();
+        }
+
+        /**
+         * @brief 获取从起始时间点到当前时间点的持续时间，以秒为单位
+         *
+         * @return double 持续时间，单位为秒
+         */
+        [[nodiscard]] auto get_duration() const -> double {
+            return std::chrono::duration<double>(Clock::now() - start).count();
+        }
+
+    private:
+        /**
+         * @brief 起始时间点
+         */
+        TimePoint start;
+    };
 }

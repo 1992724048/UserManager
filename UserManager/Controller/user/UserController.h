@@ -20,7 +20,7 @@ namespace controller {
             METHOD_ADD(UserController::user_get_captcha, "/users/user_get_captcha", httplib::GET, httplib::ALL, "用户", "获取验证码");
             METHOD_ADD(UserController::post_heartbeat, "/users/heartbeat", httplib::POST, httplib::ALL, "用户", "心跳包");
         METHOD_LIST_END
-
+    private:
         // 一定要写构造方法，不然会被优化掉
         UserController();
         static auto get_all(const httplib::Request& req, httplib::Response& res) -> void;

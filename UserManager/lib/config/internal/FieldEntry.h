@@ -3,84 +3,76 @@
 #include "../events/event.hpp"
 #include "../json.hpp"
 
-namespace config::internal
-{
-	class FieldEntry
-	{
-	public:
-		FieldEntry(const std::string& friendlyName, const std::string& name, const std::string& sectionName, const bool multiProfile = false)
-			: m_Name(name), m_FriendName(friendlyName), m_Section(sectionName), m_MultiProfile(multiProfile), m_Container(nullptr) {}
+namespace config::internal {
+    class FieldEntry {
+    public:
+        FieldEntry(std::string _friendly_name, std::string _name, std::string _section_name, const bool _multi_profile = false) : m_name(std::move(_name)),
+                                                                                                                                  m_friend_name(std::move(_friendly_name)),
+                                                                                                                                  m_section(std::move(_section_name)),
+                                                                                                                                  m_multi_profile(_multi_profile),
+                                                                                                                                  m_container(nullptr) {}
 
-		TEvent<FieldEntry*> ChangedEvent;
-		TEvent<FieldEntry*, const std::string&, bool> MovedEvent;
-		TEvent<FieldEntry*, const std::string&, bool> RepositionEvent;
+        TEvent<FieldEntry*> changed_event;
+        TEvent<FieldEntry*, const std::string&, bool> moved_event;
+        TEvent<FieldEntry*, const std::string&, bool> reposition_event;
 
-		virtual void FireChanged()
-		{
-			ChangedEvent(this);
-		}
+        virtual auto fire_changed() -> void {
+            changed_event(this);
+        }
 
-		virtual nlohmann::json ToJson() = 0;
-		virtual void FromJson(const nlohmann::json& value) = 0;
-		virtual void Reset() = 0;
+        virtual auto ToJson() -> nlohmann::json = 0;
+        virtual auto FromJson(const nlohmann::json& value) -> void = 0;
+        virtual auto Reset() -> void = 0;
 
-		bool IsShared() const
-		{
-			return m_MultiProfile;
-		}
+        auto is_shared() const -> bool {
+            return m_multi_profile;
+        }
 
-		std::string GetName() const
-		{
-			return m_Name;
-		}
+        auto get_name() const -> std::string {
+            return m_name;
+        }
 
-		std::string GetFriendName() const
-		{
-			return m_FriendName;
-		}
+        auto get_friend_name() const -> std::string {
+            return m_friend_name;
+        }
 
-		std::string GetSection() const
-		{
-			return m_Section;
-		}
+        auto get_section() const -> std::string {
+            return m_section;
+        }
 
-		nlohmann::json* GetContainer() const
-		{
-			return m_Container;
-		}
+        auto get_container() const -> nlohmann::json* {
+            return m_container;
+        }
 
-		void Reposition(const std::string& newSection, bool shared = false)
-		{
-			std::string oldSection = m_Section;
+        auto reposition(const std::string& _new_section, const bool _shared = false) -> void {
+            std::string old_section = m_section;
 
-			m_Section = newSection;
-			m_MultiProfile = shared;
+            m_section = _new_section;
+            m_multi_profile = _shared;
 
-			RepositionEvent(this, newSection, shared);
-		}
+            reposition_event(this, _new_section, _shared);
+        }
 
-		void Move(const std::string& newSection, bool shared = false)
-		{
-			std::string oldSection = m_Section;
-			bool oldMultiProfile = m_MultiProfile;
+        auto move(const std::string& _new_section, const bool _shared = false) -> void {
+            const std::string old_section = m_section;
+            const bool old_multi_profile = m_multi_profile;
 
-			m_Section = newSection;
-			m_MultiProfile = shared;
+            m_section = _new_section;
+            m_multi_profile = _shared;
 
-			MovedEvent(this, oldSection, oldMultiProfile);
-		}
+            moved_event(this, old_section, old_multi_profile);
+        }
 
-		void SetContainer(nlohmann::json* newContainer)
-		{
-			m_Container = nullptr;
-		}
+        auto set_container(nlohmann::json* _new_container) -> void {
+            m_container = nullptr;
+        }
 
-	protected:
-		std::string m_Name;
-		std::string m_FriendName;
-		std::string m_Section;
-		bool m_MultiProfile;
+    protected:
+        std::string m_name;
+        std::string m_friend_name;
+        std::string m_section;
+        bool m_multi_profile;
 
-		nlohmann::json* m_Container;
-	};
+        nlohmann::json* m_container;
+    };
 }

@@ -444,7 +444,7 @@ public:
                                return !connection_queue.empty();
                            });
         }
-        return util::make_jemalloc_shared<Connection>(wrapper);
+        return util::make_mi_malloc_shared<Connection>(wrapper);
     }
 
     static auto initializePool() -> void {

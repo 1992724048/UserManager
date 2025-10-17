@@ -5,89 +5,141 @@
 #include "FieldSerialize.h"
 
 namespace config::internal {
-	template <typename T>
-	class FieldBase {
-		using _FieldBaseT = FieldBase<T>;
+    template<typename T>
+    class FieldBase {
+        using _FieldBaseT = FieldBase;
 
-	public:
-		using _ValueType = T;
+    public:
+        using _ValueType = T;
 
-		explicit FieldBase() : FieldChangedEvent(m_FieldChangedEvent), p_Container(nullptr) {}
+        FieldBase() : field_changed_event(m_field_changed_event), p_container(nullptr) {}
 
-		explicit FieldBase(FieldSerialize<T>* serializeFieldPtr) : FieldChangedEvent(m_FieldChangedEvent), p_Container(serializeFieldPtr) { p_Container->ChangedEvent += MY_METHOD_HANDLER(_FieldBaseT::OnFieldChanged); }
+        FieldBase(FieldSerialize<T>* _serialize_field_ptr) : field_changed_event(m_field_changed_event), p_container(_serialize_field_ptr) {
+            p_container->changed_event += MY_METHOD_HANDLER(_FieldBaseT::on_field_changed);
+        }
 
-		explicit FieldBase(const std::shared_ptr<FieldSerialize<T>>& serializeField) : FieldChangedEvent(m_FieldChangedEvent), p_Container(serializeField) { p_Container->ChangedEvent += MY_METHOD_HANDLER(_FieldBaseT::OnFieldChanged); }
+        FieldBase(const std::shared_ptr<FieldSerialize<T>>& _serialize_field) : field_changed_event(m_field_changed_event), p_container(_serialize_field) {
+            p_container->changed_event += MY_METHOD_HANDLER(_FieldBaseT::on_field_changed);
+        }
 
-		explicit FieldBase(const std::string& friendlyName, const std::string& name, const std::string& section, T defaultValue, bool multiProfile = false) : FieldChangedEvent(m_FieldChangedEvent), p_Container(std::make_shared<FieldSerialize<T>>(friendlyName, name, section, defaultValue, multiProfile)) { p_Container->ChangedEvent += MY_METHOD_HANDLER(_FieldBaseT::OnFieldChanged); }
+        FieldBase(const std::string& _friendly_name, const std::string& _name, const std::string& _section, T _default_value, bool _multi_profile = false) : field_changed_event(m_field_changed_event),
+            p_container(std::make_shared<FieldSerialize<T>>(_friendly_name, _name, _section, _default_value, _multi_profile)) {
+            p_container->changed_event += MY_METHOD_HANDLER(_FieldBaseT::on_field_changed);
+        }
 
-		explicit FieldBase(const FieldBase<T>& field) : FieldChangedEvent(m_FieldChangedEvent), m_FieldChangedEvent(), p_Container(field.p_Container) { p_Container->ChangedEvent += MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged); }
+        FieldBase(const FieldBase& _field) : field_changed_event(m_field_changed_event), m_field_changed_event(), p_container(_field.p_container) {
+            p_container->changed_event += MY_METHOD_HANDLER(FieldBase::on_field_changed);
+        }
 
-		~FieldBase() { if (p_Container.get() != nullptr) { p_Container->ChangedEvent -= MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged); } }
+        ~FieldBase() {
+            if (p_container.get() != nullptr) {
+                p_container->changed_event -= MY_METHOD_HANDLER(FieldBase::on_field_changed);
+            }
+        }
 
-		auto name() const -> std::string { return p_Container->GetName(); }
+        auto name() const -> std::string {
+            return p_container->get_name();
+        }
 
-		auto friendName() const -> std::string { return p_Container->GetFriendName(); }
+        auto friend_name() const -> std::string {
+            return p_container->get_friend_name();
+        }
 
-		auto section() const -> std::string { return p_Container->GetSection(); }
+        auto section() const -> std::string {
+            return p_container->get_section();
+        }
 
-		auto shared() const -> bool { return p_Container->IsShared(); }
+        auto shared() const -> bool {
+            return p_container->is_shared();
+        }
 
-		auto value() const -> T& { return p_Container->m_Value; }
+        auto value() const -> T& {
+            std::shared_lock lock(mutex);
+            return p_container->m_value;
+        }
 
-		auto pointer() const -> T* { return &p_Container->m_Value; }
+        auto pointer() const -> T* {
+            std::shared_lock lock(mutex);
+            return &p_container->m_value;
+        }
 
-		auto entry() const -> std::shared_ptr<FieldEntry> { return std::static_pointer_cast<FieldEntry>(p_Container); }
+        auto entry() const -> std::shared_ptr<FieldEntry> {
+            return std::static_pointer_cast<FieldEntry>(p_container);
+        }
 
-		operator T&() const { return value(); }
+        operator T&() const {
+            return value();
+        }
 
-		operator T*() const { return pointer(); }
+        operator T*() const {
+            return pointer();
+        }
 
-		auto FireChanged() const -> void { p_Container->FireChanged(); }
+        auto fire_changed() const -> void {
+            p_container->fire_changed();
+        }
 
-		auto repos(const std::string& newSection, bool shared = false) -> void { p_Container->Reposition(newSection, shared); }
+        auto repos(const std::string& _new_section, bool _shared = false) -> void {
+            p_container->reposition(_new_section, _shared);
+        }
 
-		auto move(const std::string& newSection, bool shared = false) -> void { p_Container->Move(newSection, shared); }
+        auto move(const std::string& _new_section, bool _shared = false) -> void {
+            p_container->move(_new_section, _shared);
+        }
 
-		auto operator=(const T& other) -> FieldBase<T>& {
-			p_Container->m_Value = other;
-			p_Container->FireChanged();
-			return *this;
-		}
+        auto operator=(const T& _other) -> FieldBase& {
+            {
+                std::unique_lock lock(mutex);
+                p_container->m_value = _other;
+            }
+            p_container->fire_changed();
+            return *this;
+        }
 
-		auto operator=(T&& other) -> FieldBase<T>& {
-			p_Container->m_Value = std::move(other);
-			p_Container->FireChanged();
-			return *this;
-		}
+        auto operator=(T&& _other) -> FieldBase& {
+            {
+                std::unique_lock lock(mutex);
+                p_container->m_value = std::move(_other);
+            }
+            p_container->fire_changed();
+            return *this;
+        }
 
-		auto operator=(std::shared_ptr<FieldSerialize<T>>& other) -> FieldBase<T>& {
-			p_Container->ChangedEvent -= MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged);
+        auto operator=(std::shared_ptr<FieldSerialize<T>>& _other) -> FieldBase& {
+            std::unique_lock lock(mutex);
+            p_container->changed_event -= MY_METHOD_HANDLER(FieldBase::on_field_changed);
 
-			p_Container = other;
-			p_Container->ChangedEvent += MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged);
-			return *this;
-		}
+            p_container = _other;
+            p_container->changed_event += MY_METHOD_HANDLER(FieldBase::on_field_changed);
+            return *this;
+        }
 
-		auto operator=(FieldSerialize<T>* other) -> FieldBase<T>& {
-			p_Container->ChangedEvent -= MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged);
+        auto operator=(FieldSerialize<T>* _other) -> FieldBase& {
+            std::unique_lock lock(mutex);
+            p_container->changed_event -= MY_METHOD_HANDLER(FieldBase::on_field_changed);
 
-			p_Container = std::make_shared<FieldSerialize<T>>(other);
-			p_Container->ChangedEvent += MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged);
-			return *this;
-		}
+            p_container = std::make_shared<FieldSerialize<T>>(_other);
+            p_container->changed_event += MY_METHOD_HANDLER(FieldBase::on_field_changed);
+            return *this;
+        }
 
-		auto operator=(const FieldBase<T>& other) -> FieldBase<T>& {
-			p_Container = other.p_Container;
-			p_Container->ChangedEvent += MY_METHOD_HANDLER(FieldBase<T>::OnFieldChanged);
-			return *this;
-		}
+        auto operator=(const FieldBase& _other) -> FieldBase& {
+            std::unique_lock lock(mutex);
+            p_container = _other.p_container;
+            p_container->changed_event += MY_METHOD_HANDLER(FieldBase::on_field_changed);
+            return *this;
+        }
 
-		IEvent<T&>& FieldChangedEvent;
+        IEvent<T&>& field_changed_event;
 
-	protected:
-		TEvent<T&> m_FieldChangedEvent;
+    protected:
+        TEvent<T&> m_field_changed_event;
 
-		std::shared_ptr<FieldSerialize<T>> p_Container;
-		auto OnFieldChanged(FieldEntry* entry) -> void { m_FieldChangedEvent(value()); }
-	};
+        std::shared_ptr<FieldSerialize<T>> p_container;
+        mutable std::shared_mutex mutex;
+
+        auto on_field_changed(FieldEntry* _entry) -> void {
+            m_field_changed_event(value());
+        }
+    };
 }

@@ -18,11 +18,7 @@ namespace httplib {
         PUT
     };
 
-    enum HttpRequest {
-        ALL,
-        COOKIE,
-        NOACCESS
-    };
+    enum HttpRequest { ALL, COOKIE, NOACCESS };
 
     class HttpControllerBase {
     protected:
@@ -66,7 +62,7 @@ namespace httplib {
                         return;
                     }
 
-                    if (controller.request == COOKIE && !Service::CheckCookieValid(req)) {
+                    if (controller.request == COOKIE && !Service::check_cookie_valid(req)) {
                         LOG_CRIT << fmt::format("{}:{} 未经授权的访问!", req.remote_addr, req.remote_port);
                         res.status = 401;
                         return;

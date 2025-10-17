@@ -377,9 +377,6 @@
     <ClInclude Include="Controller\key\KeyController.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="lib\Encode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="lib\Encrypt.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -3006,6 +3003,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lib\opencv2\world.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crash_dump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="encode.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

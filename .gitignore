@@ -46,3 +46,10 @@
 Debug-x64/Server.exp
 Debug-x64/Server.map
 /Debug-x64
+*.map
+*.pdb
+*.db-shm
+*.db-wal
+*.pem
+*.crt
+*.map

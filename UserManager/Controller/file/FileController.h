@@ -43,7 +43,7 @@ public:
 	inline static util::VisitCounter visit;
 
     FileController();
-	static auto file_logic(const httplib::Request&& req, httplib::Response&& res, const bool user, const bool res_path) -> void;
+	static auto file_logic(const httplib::Request& req, httplib::Response& res, const bool user, const bool res_path) -> void;
 	static auto file(const httplib::Request& req, httplib::Response& res) -> void;
 	static auto user_web(const httplib::Request& req, httplib::Response& res) -> void;
 	static auto res(const httplib::Request& req, httplib::Response& res) -> void;

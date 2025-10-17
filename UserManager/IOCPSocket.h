@@ -57,14 +57,14 @@ public:
 
 class IOCPSocket {
     template<typename T, typename... Args>
-    static auto jemalloc_shared(Args&&... args) -> std::shared_ptr<T> {
+    static auto mi_malloc_shared(Args&&... args) -> std::shared_ptr<T> {
         void* mem = mi_malloc(sizeof(T));
         try {
             new(mem) T(std::forward<Args>(args)...);
             return std::shared_ptr<T>(static_cast<T*>(mem),
-                                      [](T* ptr) {
-                                          ptr->~T();
-                                          mi_free(ptr);
+                                      [](T* _ptr) {
+                                          _ptr->~T();
+                                          mi_free(_ptr);
                                       });
         } catch (...) {
             mi_free(mem);
@@ -73,7 +73,7 @@ class IOCPSocket {
     }
 
     template<typename K, typename V>
-    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::mutex>;
+    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::shared_mutex>;
 
 public:
     inline static HANDLE iocp = nullptr;
@@ -204,7 +204,7 @@ private:
             return false;
         }
 
-        std::shared_ptr<IOContext> io_context = jemalloc_shared<IOContext>();
+        std::shared_ptr<IOContext> io_context = mi_malloc_shared<IOContext>();
         io_context->type = ACCEPT;
         io_context->client = sock;
 

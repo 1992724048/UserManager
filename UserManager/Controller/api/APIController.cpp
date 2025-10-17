@@ -44,7 +44,7 @@ auto APIController::info(const httplib::Request& req, httplib::Response& res) ->
     GetSystemInfo(&sysInfo);
     int num_cores = sysInfo.dwNumberOfProcessors;
     for (int i = 0; i < num_cores; i++) {
-        auto path = util::Encode::char_to_wchar(fmt::format("\\Processor({})\\% Processor Time", i));
+        auto path = Encode::char_to_wchar(fmt::format("\\Processor({})\\% Processor Time", i));
         PDH_HCOUNTER core_counter = nullptr;
         status = PdhAddCounter(query, path.data(), 0, &core_counter);
         if (status == ERROR_SUCCESS) {

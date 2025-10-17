@@ -62,7 +62,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
         create_directories(f_sql_path.value().parent_path() / "backup");
     }
 
-    Logger::SetLevel(f_log_level, f_log_type);
+    Logger::set_level(f_log_level, f_log_type);
 
     LOG_DEBUG << fmt::format("Cert 路径: {}", f_cert_path.value().string());
     LOG_DEBUG << fmt::format("Key  路径: {}", f_key_path.value().string());
@@ -76,7 +76,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
         };
     }
 
-    server->set_error_handler([this](const httplib::Request& req, httplib::Response& res) {
+    server->set_error_handler([this](const httplib::Request& _req, httplib::Response& _res) {
         static const boost::regex pattern(R"(\$(status|message|ip|time|path|home|cookie|http)\$)", static_cast<boost::regex_constants::flag_type_>(boost::regex::perl | boost::regex::optimize));
         static const std::string error_template = util::read_file(f_web_error_page);
 
@@ -101,19 +101,19 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
             {
                 "$status$",
                 [&] -> std::string {
-                    return std::to_string(res.status);
+                    return std::to_string(_res.status);
                 }
             },
             {
                 "$message$",
                 [&] -> std::string {
-                    return std::string(httplib::status_message(res.status));
+                    return httplib::status_message(_res.status);
                 }
             },
             {
                 "$ip$",
                 [&] -> std::string {
-                    return fmt::format("{}:{}", req.remote_addr, req.remote_port);
+                    return fmt::format("{}:{}", _req.remote_addr, _req.remote_port);
                 }
             },
             {
@@ -125,7 +125,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
             {
                 "$path$",
                 [&] -> std::string {
-                    return req.path;
+                    return _req.path;
                 }
             },
             {
@@ -150,18 +150,18 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
 
         const std::string buffer = boost::regex_replace(error_template,
                                                         pattern,
-                                                        [&](const boost::smatch& match) -> std::string {
-                                                            const auto& str = match[0].str();
+                                                        [&](const boost::smatch& _match) -> std::string {
+                                                            const auto& str = _match[0].str();
                                                             return replacements.contains(str) ? replacements[str]() : str;
                                                         },
                                                         boost::format_all);
 
-        res.set_content(buffer, "text/html");
+        _res.set_content(buffer, "text/html");
     });
 
-    server->set_logger([this](const httplib::Request& req, const httplib::Response& res) -> void {
-        if (res.status >= 400 && res.status <= 600) {
-            LOG_WARNING << fmt::format("{}:{} -> {} {} -> {}", req.remote_addr, req.remote_port, res.status, httplib::status_message(res.status), req.path);
+    server->set_logger([this](const httplib::Request& _req, const httplib::Response& _res) -> void {
+        if (_res.status >= 400 && _res.status <= 600) {
+            LOG_WARNING << fmt::format("{}:{} -> {} {} -> {}", _req.remote_addr, _req.remote_port, _res.status, httplib::status_message(_res.status), _req.path);
         }
     });
 }
@@ -172,7 +172,7 @@ Service::~Service() {
     server->stop();
 }
 
-auto Service::Run() const -> int {
+auto Service::run() const -> int {
     Dao::init_date_base();
     httplib::HttpControllerBase::registerMethod();
 
@@ -182,8 +182,8 @@ auto Service::Run() const -> int {
     return server->listen_after_bind();
 }
 
-auto Service::CheckCookieValid(const httplib::Request& req) -> bool {
-    const std::string cookie = req.get_header_value("Cookie");
+auto Service::check_cookie_valid(const httplib::Request& _req) -> bool {
+    const std::string cookie = _req.get_header_value("Cookie");
     if (cookie.empty()) {
         return false;
     }
@@ -213,7 +213,7 @@ auto Service::CheckCookieValid(const httplib::Request& req) -> bool {
 }
 
 
-auto Service::AddCookie() -> std::string {
+auto Service::add_cookie() -> std::string {
     const std::string session_token = util::generate_session_token();
     const auto expiry_time = std::chrono::system_clock::now() + std::chrono::hours(72);
 

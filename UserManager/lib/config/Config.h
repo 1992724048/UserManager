@@ -8,64 +8,64 @@
 #include <string>
 #include "fields/Enum.h"
 
-#include "..\events/event.hpp"
+#include "../events/event.hpp"
 
-#define SNFEX(field, friendName, name, section, defaultValue, shared) config::CreateField<decltype(field)::_ValueType>(friendName, name, section, shared, defaultValue)
-#define SNFB(field, name, section, defaultValue, shared) SNFEX(field, name, config::internal::FixFieldName(#field), section, defaultValue, shared)
+#define SNFEX(field, friendName, name, section, defaultValue, shared) config::create_field<decltype(field)::_ValueType>(friendName, name, section, shared, defaultValue)
+#define SNFB(field, name, section, defaultValue, shared) SNFEX(field, name, config::internal::fix_field_name(#field), section, defaultValue, shared)
 #define SNF(field, name, section, defaultValue) SNFB(field, name, section, defaultValue, false)
 
 #define NFEX(field, friendName, name, section, defaultValue, shared) field(SNFEX(field, friendName, name, section, defaultValue, shared))
-#define NFEXUP(field, friendName, name, section, shared, ...) field(config::CreateField<decltype(field)::_ValueType>(friendName, name, section, shared, __VA_ARGS__))
+#define NFEXUP(field, friendName, name, section, shared, ...) field(config::create_field<decltype(field)::_ValueType>(friendName, name, section, shared, __VA_ARGS__))
 
-#define NFB(field, name, section, defaultValue, shared) NFEX(field, name, config::internal::FixFieldName(#field), section, defaultValue, shared)
+#define NFB(field, name, section, defaultValue, shared) NFEX(field, name, config::internal::fix_field_name(#field), section, defaultValue, shared)
 #define NFS(field, name, section, defaultValue) NFB(field, name, section, defaultValue, true)
 #define NF(field, name, section, defaultValue) NFB(field, name, section, defaultValue, false)
 
-#define NFPB(field, name, section, shared, ...) NFEXUP(field, name, config::internal::FixFieldName(#field), section, shared, __VA_ARGS__)
+#define NFPB(field, name, section, shared, ...) NFEXUP(field, name, config::internal::fix_field_name(#field), section, shared, __VA_ARGS__)
 #define NFPS(field, name, section, ...) NFPB(field, name, section, true, __VA_ARGS__)
 #define NFP(field, name, section, ...) NFPB(field, name, section, false, __VA_ARGS__)
 
 namespace config {
-	namespace internal {
-		template <typename T>
-		std::vector<T> s_Fields;
+    namespace internal {
+        template<typename T>
+        inline static std::vector<T> s_fields;
 
-		auto AddField(std::shared_ptr<FieldEntry> field) -> void;
+        auto add_field(const std::shared_ptr<FieldEntry>& _field) -> void;
 
-		inline auto FixFieldName(const std::string& fieldName) -> std::string {
-			if (fieldName.substr(1, 1) == "_") {
-				return fieldName.substr(2);
-			}
-			return fieldName;
-		}
-	}
+        inline auto fix_field_name(const std::string& _field_name) -> std::string {
+            if (_field_name.substr(1, 1) == "_") {
+                return _field_name.substr(2);
+            }
+            return _field_name;
+        }
+    }
 
-	template <typename T, typename... Args>
-	auto CreateField(const std::string& friendName, const std::string& name, const std::string& section, bool multiProfile, Args... args) -> Field<T> {
-		auto newField = Field<T>(friendName, name, section, T(args...), multiProfile);
-		internal::s_Fields<Field<T>>.push_back(newField);
-		internal::AddField(newField.entry());
-		return newField;
-	}
+    template<typename T, typename... Args>
+    auto create_field(const std::string& _friend_name, const std::string& _name, const std::string& _section, bool _multi_profile, Args... _args) -> Field<T> {
+        auto new_field = Field<T>(_friend_name, _name, _section, T(_args...), _multi_profile);
+        internal::s_fields<Field<T>>.push_back(new_field);
+        internal::add_field(new_field.entry());
+        return new_field;
+    }
 
-	template <typename T>
-	auto GetFields() -> std::vector<Field<T>>& {
-		return internal::s_Fields<Field<T>>;
-	}
+    template<typename T>
+    auto get_fields() -> std::vector<Field<T>>& {
+        return internal::s_fields<Field<T>>;
+    }
 
-	auto Initialize(const std::filesystem::path& filePath) -> void;
-	auto SetupUpdate(TEvent<>*) -> void;
+    auto initialize(const std::filesystem::path& _file_path) -> void;
+    auto setup_update(TEvent<>*) -> void;
 
-	auto Refresh() -> void;
-	auto Save() -> void;
+    auto refresh() -> void;
+    auto save() -> void;
 
-	auto CreateProfile(const std::string& profileName, bool moveAfterCreate = true) -> void;
-	auto RemoveProfile(const std::string& profileName) -> void;
-	auto RenameProfile(const std::string& oldProfileName, const std::string& newProfileName) -> void;
-	auto ChangeProfile(const std::string& profileName) -> void;
-	auto DuplicateProfile(const std::string& profileName) -> void;
-	auto GetProfiles() -> std::vector<std::string> const&;
-	auto CurrentProfileName() -> std::string const&;
+    auto create_profile(const std::string& _profile_name, bool _move_after_create = true) -> void;
+    auto remove_profile(const std::string& _profile_name) -> void;
+    auto rename_profile(const std::string& _old_profile_name, const std::string& _new_profile_name) -> void;
+    auto change_profile(const std::string& _profile_name) -> void;
+    auto duplicate_profile(const std::string& _profile_name) -> void;
+    auto get_profiles() -> const std::vector<std::string>&;
+    auto current_profile_name() -> const std::string&;
 
-	extern TEvent<> ProfileChanged;
+    extern TEvent<> profile_changed;
 }

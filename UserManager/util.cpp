@@ -6,17 +6,17 @@ namespace util {
     auto app_path() -> std::filesystem::path {
         static std::filesystem::path app_path;
         if (app_path.empty()) {
-            char pathOut[MAX_PATH] = {};
-            GetModuleFileNameA(GetModuleHandleA(nullptr), pathOut, MAX_PATH);
-            app_path = std::filesystem::path(pathOut).parent_path();
+            char path_out[MAX_PATH] = {};
+            GetModuleFileNameA(GetModuleHandleA(nullptr), path_out, MAX_PATH);
+            app_path = std::filesystem::path(path_out).parent_path();
         }
         return app_path;
     }
 
-    auto read_file(const std::filesystem::path& path) -> std::string {
-        std::ifstream in(path, std::ios::binary);
+    auto read_file(const std::filesystem::path& _path) -> std::string {
+        std::ifstream in(_path, std::ios::binary);
         if (!in) {
-            throw std::runtime_error("Failed to open file: " + path.string());
+            throw std::runtime_error("Failed to open file: " + _path.string());
         }
 
         in.seekg(0, std::ios::end);
@@ -32,7 +32,7 @@ namespace util {
         in.read(buffer.data(), size);
 
         if (!in) {
-            throw std::runtime_error("Failed to read file: " + path.string());
+            throw std::runtime_error("Failed to read file: " + _path.string());
         }
 
         return buffer;
@@ -53,7 +53,33 @@ namespace util {
         return ss.str();
     }
 
-    auto GetMIMEType(const std::string& extension) -> std::string {
+    auto generate_timestamp_sha256() -> std::string {
+        const auto now = std::chrono::system_clock::now();
+        const auto duration = now.time_since_epoch();
+        const uint64_t micros = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+
+        unsigned char bytes[8];
+        bytes[0] = static_cast<unsigned char>(micros >> 56);
+        bytes[1] = static_cast<unsigned char>(micros >> 48);
+        bytes[2] = static_cast<unsigned char>(micros >> 40);
+        bytes[3] = static_cast<unsigned char>(micros >> 32);
+        bytes[4] = static_cast<unsigned char>(micros >> 24);
+        bytes[5] = static_cast<unsigned char>(micros >> 16);
+        bytes[6] = static_cast<unsigned char>(micros >> 8);
+        bytes[7] = static_cast<unsigned char>(micros);
+
+        unsigned char hash[SHA256_DIGEST_LENGTH];
+        SHA256(bytes, sizeof(bytes), hash);
+
+        std::stringstream ss;
+        for (const unsigned char i : hash) {
+            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(i);
+        }
+
+        return ss.str();
+    }
+
+    auto get_mime_type(const std::string& _extension) -> std::string {
         static phmap::flat_hash_map<std::string, std::string> mime_types = {
             // 文本类
             {
@@ -349,38 +375,7 @@ namespace util {
                 "application/toml"
             }
         };
-        const auto it = mime_types.find(extension);
+        const auto it = mime_types.find(_extension);
         return it != mime_types.end() ? it->second : "application/octet-stream";
-    }
-
-    // Boyer-Moore算法
-    auto replace_all(std::string& str, const std::string& from, const std::string& to) -> std::string& {
-        if (from.empty()) {
-            return str;
-        }
-
-        const size_t from_len = from.length();
-        const size_t to_len = to.length();
-
-        std::vector bad_char(256, from_len);
-        for (size_t i = 0; i < from_len - 1; ++i) {
-            bad_char[static_cast<unsigned char>(from[i])] = from_len - i - 1;
-        }
-
-        size_t pos = 0;
-        while (pos <= str.length() - from_len) {
-            size_t j;
-            for (j = from_len - 1; j > 0 && from[j] == str[pos + j]; --j) {
-            }
-
-            if (j == 0) {
-                str.replace(pos, from_len, to);
-                pos += to_len;
-            } else {
-                pos += bad_char[static_cast<unsigned char>(str[pos + from_len - 1])];
-            }
-        }
-
-        return str;
     }
 }

@@ -43,17 +43,12 @@ class Service {
     TEvent<> config_updata;
     util::Timer cookie_timer;
     util::Timer file_cache_timer;
-    tbb::global_control gc{tbb::global_control::max_allowed_parallelism,
-                           std::thread::hardware_concurrency() * 8
-    };
+    tbb::global_control gc{tbb::global_control::max_allowed_parallelism, std::thread::hardware_concurrency() * 8};
     inline static std::pair<std::string, std::chrono::system_clock::time_point> active_sessions;
+
 public:
-    std::shared_ptr<tp::ThreadPool> thread_pool{
-        nullptr
-    };
-    std::shared_ptr<httplib::SSLServer> server{
-        nullptr
-    };
+    std::shared_ptr<tp::ThreadPool> thread_pool{nullptr};
+    std::shared_ptr<httplib::SSLServer> server{nullptr};
 
     config::Field<int> f_server_port;
     config::Field<int> f_file_cache_time;
@@ -82,7 +77,7 @@ public:
     Service();
     ~Service();
 
-    auto Run() const -> int;
-    static auto CheckCookieValid(const httplib::Request& req) -> bool;
-    static auto AddCookie() -> std::string;
+    auto run() const -> int;
+    static auto check_cookie_valid(const httplib::Request& _req) -> bool;
+    static auto add_cookie() -> std::string;
 };

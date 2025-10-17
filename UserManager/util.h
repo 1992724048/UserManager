@@ -46,6 +46,8 @@
 #include <units.h>
 #include <parallel_hashmap/phmap.h>
 
+#include "encode.h"
+
 #include "fmt/format.h"
 
 #pragma comment(lib, "pdh.lib")
@@ -61,52 +63,6 @@ using namespace units::area;
 using namespace units::velocity;
 
 namespace util {
-    template<typename Ret>
-    struct CoroWrapper {
-        struct promise_type {
-            Ret value_;
-
-            auto get_return_object() {
-                return CoroWrapper(std::coroutine_handle<promise_type>::from_promise(*this));
-            }
-
-            static auto initial_suspend() noexcept -> std::suspend_always {
-                return {};
-            }
-
-            static auto final_suspend() noexcept -> std::suspend_always {
-                return {};
-            }
-
-            auto return_value(Ret&& v) -> void {
-                value_ = std::forward<decltype(v)>(v);
-            }
-
-            static auto unhandled_exception() -> void {
-                std::terminate();
-            }
-        };
-
-        explicit CoroWrapper(std::coroutine_handle<promise_type> h) : handle(h) {}
-
-        ~CoroWrapper() {
-            if (handle) {
-                handle.destroy();
-            }
-        }
-
-        auto operator()() -> void {
-            handle.resume();
-        }
-
-        auto value() -> Ret {
-            return handle.promise().value_;
-        }
-
-    private:
-        std::coroutine_handle<promise_type> handle;
-    };
-
     class Timer final {
         std::jthread thread_;
 
@@ -115,17 +71,17 @@ namespace util {
         auto operator=(const Timer&) -> Timer& = delete;
         Timer() = default;
 
-        auto start(int ms, const std::function<void()>& task) -> void {
+        auto start(int _ms, const std::function<void()>& _task) -> void {
             if (thread_.joinable()) {
                 thread_.request_stop();
                 thread_.join();
             }
 
-            thread_ = std::jthread([ms, task](const std::stop_token& st) {
-                while (!st.stop_requested()) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-                    if (!st.stop_requested()) {
-                        task();
+            thread_ = std::jthread([_ms, _task](const std::stop_token& _st) {
+                while (!_st.stop_requested()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(_ms));
+                    if (!_st.stop_requested()) {
+                        _task();
                     }
                 }
             });
@@ -139,170 +95,24 @@ namespace util {
         }
     };
 
-    /**
-     * @brief 时间守护结构体，用于记录和计算时间持续
-     */
-    struct TimeGuard {
-        /**
-         * @brief 使用std::chrono::steady_clock作为时钟
-         */
-        using Clock = std::chrono::steady_clock;
-        /**
-         * @brief 时间点类型
-         */
-        using TimePoint = Clock::time_point;
-
-        /**
-         * @brief 构造函数，初始化时间守护并记录起始时间
-         */
-        TimeGuard() : start(Clock::now()) {}
-
-        /**
-         * @brief 更新起始时间点为当前时间
-         */
-        auto update_start() -> void {
-            start = Clock::now();
+    template<typename T, typename... Args>
+    static auto make_mi_malloc_shared(Args&&... _args) -> std::shared_ptr<T> {
+        void* mem = mi_malloc(sizeof(T));
+        try {
+            new(mem) T(std::forward<Args>(_args)...);
+            return std::shared_ptr<T>(static_cast<T*>(mem),
+                                      [](T* _ptr) {
+                                          _ptr->~T();
+                                          mi_free(_ptr);
+                                      });
+        } catch (...) {
+            mi_free(mem);
+            throw;
         }
-
-        /**
-         * @brief 获取从起始时间点到当前时间点的持续时间，以秒为单位
-         * 
-         * @return double 持续时间，单位为秒
-         */
-        [[nodiscard]] auto get_duration() const -> double {
-            return std::chrono::duration<double>(Clock::now() - start).count();
-        }
-
-    private:
-        /**
-         * @brief 起始时间点
-         */
-        TimePoint start;
-    };
-
-    class Encode {
-    public:
-        static auto gbk_to_utf8(const std::string_view str) -> std::string {
-            const int wlen = MultiByteToWideChar(936, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
-            if (wlen == 0) {
-                throw std::runtime_error("Failed to convert GBK to UTF-16");
-            }
-
-            std::wstring wstr(wlen, 0);
-            if (MultiByteToWideChar(936, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
-                throw std::runtime_error("Failed to convert GBK to UTF-16");
-            }
-
-            const int ulen = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-            if (ulen == 0) {
-                throw std::runtime_error("Failed to convert UTF-16 to UTF-8");
-            }
-
-            std::string utf8(ulen, 0);
-            if (WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), utf8.data(), ulen, nullptr, nullptr) == 0) {
-                throw std::runtime_error("Failed to convert UTF-16 to UTF-8");
-            }
-
-            return utf8;
-        }
-
-        static auto utf8_to_gbk(const std::string_view str) -> std::string {
-            const int wlen = MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
-            if (wlen == 0) {
-                return {};
-            }
-
-            std::wstring wstr(wlen, 0);
-            if (MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
-                throw std::runtime_error("Failed to convert UTF-8 to UTF-16");
-            }
-
-            const int glen = WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-            if (glen == 0) {
-                throw std::runtime_error("Failed to convert UTF-16 to GBK");
-            }
-
-            std::string gbk(glen, 0);
-            if (WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), gbk.data(), glen, nullptr, nullptr) == 0) {
-                throw std::runtime_error("Failed to convert UTF-16 to GBK");
-            }
-
-            return gbk;
-        }
-
-        static auto wchar_to_char(const std::wstring& wstr) -> std::string {
-            const int len = WideCharToMultiByte(CP_ACP, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-            if (len == 0) {
-                throw std::runtime_error("Failed to convert wide string to multibyte");
-            }
-
-            std::string str(len, 0);
-            if (WideCharToMultiByte(CP_ACP, 0, wstr.data(), static_cast<int>(wstr.size()), str.data(), len, nullptr, nullptr) == 0) {
-                throw std::runtime_error("Failed to convert wide string to multibyte");
-            }
-
-            return str;
-        }
-
-        static auto char_to_wchar(const std::string& str) -> std::wstring {
-            const int wlen = MultiByteToWideChar(CP_ACP, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
-            if (wlen == 0) {
-                throw std::runtime_error("Failed to convert multibyte string to wide string");
-            }
-
-            std::wstring wstr(wlen, 0);
-            if (MultiByteToWideChar(CP_ACP, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
-                throw std::runtime_error("Failed to convert multibyte string to wide string");
-            }
-
-            return wstr;
-        }
-
-        static auto wchar_to_utf8(const std::wstring& wstr) -> std::string {
-            const int ulen = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-            if (ulen == 0) {
-                throw std::runtime_error("Failed to convert wide string to UTF-8");
-            }
-
-            std::string utf8(ulen, 0);
-            if (WideCharToMultiByte(CP_UTF8, 0, wstr.data(), static_cast<int>(wstr.size()), utf8.data(), ulen, nullptr, nullptr) == 0) {
-                throw std::runtime_error("Failed to convert wide string to UTF-8");
-            }
-
-            return utf8;
-        }
-
-        static auto utf8_to_wchar(const std::string_view str) -> std::wstring {
-            const int wlen = MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
-            if (wlen == 0) {
-                throw std::runtime_error("Failed to convert UTF-8 to wide string");
-            }
-
-            std::wstring wstr(wlen, 0);
-            if (MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), wstr.data(), wlen) == 0) {
-                throw std::runtime_error("Failed to convert UTF-8 to wide string");
-            }
-
-            return wstr;
-        }
-
-        static auto wchar_to_gbk(const std::wstring& wstr) -> std::string {
-            const int glen = WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-            if (glen == 0) {
-                throw std::runtime_error("Failed to convert wide string to GBK");
-            }
-
-            std::string gbk(glen, 0);
-            if (WideCharToMultiByte(936, 0, wstr.data(), static_cast<int>(wstr.size()), gbk.data(), glen, nullptr, nullptr) == 0) {
-                throw std::runtime_error("Failed to convert wide string to GBK");
-            }
-
-            return gbk;
-        }
-    };
+    }
 
     template<typename K, typename V>
-    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::mutex>;
+    using SafeMap = phmap::parallel_flat_hash_map<K, V, phmap::priv::hash_default_hash<K>, phmap::priv::hash_default_eq<K>, mi_stl_allocator<std::pair<K, V>>, 4, std::shared_mutex>;
 
     class File {
     public:
@@ -316,11 +126,11 @@ namespace util {
             time_t modification_time;
         };
 
-        static auto list_directory(const std::filesystem::path& directory) -> std::vector<FileInfo> {
+        static auto list_directory(const std::filesystem::path& _directory) -> std::vector<FileInfo> {
             std::vector<FileInfo> result;
             std::error_code ec;
 
-            for (const auto& entry : std::filesystem::directory_iterator(directory, ec)) {
+            for (const auto& entry : std::filesystem::directory_iterator(_directory, ec)) {
                 if (ec || !entry.exists()) {
                     continue;
                 }
@@ -355,57 +165,41 @@ namespace util {
             }
 
             std::ranges::sort(result,
-                              [](const FileInfo& a, const FileInfo& b) {
-                                  if (a.is_directory != b.is_directory) {
-                                      return a.is_directory;
+                              [](const FileInfo& _a, const FileInfo& _b) {
+                                  if (_a.is_directory != _b.is_directory) {
+                                      return _a.is_directory;
                                   }
-                                  return a.filename < b.filename;
+                                  return _a.filename < _b.filename;
                               });
 
             return result;
         }
 
     private:
-        static auto get_file_times(const std::filesystem::path& path, time_t* creation, time_t* access, time_t* modification) -> void {
-            *creation = *access = *modification = 0;
-            const std::shared_ptr<void> hFile(CreateFileW(path.wstring().c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr), CloseHandle);
-            if (hFile.get() == INVALID_HANDLE_VALUE) {
+        static auto get_file_times(const std::filesystem::path& _path, time_t* _creation, time_t* _access, time_t* _modification) -> void {
+            *_creation = *_access = *_modification = 0;
+            const std::shared_ptr<void> h_file(CreateFileW(_path.wstring().c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr), CloseHandle);
+            if (h_file.get() == INVALID_HANDLE_VALUE) {
                 return;
             }
 
-            FILETIME ftCreate, ftAccess, ftWrite;
-            if (!GetFileTime(hFile.get(), &ftCreate, &ftAccess, &ftWrite)) {
+            FILETIME ft_create, ft_access, ft_write;
+            if (!GetFileTime(h_file.get(), &ft_create, &ft_access, &ft_write)) {
                 return;
             }
 
-            auto convertFileTime = [](const FILETIME& ft) {
+            auto convert_file_time = [](const FILETIME& _ft) {
                 ULARGE_INTEGER ull;
-                ull.LowPart = ft.dwLowDateTime;
-                ull.HighPart = ft.dwHighDateTime;
+                ull.LowPart = _ft.dwLowDateTime;
+                ull.HighPart = _ft.dwHighDateTime;
                 return (ull.QuadPart - 116444736000000000ULL) / 10000000ULL;
             };
 
-            *creation = static_cast<time_t>(convertFileTime(ftCreate));
-            *access = static_cast<time_t>(convertFileTime(ftAccess));
-            *modification = static_cast<time_t>(convertFileTime(ftWrite));
+            *_creation = static_cast<time_t>(convert_file_time(ft_create));
+            *_access = static_cast<time_t>(convert_file_time(ft_access));
+            *_modification = static_cast<time_t>(convert_file_time(ft_write));
         }
     };
-
-    template<typename T, typename... Args>
-    static auto make_jemalloc_shared(Args&&... args) -> std::shared_ptr<T> {
-        void* mem = mi_malloc(sizeof(T));
-        try {
-            new(mem) T(std::forward<Args>(args)...);
-            return std::shared_ptr<T>(static_cast<T*>(mem),
-                                      [](T* ptr) {
-                                          ptr->~T();
-                                          mi_free(ptr);
-                                      });
-        } catch (...) {
-            mi_free(mem);
-            throw;
-        }
-    }
 
     class VisitCounter {
     public:
@@ -425,18 +219,18 @@ namespace util {
         }
 
     public:
-        auto add(const std::string& ip) -> void {
+        auto add(const std::string& _ip) -> void {
             const auto now = std::chrono::system_clock::now();
             const auto today = std::chrono::floor<std::chrono::days>(now);
 
             std::lock_guard lock(rwlock_);
-            if (data_[today].insert(ip).second) {
+            if (data_[today].insert(_ip).second) {
                 async_cleanup(now - std::chrono::days(30));
             }
         }
 
-        auto get(const std::chrono::days days) const -> int {
-            const auto cutoff = std::chrono::system_clock::now() - days;
+        auto get(const std::chrono::days _days) const -> int {
+            const auto cutoff = std::chrono::system_clock::now() - _days;
             const auto cutoff_day = std::chrono::floor<std::chrono::days>(cutoff);
 
             std::lock_guard lock(rwlock_);
@@ -520,35 +314,9 @@ namespace util {
         }
     };
 
-    extern auto GetMIMEType(const std::string& extension) -> std::string;
-    extern auto replace_all(std::string& str, const std::string& from, const std::string& to) -> std::string&;
+    extern auto get_mime_type(const std::string& _extension) -> std::string;
     extern auto app_path() -> std::filesystem::path;
-    extern auto read_file(const std::filesystem::path& path) -> std::string;
+    extern auto read_file(const std::filesystem::path& _path) -> std::string;
     extern auto generate_session_token() -> std::string;
-
-    inline auto generate_timestamp_sha256() -> std::string {
-        const auto now = std::chrono::system_clock::now();
-        const auto duration = now.time_since_epoch();
-        const uint64_t micros = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
-
-        unsigned char bytes[8];
-        bytes[0] = static_cast<unsigned char>(micros >> 56);
-        bytes[1] = static_cast<unsigned char>(micros >> 48);
-        bytes[2] = static_cast<unsigned char>(micros >> 40);
-        bytes[3] = static_cast<unsigned char>(micros >> 32);
-        bytes[4] = static_cast<unsigned char>(micros >> 24);
-        bytes[5] = static_cast<unsigned char>(micros >> 16);
-        bytes[6] = static_cast<unsigned char>(micros >> 8);
-        bytes[7] = static_cast<unsigned char>(micros);
-
-        unsigned char hash[SHA256_DIGEST_LENGTH];
-        SHA256(bytes, sizeof(bytes), hash);
-
-        std::stringstream ss;
-        for (const unsigned char i : hash) {
-            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(i);
-        }
-
-        return ss.str();
-    }
+    extern auto generate_timestamp_sha256() -> std::string;
 }

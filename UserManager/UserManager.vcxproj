@@ -91,7 +91,7 @@
       <OpenMP>GenerateParallelCode</OpenMP>
       <AssemblerOutput>All</AssemblerOutput>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
       <PGOUsePreTrainedModel>true</PGOUsePreTrainedModel>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\UserManager\lib\minmalloc;..\UserManager\lib\zlib;..\UserManager\lib\openssl;..\UserManager\lib\fmt;..\UserManager\lib\sqlite;..\UserManager\lib;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Link>
@@ -206,6 +206,7 @@
     <ClInclude Include="Controller\key\KeyController.h" />
     <ClInclude Include="Controller\setting\SettingController.h" />
     <ClInclude Include="Controller\user\UserController.h" />
+    <ClInclude Include="crash_dump.h" />
     <ClInclude Include="Dao\app\AppDao.h" />
     <ClInclude Include="Dao\Dao.h" />
     <ClInclude Include="Dao\data\DataDao.h" />
@@ -579,7 +580,7 @@
     <ClInclude Include="lib\config\internal\FieldBase.h" />
     <ClInclude Include="lib\config\internal\FieldEntry.h" />
     <ClInclude Include="lib\config\internal\FieldSerialize.h" />
-    <ClInclude Include="lib\Encode.h" />
+    <ClInclude Include="encode.h" />
     <ClInclude Include="lib\Encrypt.h" />
     <ClInclude Include="lib\events\event.hpp" />
     <ClInclude Include="lib\events\handlers\abstracteventhandler.hpp" />

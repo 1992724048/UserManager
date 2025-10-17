@@ -1272,7 +1272,7 @@ namespace httplib {
         size_t payload_max_length_ = CPPHTTPLIB_PAYLOAD_MAX_LENGTH;
 
     private:
-        using Handlers = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>>;
+        using Handlers = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>, mi_stl_allocator<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>>>;
         using HandlersForContentReader = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, HandlerWithContentReader>>;
 
         static auto make_matcher(const std::string& pattern) -> std::unique_ptr<detail::MatcherBase>;
@@ -6079,25 +6079,23 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
             request.path_params.clear();
             request.path_params.reserve(param_names_.size());
 
-            const std::string& path = request.path; // 使用局部引用减少访问开销
+            const std::string& path = request.path;
             if (path.length() < static_total_length_) {
-                return false; // 快速失败：路径过短
+                return false;
             }
 
             size_t starting_pos = 0;
-            const size_t num_fragments = static_fragments_.size(); // 缓存循环次数
-            const size_t param_count = param_names_.size(); // 缓存参数数量
+            const size_t num_fragments = static_fragments_.size();
+            const size_t param_count = param_names_.size();
 
             for (size_t i = 0; i < num_fragments; ++i) {
                 const auto& fragment = static_fragments_[i];
                 const size_t frag_len = fragment.length();
 
-                // 检查剩余路径长度是否足够
                 if (starting_pos + frag_len > path.length()) {
                     return false;
                 }
 
-                // 使用memcmp进行高效内存块比较
                 if (std::memcmp(path.data() + starting_pos, fragment.data(), frag_len) != 0) {
                     return false;
                 }
@@ -6105,24 +6103,20 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
                 starting_pos += frag_len;
 
                 if (i >= param_count) {
-                    continue; // 无对应参数需处理
+                    continue;
                 }
 
-                // 使用memchr查找分隔符
                 const size_t remaining_length = path.length() - starting_pos;
                 const char* start_ptr = path.data() + starting_pos;
-                auto sep_ptr = static_cast<const char*>(memchr(start_ptr, separator, remaining_length));
+                const auto sep_ptr = static_cast<const char*>(memchr(start_ptr, separator, remaining_length));
                 const size_t sep_pos = (sep_ptr != nullptr) ? (sep_ptr - path.data()) : path.length();
 
-                // 提取参数值
                 const auto& param_name = param_names_[i];
                 request.path_params.emplace(param_name, path.substr(starting_pos, sep_pos - starting_pos));
 
-                // 更新起始位置
                 starting_pos = sep_pos + 1;
             }
 
-            // 检查是否匹配完整路径
             return starting_pos >= path.length();
         }
 
@@ -6913,9 +6907,9 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
     }
 
     inline auto Server::dispatch_request(Request& req, Response& res, const Handlers& handlers) -> bool {
-        for (const auto& x : handlers) {
-            const auto& matcher = x.first;
-            const auto& handler = x.second;
+        for (const auto& [fst, snd] : handlers) {
+            const auto& matcher = fst;
+            const auto& handler = snd;
 
             if (matcher->match(req)) {
                 handler(req, res);
@@ -7775,6 +7769,7 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
         if (!req.content_receiver) {
             if (!req.has_header("Accept-Encoding")) {
                 std::string accept_encoding;
+                accept_encoding.reserve(10);
 #ifdef CPPHTTPLIB_BROTLI_SUPPORT
                 accept_encoding = "br";
 #endif

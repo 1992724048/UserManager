@@ -9,7 +9,7 @@ AdminController::AdminController() {
 
 auto AdminController::cookie_check(const httplib::Request& req, httplib::Response& res) -> void {
     nlohmann::json json;
-    if (Service::CheckCookieValid(req)) {
+    if (Service::check_cookie_valid(req)) {
         json["success"] = true;
         res.set_content(json.dump(), "application/json");
         return;
@@ -38,7 +38,7 @@ auto AdminController::login(const httplib::Request& req, httplib::Response& res)
 
     if (username_ == service.f_username.value() && password_ == service.f_password.value()) {
         LOG_CRIT << fmt::format("{}:{} 管理员登录成功!", req.remote_addr, req.remote_port);
-        res.set_header("Set-Cookie", Service::AddCookie());
+        res.set_header("Set-Cookie", Service::add_cookie());
         json["message"] = "验证完成";
         json["success"] = true;
     } else {

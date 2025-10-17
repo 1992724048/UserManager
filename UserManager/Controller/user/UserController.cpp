@@ -14,8 +14,7 @@
 #include "../../Model/KeyModel.h"
 
 namespace controller {
-    UserController::UserController() {
-    }
+    UserController::UserController() {}
 
     auto UserController::get_all(const httplib::Request& req, httplib::Response& res) -> void {
         nlohmann::json json = nlohmann::json::parse(req.body);
@@ -40,44 +39,10 @@ namespace controller {
             json["data"] = nlohmann::json::array();
 
             for (const auto& user : users) {
-                json["data"].push_back({
-                    {
-                        "username",
-                        user.username
-                    },
-                    {
-                        "is_ban",
-                        user.is_ban
-                    },
-                    {
-                        "create_time",
-                        user.create_time
-                    },
-                    {
-                        "password",
-                        user.password
-                    }
-                });
+                json["data"].push_back({{"username", user.username}, {"is_ban", user.is_ban}, {"create_time", user.create_time}, {"password", user.password}});
             }
 
-            json["pagination"] = {
-                {
-                    "current_page",
-                    page
-                },
-                {
-                    "page_size",
-                    page_size
-                },
-                {
-                    "total_users",
-                    total_users
-                },
-                {
-                    "total_pages",
-                    total_pages
-                }
-            };
+            json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_users", total_users}, {"total_pages", total_pages}};
 
             res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
@@ -107,39 +72,9 @@ namespace controller {
             json["success"] = true;
             json["message"] = "搜索成功!";
             json["data"] = nlohmann::json::array();
-            json["data"].push_back({
-                {
-                    "username",
-                    user->username
-                },
-                {
-                    "is_ban",
-                    user->is_ban
-                },
-                {
-                    "create_time",
-                    user->create_time
-                },
-                {
-                    "password",
-                    user->password
-                }
-            });
+            json["data"].push_back({{"username", user->username}, {"is_ban", user->is_ban}, {"create_time", user->create_time}, {"password", user->password}});
 
-            json["pagination"] = {
-                {
-                    "current_page",
-                    1
-                },
-                {
-                    "total_users",
-                    1
-                },
-                {
-                    "total_pages",
-                    1
-                }
-            };
+            json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
 
             res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
@@ -232,9 +167,15 @@ namespace controller {
                 heartbeat.erase(username);
             }
 
+            for (auto& [fst, snd] : captchas) {
+                if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first) >= std::chrono::minutes(1)) {
+                    captchas.erase(fst);
+                }
+            }
+
             for (auto& [fst, snd] : heartbeat) {
                 if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
-                    captchas.erase(fst);
+                    heartbeat.erase(fst);
                 }
             }
 
@@ -429,12 +370,11 @@ namespace controller {
 
             json["success"] = true;
             json["message"] = "注册成功!";
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("注册用户失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_get_captcha(const httplib::Request& req, httplib::Response& res) -> void {
@@ -462,14 +402,14 @@ namespace controller {
             const std::string username = json["username"];
             json.clear();
 
-            if (username.empty()) {
-                throw std::runtime_error("用户名不能为空!");
-            }
-
             for (auto& [fst, snd] : heartbeat) {
                 if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
-                    captchas.erase(fst);
+                    heartbeat.erase(fst);
                 }
+            }
+
+            if (username.empty()) {
+                throw std::runtime_error("用户名不能为空!");
             }
 
             if (!heartbeat.contains(username)) {
@@ -491,11 +431,10 @@ namespace controller {
             json["success"] = true;
             json["message"] = "成功!";
             json["endtime"] = fst.first;
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("[!] ") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 }
