@@ -7,7 +7,7 @@ namespace controller {
     }
 
     auto SettingController::set_server(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
         service.f_server_port.value() = json["server_port"];
@@ -25,7 +25,7 @@ namespace controller {
     }
 
     auto SettingController::set_panel(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
         service.f_username.value() = json["username"];
@@ -38,7 +38,7 @@ namespace controller {
     }
 
     auto SettingController::set_file(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
         service.f_cert_path.value() = json["cert_path"].get<std::string>();
@@ -55,7 +55,7 @@ namespace controller {
     }
 
     auto SettingController::set_log(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
         service.f_log_level.value() = magic_enum::enum_cast<Logger::Level>(json["log_level"].get<std::string>()).value();
@@ -68,7 +68,7 @@ namespace controller {
     }
 
     auto SettingController::set_sql(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
         service.f_sqlite_max_connect.value() = json["sqlite_max_connect"];
@@ -80,7 +80,7 @@ namespace controller {
     }
 
     auto SettingController::get(const httplib::Request& req, httplib::Response& res) -> void {
-        const Service& service = Service::Instance();
+        const Service& service = Service::instance();
         nlohmann::json json;
         json["server_port"] = service.f_server_port.value();
         json["f_max_download_speed"] = service.f_max_download_speed.value();

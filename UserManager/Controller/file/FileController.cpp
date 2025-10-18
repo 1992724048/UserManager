@@ -5,7 +5,7 @@
 FileController::FileController() {}
 
 auto FileController::file_logic(const httplib::Request& req, httplib::Response& res, const bool user, const bool res_path) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     const std::filesystem::path local_path = service.f_web_files / (res_path ? "res" : "pages") / (res_path ? "" : user ? "user" : "admin") / req.matches[1].data();
 
     std::error_code ec;
@@ -87,7 +87,7 @@ auto FileController::res(const httplib::Request& req, httplib::Response& res) ->
 }
 
 auto FileController::logic_enum_path(const httplib::Request& req, httplib::Response& res, const bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -143,7 +143,7 @@ auto FileController::logic_enum_path(const httplib::Request& req, httplib::Respo
 }
 
 auto FileController::logic_remove_file(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -165,7 +165,7 @@ auto FileController::logic_remove_file(const httplib::Request& req, httplib::Res
 }
 
 auto FileController::logic_remove_directory(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -187,7 +187,7 @@ auto FileController::logic_remove_directory(const httplib::Request& req, httplib
 }
 
 auto FileController::logic_create_file(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -211,7 +211,7 @@ auto FileController::logic_create_file(const httplib::Request& req, httplib::Res
 }
 
 auto FileController::logic_create_directory(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -233,7 +233,7 @@ auto FileController::logic_create_directory(const httplib::Request& req, httplib
 }
 
 auto FileController::logic_rename(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -255,7 +255,7 @@ auto FileController::logic_rename(const httplib::Request& req, httplib::Response
 }
 
 auto FileController::logic_copy(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -277,7 +277,7 @@ auto FileController::logic_copy(const httplib::Request& req, httplib::Response& 
 }
 
 auto FileController::logic_cut(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -299,7 +299,7 @@ auto FileController::logic_cut(const httplib::Request& req, httplib::Response& r
 }
 
 auto FileController::logic_upload(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json;
 
     try {
@@ -350,7 +350,7 @@ auto FileController::logic_upload(const httplib::Request& req, httplib::Response
 }
 
 auto FileController::logic_download(const httplib::Request& req, httplib::Response& res, bool web) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
 
     try {
         std::string path = Encode::utf8_to_gbk(req.get_param_value("path"));
@@ -540,7 +540,7 @@ auto FileController::web_user_view_count(const httplib::Request& req, httplib::R
 }
 
 auto FileController::log_enum_path(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -576,7 +576,7 @@ auto FileController::log_enum_path(const httplib::Request& req, httplib::Respons
 }
 
 auto FileController::log_remove_file(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -598,7 +598,7 @@ auto FileController::log_remove_file(const httplib::Request& req, httplib::Respo
 }
 
 auto FileController::log_download(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
 
     try {
         const std::string path = Encode::utf8_to_gbk(req.get_param_value("path"));
@@ -670,7 +670,7 @@ auto FileController::get_cache_paths(const httplib::Request& req, httplib::Respo
 }
 
 auto FileController::sql_enum_path(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -706,7 +706,7 @@ auto FileController::sql_enum_path(const httplib::Request& req, httplib::Respons
 }
 
 auto FileController::sql_remove_file(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);
@@ -728,7 +728,7 @@ auto FileController::sql_remove_file(const httplib::Request& req, httplib::Respo
 }
 
 auto FileController::sql_download(const httplib::Request& _req, httplib::Response& _res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
 
     try {
         const std::string path = Encode::utf8_to_gbk(_req.get_param_value("path"));
@@ -781,7 +781,7 @@ auto FileController::sql_download(const httplib::Request& _req, httplib::Respons
 }
 
 auto FileController::sql_backup(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     try {
         const std::string path = Encode::utf8_to_gbk(json["path"]);

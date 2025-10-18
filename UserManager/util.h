@@ -3,32 +3,19 @@
 #include <memory>
 #include <filesystem>
 #include <tbb/tbb.h>
-#include <ipp.h>
 #include <pdh.h>
-#include <pdhmsg.h>
 #include <windows.h>
-#include <WinSock2.h>
-#include <mswsock.h>
-#include <fstream>
-#include <codecvt>
 #include <cwchar>
-#include <bcrypt.h>
 #include <locale>
 #include <map>
 #include <unordered_set>
 #include <chrono>
 #include <string>
 #include <shared_mutex>
-#include <array>
 #include <functional>
 #include <cstddef>
-#include <iomanip>
-#include <iostream>
 #include <vector>
 #include <algorithm>
-#include <coroutine>
-
-#include "Logger.h"
 #include "thread_pool.hpp"
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #define CPPHTTPLIB_ZLIB_SUPPORT
@@ -37,12 +24,6 @@
 #include "lib/config/Config.h"
 #include "mimalloc.h"
 
-#include <openssl/rsa.h>
-#include <openssl/aes.h>
-#include <openssl/pem.h>
-#include <openssl/rand.h>
-
-#include <sqlite3.h>
 #include <units.h>
 #include <parallel_hashmap/phmap.h>
 
@@ -96,7 +77,7 @@ namespace util {
     };
 
     template<typename T, typename... Args>
-    static auto make_mi_malloc_shared(Args&&... _args) -> std::shared_ptr<T> {
+    static auto mi_malloc_shared(Args&&... _args) -> std::shared_ptr<T> {
         void* mem = mi_malloc(sizeof(T));
         try {
             new(mem) T(std::forward<Args>(_args)...);
@@ -319,4 +300,5 @@ namespace util {
     extern auto read_file(const std::filesystem::path& _path) -> std::string;
     extern auto generate_session_token() -> std::string;
     extern auto generate_timestamp_sha256() -> std::string;
+    extern auto string2buffer(const std::string& _str) -> std::vector<std::uint8_t>;
 }

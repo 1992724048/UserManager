@@ -305,7 +305,7 @@ public:
 
 
     SQLiteWrapper() {
-        if (sqlite3_open(Service::Instance().f_sql_path.value().string().data(), &db) != SQLITE_OK) {
+        if (sqlite3_open(Service::instance().f_sql_path.value().string().data(), &db) != SQLITE_OK) {
             throw std::runtime_error("无法打开数据库");
         }
 
@@ -386,14 +386,14 @@ public:
     }
 
     template<typename... Args>
-    auto execute(const std::string& query, Args&&... args) -> int {
+    auto execute(const std::string& _query, Args&&... _args) -> int {
         sqlite3_stmt* stmt = nullptr;
-        if (sqlite3_prepare_v2(db, query.data(), -1, &stmt, nullptr) != SQLITE_OK) {
+        if (sqlite3_prepare_v2(db, _query.data(), -1, &stmt, nullptr) != SQLITE_OK) {
             throw std::runtime_error("SQLite准备语句失败");
         }
 
         int index = 1;
-        (bind_parameter(stmt, index++, std::forward<Args>(args)), ...);
+        (bind_parameter(stmt, index++, std::forward<Args>(_args)), ...);
 
         if (sqlite3_step(stmt) != SQLITE_DONE) {
             sqlite3_finalize(stmt);
@@ -405,13 +405,13 @@ public:
         return changes;
     }
 
-    [[nodiscard]] auto prepare(const std::string& sql) const -> std::shared_ptr<SQLiteStatement> {
+    [[nodiscard]] auto prepare(const std::string& _sql) const -> std::shared_ptr<SQLiteStatement> {
         sqlite3_stmt* stmt = nullptr;
-        const int rc = sqlite3_prepare_v2(db, sql.data(), -1, &stmt, nullptr);
+        const int rc = sqlite3_prepare_v2(db, _sql.data(), -1, &stmt, nullptr);
 
         if (rc != SQLITE_OK) {
-            const char* errMsg = sqlite3_errmsg(db);
-            throw std::runtime_error("SQL prepare error: " + std::string(errMsg));
+            const char* err_msg = sqlite3_errmsg(db);
+            throw std::runtime_error("SQL prepare error: " + std::string(err_msg));
         }
 
         return std::make_shared<SQLiteStatement>(stmt);
@@ -421,8 +421,8 @@ public:
         std::shared_ptr<SQLiteWrapper> sqlite_wrapper;
 
     public:
-        explicit Connection(const std::shared_ptr<SQLiteWrapper>& wrapper) {
-            sqlite_wrapper = wrapper;
+        explicit Connection(const std::shared_ptr<SQLiteWrapper>& _wrapper) {
+            sqlite_wrapper = _wrapper;
         }
 
         ~Connection() {
@@ -444,11 +444,11 @@ public:
                                return !connection_queue.empty();
                            });
         }
-        return util::make_mi_malloc_shared<Connection>(wrapper);
+        return util::mi_malloc_shared<Connection>(wrapper);
     }
 
-    static auto initializePool() -> void {
-        const auto max = Service::Instance().f_sqlite_max_connect.value();
+    static auto initialize_pool() -> void {
+        const auto max = Service::instance().f_sqlite_max_connect.value();
         for (int i = 0; std::cmp_less(i, max); ++i) {
             connection_queue.push(std::make_shared<SQLiteWrapper>());
         }
@@ -461,20 +461,20 @@ private:
     inline static std::condition_variable condition;
 
     template<typename T>
-    auto bind_parameter(sqlite3_stmt* stmt, int index, T&& value) -> void {
+    auto bind_parameter(sqlite3_stmt* _stmt, int _index, T&& _value) -> void {
         using Type = std::decay_t<T>;
         if constexpr (std::is_integral_v<Type>) {
-            sqlite3_bind_int64(stmt, index, static_cast<sqlite3_int64>(value));
+            sqlite3_bind_int64(_stmt, _index, static_cast<sqlite3_int64>(_value));
         } else if constexpr (std::is_floating_point_v<Type>) {
-            sqlite3_bind_double(stmt, index, value);
+            sqlite3_bind_double(_stmt, _index, _value);
         } else if constexpr (std::is_constructible_v<std::string_view, Type>) {
-            const std::string_view str = value;
-            sqlite3_bind_text(stmt, index, str.data(), str.size(), SQLITE_TRANSIENT);
+            const std::string_view str = _value;
+            sqlite3_bind_text(_stmt, _index, str.data(), str.size(), SQLITE_TRANSIENT);
         } else if constexpr (std::is_same_v<Type, std::nullptr_t>) {
-            sqlite3_bind_null(stmt, index);
+            sqlite3_bind_null(_stmt, _index);
         } else if constexpr (std::is_same_v<Type, std::string>) {
-            const std::string str = value;
-            sqlite3_bind_text(stmt, index, str.data(), str.size(), SQLITE_TRANSIENT);
+            const std::string str = _value;
+            sqlite3_bind_text(_stmt, _index, str.data(), str.size(), SQLITE_TRANSIENT);
         } else {
             static_assert(sizeof(T) == 0, "不支持参数!");
         }
@@ -484,10 +484,9 @@ private:
 class Dao {
 public:
     static auto init_date_base() -> void {
-        // 启用sqlite优化选项
         sqlite3_config(SQLITE_CONFIG_MULTITHREAD);
         bool new_db = false;
-        const auto& ser = Service::Instance();
+        const auto& ser = Service::instance();
         LOG_DEBUG << "数据库路径: " << ser.f_sql_path.value().string();
         const auto db_path = ser.f_sql_path.value().parent_path();
 
@@ -554,6 +553,6 @@ public:
             }
         }
 
-        SQLiteWrapper::initializePool();
+        SQLiteWrapper::initialize_pool();
     }
 };

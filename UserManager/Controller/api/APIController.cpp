@@ -299,7 +299,7 @@ auto APIController::command(const httplib::Request& req, httplib::Response& res)
 
 auto APIController::check(const httplib::Request& req, httplib::Response& res) -> void {
     nlohmann::json json;
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     try {
         for (const auto& [fst, snd] : controllers) {
             if (controllers_default.contains(fst)) {

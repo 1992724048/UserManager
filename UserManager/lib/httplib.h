@@ -1272,7 +1272,7 @@ namespace httplib {
         size_t payload_max_length_ = CPPHTTPLIB_PAYLOAD_MAX_LENGTH;
 
     private:
-        using Handlers = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>, mi_stl_allocator<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>>>;
+        using Handlers = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, Handler>>;
         using HandlersForContentReader = std::vector<std::pair<std::unique_ptr<detail::MatcherBase>, HandlerWithContentReader>>;
 
         static auto make_matcher(const std::string& pattern) -> std::unique_ptr<detail::MatcherBase>;
@@ -3418,7 +3418,7 @@ namespace httplib {
             using namespace std::chrono;
 
             const auto start = steady_clock::now();
-            const auto timeout = seconds{keep_alive_timeout_sec};
+            const auto timeout = seconds(keep_alive_timeout_sec);
 
             while (true) {
                 if (svr_sock == INVALID_SOCKET) {
@@ -5940,7 +5940,7 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
                 if (n <= 0) {
                     return n;
                 }
-                if (n <= static_cast<ssize_t>(size)) {
+                if (std::cmp_less_equal(n, size)) {
                     std::memcpy(ptr, read_buff_.data(), static_cast<size_t>(n));
                     return n;
                 }
@@ -7184,8 +7184,7 @@ inline bool parse_range_header(const std::string &s, Ranges &ranges) {
                 res.set_content_provider(mm->size(),
                                          content_type,
                                          [mm](const size_t offset, const size_t length, const DataSink& sink) -> bool {
-                                             sink.write(mm->data() + offset, length);
-                                             return true;
+                                             return sink.write(mm->data() + offset, length);
                                          });
             }
 

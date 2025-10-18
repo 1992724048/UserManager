@@ -1,161 +1,147 @@
 ﻿#pragma once
 #include <iostream>
 #include <string>
-#include <type_traits>
 #include <array>
-#include <cstring>
-#include <utility>
-#include <cwchar>
 #include <iomanip>
-#include <sstream>
+#include <optional>
 #include <vector>
 #include <mimalloc-override.h>
-
-#include "bio.h"
-#include "pem.h"
-#include "rsa.h"
+#include <mimalloc-new-delete.h>
 
 #include "openssl/md5.h"
+#include "openssl/aes.h"
+#include "openssl/rsa.h"
+#include "openssl/pem.h"
 
-class Encrypt {
-    inline static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz" "0123456789+/";
-
-public:
-    static auto md5(const std::string& str) -> std::string {
-        unsigned char digest[MD5_DIGEST_LENGTH];
-        MD5((unsigned char*)str.c_str(), str.size(), reinterpret_cast<unsigned char*>(&digest));
-
-        std::stringstream ss;
-        for (const unsigned char i : digest) {
-            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(i);
+namespace encrypt {
+    class Base64 {
+    public:
+        static auto encode(const std::vector<std::uint8_t>& _buf) -> std::string {
+            BIO* b64 = BIO_new(BIO_f_base64());
+            BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+            BIO* mem = BIO_new(BIO_s_mem());
+            b64 = BIO_push(b64, mem);
+            BIO_write(b64, _buf.data(), _buf.size());
+            BIO_flush(b64);
+            BUF_MEM* ptr = nullptr;
+            BIO_get_mem_ptr(b64, &ptr);
+            std::string buff(ptr->length + 1, '\0');
+            std::memcpy(buff.data(), ptr->data, ptr->length);
+            BIO_free_all(b64);
+            return buff;
         }
-        return ss.str();
-    }
 
-    static auto is_base64(const std::uint8_t c) -> bool {
-        return isalnum(c) || c == '+' || c == '/';
-    }
+        static auto decode(const std::string& _buf) -> std::vector<std::uint8_t> {
+            std::vector<std::uint8_t> buffer(_buf.size());
+            BIO* b64 = BIO_new(BIO_f_base64());
+            BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+            BIO* mem = BIO_new_mem_buf(_buf.data(), _buf.size());
+            mem = BIO_push(b64, mem);
+            BIO_read(mem, buffer.data(), _buf.size());
+            BIO_free_all(mem);
+            return buffer;
+        }
+    };
 
-    static auto base64_encode(const std::uint8_t* _buf, unsigned int _buf_len) -> std::string {
-        std::string ret;
-        int i = 0;
-        std::uint8_t char_array_3[3];
-        std::uint8_t char_array_4[4];
+    class MD5 {
+    public:
+        static auto encode(const std::vector<std::uint8_t>& _data) -> std::vector<std::uint8_t> {
+            std::vector<std::uint8_t> digest(MD5_DIGEST_LENGTH, 0x00);
+            ::MD5(_data.data(), _data.size(), digest.data());
+            return digest;
+        }
+    };
 
-        while (_buf_len--) {
-            char_array_3[i++] = *_buf++;
-            if (i == 3) {
-                char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-                char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-                char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-                char_array_4[3] = char_array_3[2] & 0x3f;
+    class AES {};
 
-                for (i = 0; i < 4; i++) {
-                    ret += base64_chars[char_array_4[i]];
+    class RSA {
+        std::string pub_key;
+        std::string pri_key;
+
+    public:
+        auto key_pub() -> std::string& {
+            return pub_key;
+        }
+
+        auto key_pri() -> std::string& {
+            return pri_key;
+        }
+
+        auto key_generate(const int _len = 8192) -> void {
+            const auto keypair = std::make_unique<::RSA>(RSA_generate_key(_len, RSA_3, nullptr, nullptr), RSA_free);
+
+            const auto pri = std::make_unique<BIO>(BIO_new(BIO_s_mem()), BIO_free_all);
+            const auto pub = std::make_unique<BIO>(BIO_new(BIO_s_mem()), BIO_free_all);
+
+            PEM_write_bio_RSAPrivateKey(pri.get(), keypair.get(), nullptr, nullptr, 0, nullptr, nullptr);
+            PEM_write_bio_RSA_PUBKEY(pub.get(), keypair.get());
+
+            const size_t pri_len = BIO_pending(pri.get());
+            const size_t pub_len = BIO_pending(pub.get());
+
+            std::string pri_key(pri_len + 1, '\0');
+            std::string pub_key(pub_len + 1, '\0');
+
+            BIO_read(pri.get(), pri_key.data(), pri_len);
+            BIO_read(pub.get(), pub_key.data(), pub_len);
+
+            this->pub_key = std::move(pub_key);
+            this->pri_key = std::move(pri_key);
+        }
+
+        [[nodiscard]] auto pri_encode(const std::vector<std::uint8_t>& _data) const -> std::vector<std::uint8_t> {
+            return encode_decode(_data);
+        }
+
+        [[nodiscard]] auto pri_decode(const std::vector<std::uint8_t>& _data) const -> std::vector<std::uint8_t> {
+            return encode_decode(_data, false, true);
+        }
+
+        [[nodiscard]] auto pub_encode(const std::vector<std::uint8_t>& _data) const -> std::vector<std::uint8_t> {
+            return encode_decode(_data, true, false);
+        }
+
+        [[nodiscard]] auto pub_decode(const std::vector<std::uint8_t>& _data) const -> std::vector<std::uint8_t> {
+            return encode_decode(_data, true, true);
+        }
+
+    private:
+        static auto make_rsa(const std::unique_ptr<bio_st>& _bio, const bool _pub = false) -> std::optional<std::pair<const int, std::unique_ptr<::RSA>>> {
+            ::RSA* rsa = RSA_new();
+            if (_pub) {
+                rsa = PEM_read_bio_RSA_PUBKEY(_bio.get(), &rsa, nullptr, nullptr);
+            } else {
+                rsa = PEM_read_bio_RSAPrivateKey(_bio.get(), &rsa, nullptr, nullptr);
+            }
+            if (!rsa) {
+                return std::nullopt;
+            }
+            return {{RSA_size(rsa), std::make_unique<::RSA>(rsa, RSA_free)}};
+        }
+
+        [[nodiscard]] auto encode_decode(const std::vector<std::uint8_t>& _data, const bool _pub = false, const bool _decode = false) const -> std::vector<std::uint8_t> {
+            if (_data.empty()) {
+                return {};
+            }
+
+            const auto key_bio = std::make_unique<BIO>(BIO_new_mem_buf(_pub ? this->pub_key.data() : this->pri_key.data(), -1), BIO_free_all);
+
+            if (const auto opt = make_rsa(key_bio)) {
+                auto& [len, rsa] = opt.value();
+
+                std::vector<std::uint8_t> buffer(len);
+                if (_pub) {
+                    _decode
+                        ? RSA_public_decrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING)
+                        : RSA_public_encrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING);
+                } else {
+                    _decode
+                        ? RSA_private_decrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING)
+                        : RSA_private_encrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING);
                 }
-                i = 0;
+                return buffer;
             }
+            return {};
         }
-
-        if (i) {
-            int j;
-            for (j = i; j < 3; j++) {
-                char_array_3[j] = '\0';
-            }
-
-            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-            char_array_4[3] = char_array_3[2] & 0x3f;
-
-            for (j = 0; j < i + 1; j++) {
-                ret += base64_chars[char_array_4[j]];
-            }
-
-            while (i++ < 3) {
-                ret += '=';
-            }
-        }
-
-        return ret;
-    }
-
-    static auto base64_decode(const std::string& encoded_string) -> std::vector<std::uint8_t> {
-        size_t in_len = encoded_string.size();
-        int i = 0;
-        int in_ = 0;
-        std::uint8_t char_array_4[4], char_array_3[3];
-        std::vector<std::uint8_t> ret;
-
-        while (in_len-- && encoded_string[in_] != '=' && is_base64(encoded_string[in_])) {
-            char_array_4[i++] = encoded_string[in_];
-            in_++;
-            if (i == 4) {
-                for (i = 0; i < 4; i++) {
-                    char_array_4[i] = static_cast<std::uint8_t>(base64_chars.find(char_array_4[i]));
-                }
-
-                char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-                char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-                char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-                for (i = 0; i < 3; i++) {
-                    ret.push_back(char_array_3[i]);
-                }
-                i = 0;
-            }
-        }
-
-        if (i) {
-            int j;
-            for (j = i; j < 4; j++) {
-                char_array_4[j] = 0;
-            }
-
-            for (j = 0; j < 4; j++) {
-                char_array_4[j] = static_cast<std::uint8_t>(base64_chars.find(char_array_4[j]));
-            }
-
-            char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-            char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-            char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-            for (j = 0; j < i - 1; j++) {
-                ret.push_back(char_array_3[j]);
-            }
-        }
-
-        return ret;
-    }
-
-    static auto generate_rsa_key(std::string& _out_pub_key, std::string& _out_pri_key, const int _len) -> void {
-        RSA* keypair = RSA_generate_key(_len, RSA_3, nullptr, nullptr);
-
-        BIO* pri = BIO_new(BIO_s_mem());
-        BIO* pub = BIO_new(BIO_s_mem());
-
-        PEM_write_bio_RSAPrivateKey(pri, keypair, nullptr, nullptr, 0, nullptr, nullptr);
-        PEM_write_bio_RSA_PUBKEY(pub, keypair);
-
-        const size_t pri_len = BIO_pending(pri);
-        const size_t pub_len = BIO_pending(pub);
-
-        const auto pri_key = static_cast<char*>(malloc(pri_len + 1));
-        const auto pub_key = static_cast<char*>(malloc(pub_len + 1));
-
-        BIO_read(pri, pri_key, pri_len);
-        BIO_read(pub, pub_key, pub_len);
-
-        pri_key[pri_len] = '\0';
-        pub_key[pub_len] = '\0';
-
-        _out_pub_key = pub_key;
-        _out_pri_key = pri_key;
-
-        RSA_free(keypair);
-        BIO_free_all(pub);
-        BIO_free_all(pri);
-        free(pri_key);
-        free(pub_key);
-    }
-};
+    };
+}

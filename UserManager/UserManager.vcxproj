@@ -581,7 +581,7 @@
     <ClInclude Include="lib\config\internal\FieldEntry.h" />
     <ClInclude Include="lib\config\internal\FieldSerialize.h" />
     <ClInclude Include="encode.h" />
-    <ClInclude Include="lib\Encrypt.h" />
+    <ClInclude Include="lib\encrypt.h" />
     <ClInclude Include="lib\events\event.hpp" />
     <ClInclude Include="lib\events\handlers\abstracteventhandler.hpp" />
     <ClInclude Include="lib\events\handlers\eventhandlerptr.h" />
@@ -612,6 +612,7 @@
     <ClInclude Include="lib\fmt\xchar.h" />
     <ClInclude Include="lib\httplib.h" />
     <ClInclude Include="lib\json.hpp" />
+    <ClInclude Include="lib\minmalloc\mimalloc-new-delete.h" />
     <ClInclude Include="lib\minmalloc\mimalloc-override.h" />
     <ClInclude Include="lib\minmalloc\mimalloc-stats.h" />
     <ClInclude Include="lib\minmalloc\mimalloc.h" />

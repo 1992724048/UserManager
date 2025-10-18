@@ -12,7 +12,7 @@
 
 #include "Controller/file/FileController.h"
 
-auto Service::Instance() -> Service& {
+auto Service::instance() -> Service& {
     static Service instance;
     return instance;
 }

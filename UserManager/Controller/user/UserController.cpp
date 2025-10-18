@@ -1,16 +1,13 @@
 ﻿#include "UserController.h"
 
 #include <algorithm>
-
 #include <boost/cstdint.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include "../../Captcha.hpp"
-
 #include "../../Dao/app/AppDao.h"
 #include "../../Dao/data/DataDao.h"
 #include "../../Dao/key/KeyDao.h"
-
 #include "../../Model/KeyModel.h"
 
 namespace controller {
@@ -43,14 +40,12 @@ namespace controller {
             }
 
             json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_users", total_users}, {"total_pages", total_pages}};
-
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json.clear();
             json["success"] = false;
             json["message"] = std::string("获取失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_get(const httplib::Request& req, httplib::Response& res) -> void {
@@ -75,14 +70,12 @@ namespace controller {
             json["data"].push_back({{"username", user->username}, {"is_ban", user->is_ban}, {"create_time", user->create_time}, {"password", user->password}});
 
             json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
-
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json.clear();
             json["success"] = false;
             json["message"] = std::string("获取用户失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_add(const httplib::Request& req, httplib::Response& res) -> void {
@@ -100,15 +93,14 @@ namespace controller {
             if (UserDao::Add(username, password)) {
                 json["success"] = true;
                 json["message"] = "添加成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("用户可能已经存在!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("添加用户失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_login(const httplib::Request& req, httplib::Response& res) -> void {
@@ -176,6 +168,7 @@ namespace controller {
             for (auto& [fst, snd] : heartbeat) {
                 if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
                     heartbeat.erase(fst);
+                    rsa_keys.erase(fst);
                 }
             }
 
@@ -188,12 +181,11 @@ namespace controller {
             json["success"] = true;
             json["message"] = "登录成功!";
             json["endtime"] = data->end_time;
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("登录失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_use_key(const httplib::Request& req, httplib::Response& res) -> void {
@@ -275,12 +267,11 @@ namespace controller {
             json["success"] = true;
             json["message"] = "使用成功!";
             json["endtime"] = ret_time;
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("使用失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_updata(const httplib::Request& req, httplib::Response& res) -> void {
@@ -299,15 +290,14 @@ namespace controller {
             if (UserDao::Update(username, password, is_ban)) {
                 json["success"] = true;
                 json["message"] = "更新成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("用户不存在或更新失败!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("更新用户失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_delete(const httplib::Request& req, httplib::Response& res) -> void {
@@ -324,15 +314,14 @@ namespace controller {
             if (UserDao::Delete(username)) {
                 json["success"] = true;
                 json["message"] = "删除成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("用户不存在或删除失败!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("删除用户失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_register(const httplib::Request& req, httplib::Response& res) -> void {
@@ -405,6 +394,7 @@ namespace controller {
             for (auto& [fst, snd] : heartbeat) {
                 if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
                     heartbeat.erase(fst);
+                    rsa_keys.erase(fst);
                 }
             }
 
@@ -412,7 +402,7 @@ namespace controller {
                 throw std::runtime_error("用户名不能为空!");
             }
 
-            if (!heartbeat.contains(username)) {
+            if (!heartbeat.contains(username) || !rsa_keys.contains(username)) {
                 throw std::runtime_error("用户未登录!");
             }
 
@@ -431,10 +421,23 @@ namespace controller {
             json["success"] = true;
             json["message"] = "成功!";
             json["endtime"] = fst.first;
+
+            encrypt::RSA& rsa = rsa_keys[username];
+            std::vector<std::uint8_t> buffer = rsa.pri_encode(util::string2buffer(json.dump()));
+            const auto md5 = encrypt::MD5::encode(buffer);
+            const auto pri_buffer = encrypt::Base64::encode(util::string2buffer(rsa.key_pub()));
+            buffer.insert_range(buffer.end(), util::string2buffer(pri_buffer));
+            buffer.insert_range(buffer.end(), md5);
+            buffer.push_back(pri_buffer.size());
+            buffer.push_back(md5.size());
+
+            json.clear();
+            json["buffer"] = encrypt::Base64::encode(buffer);
+            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("[!] ") + exception.what();
+            res.set_content(json.dump(), "application/json");
         }
-        res.set_content(json.dump(), "application/json");
     }
 }

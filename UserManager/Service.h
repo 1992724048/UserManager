@@ -72,7 +72,7 @@ public:
     std::size_t file_total_size{};
     inline static util::SafeMap<std::string, FileDate> file_cache;
 
-    static auto Instance() -> Service&;
+    static auto instance() -> Service&;
 
     Service();
     ~Service();

@@ -377,7 +377,7 @@
     <ClInclude Include="Controller\key\KeyController.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="lib\Encrypt.h">
+    <ClInclude Include="lib\encrypt.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lib\MemoryPool\MemoryPool.h">
@@ -3009,6 +3009,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="encode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\minmalloc\mimalloc-new-delete.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

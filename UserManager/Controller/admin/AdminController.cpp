@@ -19,7 +19,7 @@ auto AdminController::cookie_check(const httplib::Request& req, httplib::Respons
 }
 
 auto AdminController::login(const httplib::Request& req, httplib::Response& res) -> void {
-    const Service& service = Service::Instance();
+    const Service& service = Service::instance();
     nlohmann::json json = nlohmann::json::parse(req.body);
     const std::string username_ = json["username"];
     const std::string password_ = json["password"];

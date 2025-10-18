@@ -19,7 +19,7 @@ auto main() -> int {
     Logger::prepare_file_logging(util::app_path() / "logs");
 
     try {
-        return Service::Instance().run();
+        return Service::instance().run();
     } catch (std::exception& exception) {
         LOG_ERROR << exception.what();
         std::this_thread::sleep_for(std::chrono::minutes(1));

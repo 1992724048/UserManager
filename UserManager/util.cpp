@@ -79,6 +79,12 @@ namespace util {
         return ss.str();
     }
 
+    auto string2buffer(const std::string& _str) -> std::vector<std::uint8_t> {
+        std::vector<std::uint8_t> buffer(_str.size());
+        std::memcpy(buffer.data(), _str.data(), buffer.size());
+        return buffer;
+    }
+
     auto get_mime_type(const std::string& _extension) -> std::string {
         static phmap::flat_hash_map<std::string, std::string> mime_types = {
             // 文本类

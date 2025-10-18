@@ -15,9 +15,9 @@ namespace tp {
         /**
          * @brief 构造函数，初始化线程池
          *
-         * @param num_threads 线程池中线程的数量，默认为硬件支持的并发数
+         * @param _num_threads 线程池中线程的数量，默认为硬件支持的并发数
          */
-        explicit ThreadPool(const int num_threads = std::thread::hardware_concurrency()) : arena_(num_threads), task_count_(0) {}
+        explicit ThreadPool(const int _num_threads = std::thread::hardware_concurrency()) : arena_(_num_threads), task_count_(0) {}
 
         /**
          * @brief 获取线程池中线程的最大数量
@@ -33,17 +33,17 @@ namespace tp {
          *
          * @tparam F 任务函数类型
          * @tparam Args 任务函数参数类型
-         * @param f 任务函数
-         * @param args 任务函数的参数
+         * @param _f 任务函数
+         * @param _args 任务函数的参数
          * @return std::future<std::invoke_result_t<F, Args...>> 任务的返回值的future对象
          */
         template<typename F, typename... Args>
-        auto push(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>> {
+        auto push(F&& _f, Args&&... _args) -> std::future<std::invoke_result_t<F, Args...>> {
             using ResultType = std::invoke_result_t<F, Args...>;
 
-            auto task_ptr = std::make_shared<std::packaged_task<ResultType()>>([func = std::forward<F>(f), args_tuple = std::make_tuple(std::forward<Args>(args)...)]()mutable {
-                return std::apply([&func]<typename... T>(T&&... args) -> ResultType {
-                                      return std::invoke(func, std::forward<T>(args)...);
+            auto task_ptr = std::make_shared<std::packaged_task<ResultType()>>([func = std::forward<F>(_f), args_tuple = std::make_tuple(std::forward<Args>(_args)...)]()mutable {
+                return std::apply([&func]<typename... T>(T&&... _args_) -> ResultType {
+                                      return std::invoke(func, std::forward<T>(_args_)...);
                                   },
                                   std::move(args_tuple));
             });
@@ -52,7 +52,7 @@ namespace tp {
 
             task_count_.fetch_add(1, std::memory_order_relaxed);
 
-            arena_.enqueue([this, task_ptr]() {
+            arena_.enqueue([this, task_ptr] {
                 group_.run([this, task_ptr] {
                     (*task_ptr)();
                     task_count_.fetch_sub(1, std::memory_order_relaxed);
@@ -82,14 +82,14 @@ namespace tp {
          *
          * @tparam Rep 持续时间的表示类型
          * @tparam Period 持续时间的周期类型
-         * @param duration 等待的时间
+         * @param _duration 等待的时间
          * @return bool 如果所有任务完成则返回true，否则返回false
          */
         template<typename Rep, typename Period>
-        auto wait_for(const std::chrono::duration<Rep, Period>& duration) -> bool {
+        auto wait_for(const std::chrono::duration<Rep, Period>& _duration) -> bool {
             std::unique_lock lock(mtx_);
             return cv_.wait_for(lock,
-                                duration,
+                                _duration,
                                 [this] {
                                     return task_count_.load(std::memory_order_relaxed) == 0;
                                 });
@@ -99,17 +99,17 @@ namespace tp {
          * @brief 提交一个循环任务到线程池
          *
          * @tparam F 任务函数类型
-         * @param count 循环次数
-         * @param f 任务函数
+         * @param _count 循环次数
+         * @param _f 任务函数
          * @return std::vector<std::future<std::invoke_result_t<F, std::size_t>>> 所有任务的返回值的future对象的向量
          */
         template<typename F>
-        auto push_loop(std::size_t count, F&& f) -> std::vector<std::future<std::invoke_result_t<F, std::size_t>>> {
+        auto push_loop(std::size_t _count, F&& _f) -> std::vector<std::future<std::invoke_result_t<F, std::size_t>>> {
             using ResultType = std::invoke_result_t<F, std::size_t>;
             std::vector<std::future<ResultType>> futures;
-            futures.reserve(count);
-            for (std::size_t i = 0; i < count; ++i) {
-                futures.push_back(push(std::forward<F>(f), i));
+            futures.reserve(_count);
+            for (std::size_t i = 0; i < _count; ++i) {
+                futures.push_back(push(std::forward<F>(_f), i));
             }
             return futures;
         }
@@ -119,18 +119,18 @@ namespace tp {
          *
          * @tparam Iterator 迭代器类型
          * @tparam F 任务函数类型
-         * @param begin 迭代器范围的起始位置
-         * @param end 迭代器范围的结束位置
-         * @param f 任务函数
+         * @param _begin 迭代器范围的起始位置
+         * @param _end 迭代器范围的结束位置
+         * @param _f 任务函数
          * @return std::vector<std::future<std::invoke_result_t<F, typename std::iterator_traits<Iterator>::value_type>>> 所有任务的返回值的future对象的向量
          */
         template<typename Iterator, typename F>
-        auto push_loop(Iterator begin, Iterator end, F&& f) -> std::vector<std::future<std::invoke_result_t<F, typename std::iterator_traits<Iterator>::value_type>>> {
+        auto push_loop(Iterator _begin, Iterator _end, F&& _f) -> std::vector<std::future<std::invoke_result_t<F, typename std::iterator_traits<Iterator>::value_type>>> {
             using value_type = typename std::iterator_traits<Iterator>::value_type;
             using ResultType = std::invoke_result_t<F, value_type>;
             std::vector<std::future<ResultType>> futures;
-            for (auto it = begin; it != end; ++it) {
-                futures.push_back(push(std::forward<F>(f), *it));
+            for (auto it = _begin; it != _end; ++it) {
+                futures.push_back(push(std::forward<F>(_f), *it));
             }
             return futures;
         }
@@ -147,40 +147,33 @@ namespace tp {
      * @brief 时间守护结构体，用于记录和计算时间持续
      */
     struct TimeGuard {
-        /**
-         * @brief 使用std::chrono::steady_clock作为时钟
-         */
         using Clock = std::chrono::steady_clock;
-        /**
-         * @brief 时间点类型
-         */
         using TimePoint = Clock::time_point;
 
-        /**
-         * @brief 构造函数，初始化时间守护并记录起始时间
-         */
-        TimeGuard() : start(Clock::now()) {}
+        TimeGuard() : f_start_(Clock::now()) {}
 
-        /**
-         * @brief 更新起始时间点为当前时间
-         */
+        // 更新起始时间
         auto update_start() -> void {
-            start = Clock::now();
+            f_start_ = Clock::now();
         }
 
         /**
-         * @brief 获取从起始时间点到当前时间点的持续时间，以秒为单位
+         * @brief 获取持续时间，单位可选
+         * @tparam Duration std::chrono::duration 类型（默认秒）
+         * @return double 持续时间
          *
-         * @return double 持续时间，单位为秒
+         * 示例：
+         *   get_duration<std::chrono::seconds>()    → 秒
+         *   get_duration<std::chrono::milliseconds>() → 毫秒
+         *   get_duration<std::chrono::microseconds>() → 微秒
+         *   get_duration<std::chrono::nanoseconds>()  → 纳秒
          */
+        template<typename Duration = std::chrono::seconds>
         [[nodiscard]] auto get_duration() const -> double {
-            return std::chrono::duration<double>(Clock::now() - start).count();
+            return std::chrono::duration<double, typename Duration::period>(Clock::now() - f_start_).count();
         }
 
     private:
-        /**
-         * @brief 起始时间点
-         */
-        TimePoint start;
+        TimePoint f_start_;
     };
 }

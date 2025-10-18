@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <json.hpp>
-
+#include <encrypt.h>
 #include "../HTTPController.h"
-
 #include "../../Dao/user/UserDao.h"
 
 namespace controller {
@@ -36,5 +35,6 @@ namespace controller {
 
         inline static util::SafeMap<std::string, std::pair<std::chrono::steady_clock::time_point, std::string>> captchas;
         inline static util::SafeMap<std::string, std::pair<std::pair<long long, std::chrono::steady_clock::time_point>, std::string>> heartbeat;
+        inline static util::SafeMap<std::string, encrypt::RSA> rsa_keys;
     };
 }

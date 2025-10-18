@@ -41,7 +41,7 @@ namespace httplib {
         }
 
         static auto registerMethod() -> void {
-            const Service& instance = Service::Instance();
+            const Service& instance = Service::instance();
             std::ifstream file(util::app_path() / "url.json", std::ios::in);
             if (file) {
                 file >> api_json;
