@@ -318,12 +318,12 @@ $cookie$
             >
               <template #default="scope">
                 <div class="whitespace-nowrap select-text">
-                  {{ scope.row.key }}
+                  {{ scope.row.key_str }}
                 </div>
               </template>
             </el-table-column>
 
-            <el-table-column label="是否使用" width="180" align="center">
+            <el-table-column label="是否使用" align="center" width="100px">
               <template #default="scope">
                 <el-tag v-if="scope.row.is_use" type="danger">
                   <el-icon>

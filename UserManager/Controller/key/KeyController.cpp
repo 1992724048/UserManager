@@ -27,7 +27,7 @@ namespace controller {
             json["data"] = nlohmann::json::array();
 
             for (const auto& key : keys) {
-                json["data"].push_back({{"key", key.key_str}, {"is_use", key.is_use}, {"create_time", key.create_time}, {"app_id", key.app_id}, {"add_time", key.add_time}, {"price", key.price}});
+                json["data"].push_back(key);
             }
 
             json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_keys", total_keys}, {"total_pages", total_pages}};
@@ -53,14 +53,7 @@ namespace controller {
             json["success"] = true;
             json["message"] = "搜索成功!";
             json["data"] = nlohmann::json::array();
-            json["data"].push_back({
-                {"key", key_->key_str},
-                {"is_use", key_->is_use},
-                {"create_time", key_->create_time},
-                {"app_id", key_->app_id},
-                {"add_time", key_->add_time},
-                {"price", key_->price}
-            });
+            json["data"].push_back(key_.value());
 
             json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
         } catch (std::exception& exception) {

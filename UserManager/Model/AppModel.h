@@ -12,6 +12,19 @@ public:
 
     App() = default;
 
-    App(std::string app_name, const long long create_time, const int users, const int is_stop, const int keys)
-        : app_name(std::move(app_name)), create_time(create_time), users(users), keys(keys), is_stop(is_stop) {}
+    App(std::string _app_name, const long long _create_time, const int _users, const int _is_stop, const int _keys) : app_name(std::move(_app_name)),
+                                                                                                                      create_time(_create_time),
+                                                                                                                      users(_users),
+                                                                                                                      keys(_keys),
+                                                                                                                      is_stop(_is_stop) {}
 };
+
+namespace nlohmann {
+    inline auto to_json(json& _j, const App& _value) -> void {
+        _j = {{"app_name", _value.app_name}, {"create_time", _value.create_time}, {"users", _value.users}, {"keys", _value.keys}, {"is_stop", _value.is_stop}};
+    }
+
+    inline auto from_json(const json& _j, App& _value) -> void {
+        throw std::format_error("废弃");
+    }
+}

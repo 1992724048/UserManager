@@ -26,7 +26,7 @@ namespace controller {
                 throw std::runtime_error("页面显示数量过大或过小!");
             }
 
-            const std::vector<User> users = UserDao::GetByPage(page, page_size);
+            std::vector<User> users = UserDao::GetByPage(page, page_size);
             int total_users = UserDao::GetCount();
 
             const int total_pages = total_users > 0 ? (total_users + page_size - 1) / page_size : 0;
@@ -35,8 +35,9 @@ namespace controller {
             json["message"] = "获取成功!";
             json["data"] = nlohmann::json::array();
 
-            for (const auto& user : users) {
-                json["data"].push_back({{"username", user.username}, {"is_ban", user.is_ban}, {"create_time", user.create_time}, {"password", user.password}});
+            for (auto& user : users) {
+                user.online = heartbeat.contains(user.username);
+                json["data"].push_back(user);
             }
 
             json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_users", total_users}, {"total_pages", total_pages}};
@@ -57,15 +58,17 @@ namespace controller {
 
             util::check_empty("用户名不能为空!", username);
 
-            const auto user = UserDao::Get(username);
+            auto user = UserDao::Get(username);
             if (!user) {
                 throw std::runtime_error("用户不存在!");
             }
 
+            user->online = heartbeat.contains(user->username);
+
             json["success"] = true;
             json["message"] = "搜索成功!";
             json["data"] = nlohmann::json::array();
-            json["data"].push_back({{"username", user->username}, {"is_ban", user->is_ban}, {"create_time", user->create_time}, {"password", user->password}});
+            json["data"].push_back(user.value());
 
             json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
         } catch (std::exception& exception) {

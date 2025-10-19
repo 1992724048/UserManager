@@ -177,7 +177,30 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column label="是否封禁" align="center">
+                    <el-table-column label="是否在线" align="center" width="90px">
+                        <template #default="scope">
+                            <el-tag v-if="scope.row.online" type="success">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M7.21875 5.78125L5.78125 7.21875L14.5625 16L5.78125 24.78125L7.21875 26.21875L16 17.4375L24.78125 26.21875L26.21875 24.78125L17.4375 16L26.21875 7.21875L24.78125 5.78125L16 14.5625Z" />
+                                    </svg>
+                                </el-icon>
+                                在线
+                            </el-tag>
+                            <el-tag v-else type="danger">
+                                <el-icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                                        <path
+                                            d="M28.28125 6.28125L11 23.5625L3.71875 16.28125L2.28125 17.71875L10.28125 25.71875L11 26.40625L11.71875 25.71875L29.71875 7.71875Z" />
+                                    </svg>
+                                </el-icon>
+                                离线
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="是否封禁" align="center" width="90px">
                         <template #default="scope">
                             <el-tag v-if="scope.row.is_ban" type="danger">
                                 <el-icon>

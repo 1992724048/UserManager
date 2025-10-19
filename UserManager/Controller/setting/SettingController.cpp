@@ -10,9 +10,9 @@ namespace controller {
         const Service& service = Service::instance();
         nlohmann::json json = nlohmann::json::parse(req.body);
 
-        service.f_server_port.value() = json["server_port"];
-        service.f_tbb_mode.value() = json["tbb_mode"];
-        service.f_domain.value() = json["domain"];
+        service.f_server_port = json["server_port"].get<int>();
+        service.f_tbb_mode = json["tbb_mode"].get<bool>();
+        service.f_domain = json["domain"].get<std::string>();
         service.f_file_cache.value() = json["file_cache"];
         service.f_file_cache_time.value() = json["file_cache_time"];
         service.f_file_cache_max_size.value() = json["file_cache_max_size"];
