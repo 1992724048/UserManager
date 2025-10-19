@@ -68,22 +68,26 @@ namespace encrypt {
         }
 
         auto key_generate(const int _len = 8192) -> void {
-            const auto keypair = std::make_unique<::RSA>(RSA_generate_key(_len, RSA_3, nullptr, nullptr), RSA_free);
+            const auto keypair = RSA_generate_key(_len, RSA_3, nullptr, nullptr);
 
-            const auto pri = std::make_unique<BIO>(BIO_new(BIO_s_mem()), BIO_free_all);
-            const auto pub = std::make_unique<BIO>(BIO_new(BIO_s_mem()), BIO_free_all);
+            const auto pri = BIO_new(BIO_s_mem());
+            const auto pub = BIO_new(BIO_s_mem());
 
-            PEM_write_bio_RSAPrivateKey(pri.get(), keypair.get(), nullptr, nullptr, 0, nullptr, nullptr);
-            PEM_write_bio_RSA_PUBKEY(pub.get(), keypair.get());
+            PEM_write_bio_RSAPrivateKey(pri, keypair, nullptr, nullptr, 0, nullptr, nullptr);
+            PEM_write_bio_RSA_PUBKEY(pub, keypair);
 
-            const size_t pri_len = BIO_pending(pri.get());
-            const size_t pub_len = BIO_pending(pub.get());
+            const size_t pri_len = BIO_pending(pri);
+            const size_t pub_len = BIO_pending(pub);
 
             std::string pri_key(pri_len + 1, '\0');
             std::string pub_key(pub_len + 1, '\0');
 
-            BIO_read(pri.get(), pri_key.data(), pri_len);
-            BIO_read(pub.get(), pub_key.data(), pub_len);
+            BIO_read(pri, pri_key.data(), pri_len);
+            BIO_read(pub, pub_key.data(), pub_len);
+
+            RSA_free(keypair);
+            BIO_free_all(pri);
+            BIO_free_all(pub);
 
             this->pub_key = std::move(pub_key);
             this->pri_key = std::move(pri_key);
@@ -106,41 +110,38 @@ namespace encrypt {
         }
 
     private:
-        static auto make_rsa(const std::unique_ptr<bio_st>& _bio, const bool _pub = false) -> std::optional<std::pair<const int, std::unique_ptr<::RSA>>> {
-            ::RSA* rsa = RSA_new();
-            if (_pub) {
-                rsa = PEM_read_bio_RSA_PUBKEY(_bio.get(), &rsa, nullptr, nullptr);
-            } else {
-                rsa = PEM_read_bio_RSAPrivateKey(_bio.get(), &rsa, nullptr, nullptr);
-            }
-            if (!rsa) {
-                return std::nullopt;
-            }
-            return {{RSA_size(rsa), std::make_unique<::RSA>(rsa, RSA_free)}};
-        }
-
         [[nodiscard]] auto encode_decode(const std::vector<std::uint8_t>& _data, const bool _pub = false, const bool _decode = false) const -> std::vector<std::uint8_t> {
             if (_data.empty()) {
                 return {};
             }
 
-            const auto key_bio = std::make_unique<BIO>(BIO_new_mem_buf(_pub ? this->pub_key.data() : this->pri_key.data(), -1), BIO_free_all);
+            const auto key_bio = BIO_new_mem_buf(_pub ? this->pub_key.data() : this->pri_key.data(), -1);
+            ::RSA* rsa = RSA_new();
+            if (_pub) {
+                rsa = PEM_read_bio_RSA_PUBKEY(key_bio, &rsa, nullptr, nullptr);
+            } else {
+                rsa = PEM_read_bio_RSAPrivateKey(key_bio, &rsa, nullptr, nullptr);
+            }
 
-            if (const auto opt = make_rsa(key_bio)) {
-                auto& [len, rsa] = opt.value();
-
-                std::vector<std::uint8_t> buffer(len);
+            if (rsa) {
+                std::vector<std::uint8_t> buffer(RSA_size(rsa));
                 if (_pub) {
                     _decode
-                        ? RSA_public_decrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING)
-                        : RSA_public_encrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING);
+                        ? RSA_public_decrypt(_data.size(), _data.data(), buffer.data(), rsa, RSA_PKCS1_PADDING)
+                        : RSA_public_encrypt(_data.size(), _data.data(), buffer.data(), rsa, RSA_PKCS1_PADDING);
                 } else {
                     _decode
-                        ? RSA_private_decrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING)
-                        : RSA_private_encrypt(_data.size(), _data.data(), buffer.data(), rsa.get(), RSA_PKCS1_PADDING);
+                        ? RSA_private_decrypt(_data.size(), _data.data(), buffer.data(), rsa, RSA_PKCS1_PADDING)
+                        : RSA_private_encrypt(_data.size(), _data.data(), buffer.data(), rsa, RSA_PKCS1_PADDING);
                 }
+
+                RSA_free(rsa);
+                BIO_free_all(key_bio);
                 return buffer;
             }
+
+            RSA_free(rsa);
+            BIO_free_all(key_bio);
             return {};
         }
     };

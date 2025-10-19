@@ -36,5 +36,7 @@ namespace controller {
         inline static util::SafeMap<std::string, std::pair<std::chrono::steady_clock::time_point, std::string>> captchas;
         inline static util::SafeMap<std::string, std::pair<std::pair<long long, std::chrono::steady_clock::time_point>, std::string>> heartbeat;
         inline static util::SafeMap<std::string, encrypt::RSA> rsa_keys;
+
+        static auto encode_pack(const std::string& _username, nlohmann::json& _json) -> void;
     };
 }

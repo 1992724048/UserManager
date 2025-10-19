@@ -301,4 +301,15 @@ namespace util {
     extern auto generate_session_token() -> std::string;
     extern auto generate_timestamp_sha256() -> std::string;
     extern auto string2buffer(const std::string& _str) -> std::vector<std::uint8_t>;
+
+    template<typename T> concept HasEmptyMethod = requires(T _t) {
+        { _t.empty() } -> std::convertible_to<bool>;
+    };
+
+    template<typename... T> requires (HasEmptyMethod<T> && ...)
+    auto check_empty(std::string_view _str_throw, T&&... _args) -> void {
+        if ((_args.empty() || ...)) {
+            throw std::runtime_error(_str_throw.data());
+        }
+    }
 }

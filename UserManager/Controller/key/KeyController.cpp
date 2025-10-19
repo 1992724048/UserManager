@@ -31,12 +31,11 @@ namespace controller {
             }
 
             json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_keys", total_keys}, {"total_pages", total_pages}};
-            res.set_content(json.dump(), "application/json");
         } catch (const std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("获取密钥失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::get_key(const httplib::Request& req, httplib::Response& res) -> void {
@@ -64,13 +63,11 @@ namespace controller {
             });
 
             json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
-
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("获取密钥失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::create_key(const httplib::Request& req, httplib::Response& res) -> void {
@@ -83,9 +80,7 @@ namespace controller {
             const int count = json["count"];
             json.clear();
 
-            if (app_id.empty()) {
-                throw std::runtime_error("应用不能为空!");
-            }
+            util::check_empty("应用不能为空!", app_id);
 
             if (!count || !add_time) {
                 throw std::runtime_error("数量和增加时间不能为0!");
@@ -94,15 +89,14 @@ namespace controller {
             if (KeyDao::Add(price, add_time, app_id, count) == count) {
                 json["success"] = true;
                 json["message"] = "添加成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("应用不存在/添加失败/仅部分添加成功!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("添加密钥失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::delete_key(const httplib::Request& req, httplib::Response& res) -> void {
@@ -112,22 +106,19 @@ namespace controller {
             std::string key_ = json["key"];
             json.clear();
 
-            if (key_.empty()) {
-                throw std::runtime_error("密钥不能为空!");
-            }
+            util::check_empty("密钥不能为空!", key_);
 
             if (KeyDao::Delete(key_)) {
                 json["success"] = true;
                 json["message"] = "删除成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("密钥不存在或删除失败!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("删除密钥失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::update_key(const httplib::Request& req, httplib::Response& res) -> void {
@@ -141,13 +132,8 @@ namespace controller {
             const float price = json["price"];
             json.clear();
 
-            if (key.empty()) {
-                throw std::runtime_error("密钥不能为空!");
-            }
-
-            if (app_id.empty()) {
-                throw std::runtime_error("应用不能为空!");
-            }
+            util::check_empty("密钥不能为空!", key);
+            util::check_empty("应用不能为空!", app_id);
 
             if (!add_time) {
                 throw std::runtime_error("增加时间不能为0!");
@@ -156,15 +142,14 @@ namespace controller {
             if (KeyDao::Update(key, is_use, price, add_time, app_id)) {
                 json["success"] = true;
                 json["message"] = "更新成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("密钥不存在/应用不存在/更新失败!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("更新密钥失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::clear_use(const httplib::Request& req, httplib::Response& res) -> void {
@@ -174,15 +159,14 @@ namespace controller {
             if (KeyDao::ClearUse()) {
                 json["success"] = true;
                 json["message"] = "清除成功!";
-                res.set_content(json.dump(), "application/json");
             } else {
                 throw std::runtime_error("!");
             }
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("清除失败") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 
     auto KeyController::calc(const httplib::Request& req, httplib::Response& res) -> void {
@@ -190,9 +174,7 @@ namespace controller {
         json["data"] = nlohmann::json::array();
         try {
             const auto keys = KeyDao::GetUseKeys();
-            if (keys.empty()) {
-                throw std::runtime_error("没有被使用的密钥!");
-            }
+            util::check_empty("没有被使用的密钥!", keys);
 
             std::map<std::string, std::pair<float, int>> value;
             for (const Key& key : keys) {
@@ -207,11 +189,10 @@ namespace controller {
 
             json["success"] = true;
             json["message"] = "获取成功!";
-            res.set_content(json.dump(), "application/json");
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("获取失败!") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
     }
 }

@@ -55,9 +55,7 @@ namespace controller {
             const std::string username = json["username"];
             json.clear();
 
-            if (username.empty()) {
-                throw std::runtime_error("用户名不能为空!");
-            }
+            util::check_empty("用户名不能为空!", username);
 
             const auto user = UserDao::Get(username);
             if (!user) {
@@ -86,9 +84,7 @@ namespace controller {
             const std::string password = json["password"];
             json.clear();
 
-            if (username.empty() || password.empty()) {
-                throw std::runtime_error("用户名或密码不能为空!");
-            }
+            util::check_empty("用户名或密码不能为空!", username, password);
 
             if (UserDao::Add(username, password)) {
                 json["success"] = true;
@@ -113,17 +109,13 @@ namespace controller {
             const std::string app_name = json["app_name"];
             json.clear();
 
-            if (username.empty() || password.empty()) {
-                throw std::runtime_error("用户名或密码不能为空!");
-            }
+            util::check_empty("用户名或密码不能为空!", username, password);
+            util::check_empty("验证码不能为空!", captcha);
+            util::check_empty("应用名不能为空!", app_name);
 
             boost::to_upper(captcha);
             if (captchas[req.remote_addr].second != captcha) {
                 throw std::runtime_error("验证码错误!");
-            }
-
-            if (app_name.empty()) {
-                throw std::runtime_error("应用名不能为空!");
             }
 
             const auto user = UserDao::Get(username);
@@ -181,6 +173,8 @@ namespace controller {
             json["success"] = true;
             json["message"] = "登录成功!";
             json["endtime"] = data->end_time;
+
+            encode_pack(username, json);
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("登录失败!") + exception.what();
@@ -198,17 +192,9 @@ namespace controller {
             const std::string key_name = json["key"];
             json.clear();
 
-            if (username.empty() || password.empty()) {
-                throw std::runtime_error("用户名或密码不能为空!");
-            }
-
-            if (app_name.empty()) {
-                throw std::runtime_error("应用名不能为空!");
-            }
-
-            if (key_name.empty()) {
-                throw std::runtime_error("密钥不能为空!");
-            }
+            util::check_empty("用户名或密码不能为空!", username, password);
+            util::check_empty("应用名不能为空!", app_name);
+            util::check_empty("密钥不能为空!", key_name);
 
             const auto user = UserDao::Get(username);
             if (!user || user->password != password) {
@@ -398,9 +384,7 @@ namespace controller {
                 }
             }
 
-            if (username.empty()) {
-                throw std::runtime_error("用户名不能为空!");
-            }
+            util::check_empty("用户名不能为空!", username);
 
             if (!heartbeat.contains(username) || !rsa_keys.contains(username)) {
                 throw std::runtime_error("用户未登录!");
@@ -422,22 +406,32 @@ namespace controller {
             json["message"] = "成功!";
             json["endtime"] = fst.first;
 
-            encrypt::RSA& rsa = rsa_keys[username];
-            std::vector<std::uint8_t> buffer = rsa.pri_encode(util::string2buffer(json.dump()));
-            const auto md5 = encrypt::MD5::encode(buffer);
-            const auto pri_buffer = encrypt::Base64::encode(util::string2buffer(rsa.key_pub()));
-            buffer.insert_range(buffer.end(), util::string2buffer(pri_buffer));
-            buffer.insert_range(buffer.end(), md5);
-            buffer.push_back(pri_buffer.size());
-            buffer.push_back(md5.size());
-
-            json.clear();
-            json["buffer"] = encrypt::Base64::encode(buffer);
-            res.set_content(json.dump(), "application/json");
+            encode_pack(username, json);
         } catch (std::exception& exception) {
             json["success"] = false;
             json["message"] = std::string("[!] ") + exception.what();
-            res.set_content(json.dump(), "application/json");
         }
+        res.set_content(json.dump(), "application/json");
+    }
+
+    auto UserController::encode_pack(const std::string& _username, nlohmann::json& _json) -> void {
+        encrypt::RSA& rsa = rsa_keys[_username];
+
+        std::vector<std::uint8_t> buffer = rsa.pri_encode(util::string2buffer(_json.dump()));
+        const auto md5 = encrypt::MD5::encode(buffer);
+        const auto pri_buffer = encrypt::Base64::encode(util::string2buffer(rsa.key_pub()));
+
+        buffer.insert_range(buffer.end(), util::string2buffer(pri_buffer));
+        buffer.insert_range(buffer.end(), md5);
+
+        const std::size_t key_size = pri_buffer.size();
+        const std::size_t md5_size = md5.size();
+
+        buffer.resize(buffer.size() + sizeof(std::size_t) * 2);
+        std::memcpy(buffer.data() + buffer.size() - sizeof(std::size_t) * 2, &key_size, sizeof(std::size_t));
+        std::memcpy(buffer.data() + buffer.size() - sizeof(std::size_t), &md5_size, sizeof(std::size_t));
+
+        _json.clear();
+        _json["buffer"] = encrypt::Base64::encode(buffer);
     }
 }
