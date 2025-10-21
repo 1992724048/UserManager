@@ -23,7 +23,7 @@ namespace controller {
         // 一定要写构造方法，不然会被优化掉
         UserController();
         static auto get_all(const httplib::Request& req, httplib::Response& res) -> void;
-        static auto user_get(const httplib::Request& req, httplib::Response& res) -> void;
+        static auto user_get(const httplib::Request& _req, httplib::Response& _res) -> void;
         static auto user_add(const httplib::Request& req, httplib::Response& res) -> void;
         static auto user_login(const httplib::Request& req, httplib::Response& res) -> void;
         static auto user_use_key(const httplib::Request& req, httplib::Response& res) -> void;

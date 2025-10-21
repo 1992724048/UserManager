@@ -42,15 +42,14 @@ namespace controller {
 
             json["pagination"] = {{"current_page", page}, {"page_size", page_size}, {"total_users", total_users}, {"total_pages", total_pages}};
         } catch (std::exception& exception) {
-            json.clear();
             json["success"] = false;
             json["message"] = std::string("获取失败!") + exception.what();
         }
         res.set_content(json.dump(), "application/json");
     }
 
-    auto UserController::user_get(const httplib::Request& req, httplib::Response& res) -> void {
-        nlohmann::json json = nlohmann::json::parse(req.body);
+    auto UserController::user_get(const httplib::Request& _req, httplib::Response& _res) -> void {
+        nlohmann::json json = nlohmann::json::parse(_req.body);
 
         try {
             const std::string username = json["username"];
@@ -72,11 +71,10 @@ namespace controller {
 
             json["pagination"] = {{"current_page", 1}, {"total_users", 1}, {"total_pages", 1}};
         } catch (std::exception& exception) {
-            json.clear();
             json["success"] = false;
             json["message"] = std::string("获取用户失败!") + exception.what();
         }
-        res.set_content(json.dump(), "application/json");
+        _res.set_content(json.dump(), "application/json");
     }
 
     auto UserController::user_add(const httplib::Request& req, httplib::Response& res) -> void {
@@ -272,9 +270,7 @@ namespace controller {
             const int is_ban = json["is_ban"];
             json.clear();
 
-            if (username.empty()) {
-                throw std::runtime_error("用户不能为空!");
-            }
+            util::check_empty("用户不能为空!", username);
 
             if (UserDao::Update(username, password, is_ban)) {
                 json["success"] = true;
@@ -296,9 +292,7 @@ namespace controller {
             const std::string username = json["username"];
             json.clear();
 
-            if (username.empty()) {
-                throw std::runtime_error("用户不能为空!");
-            }
+            util::check_empty("用户不能为空!", username);
 
             if (UserDao::Delete(username)) {
                 json["success"] = true;
@@ -322,9 +316,8 @@ namespace controller {
             const std::string captcha = json["captcha"];
             json.clear();
 
-            if (username.empty() || password.empty()) {
-                throw std::runtime_error("用户名和密码不能为空!");
-            }
+            util::check_empty("用户名和密码不能为空!", username, password);
+            util::check_empty("验证码不能为空!", captcha);
 
             if (username.size() < 8 || password.size() < 8) {
                 throw std::runtime_error("用户名和密码不能小于8位!");

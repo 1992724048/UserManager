@@ -5,7 +5,7 @@
 #define METHOD_LIST_BEGIN \
     static void initPathRouting() {
 #define METHOD_ADD(method, pattern, ...) \
-        registerMethod(&method, pattern, __VA_ARGS__, #method)
+        register_method(&method, pattern, __VA_ARGS__, #method)
 #define METHOD_LIST_END \
         return; \
     }
@@ -35,12 +35,12 @@ namespace httplib {
             std::function<void(const Request&, Response&)> call_back;
         };
 
-        static auto registerHandler(const std::string& class_name, const ControllerData& data) -> void {
+        static auto register_handler(const std::string& class_name, const ControllerData& data) -> void {
             controllers[class_name] = data;
             controllers_default[class_name] = data;
         }
 
-        static auto registerMethod() -> void {
+        static auto register_method() -> void {
             const Service& instance = Service::instance();
             std::ifstream file(util::app_path() / "url.json", std::ios::in);
             if (file) {
@@ -111,12 +111,12 @@ namespace httplib {
     template<typename T, bool AutoCreation = true>
     class HttpController : public HttpControllerBase {
     public:
-        static constexpr bool isAutoCreation = AutoCreation;
+        static constexpr bool is_auto_creation = AutoCreation;
 
     protected:
         ~HttpController() = default;
 
-        static auto registerMethod(void (T::*function)(const Request&, Response&),
+        static auto register_method(void (T::*function)(const Request&, Response&),
                                    const std::string& pattern,
                                    const HttpRequestType request_type,
                                    const HttpRequest request,
@@ -124,10 +124,10 @@ namespace httplib {
                                    const std::string& note,
                                    const std::string& handler_name) -> void {
             const ControllerData data(pattern, note, group, request_type, request, this_, std::bind(function, &this_, std::placeholders::_1));
-            registerHandler(handler_name, data);
+            register_handler(handler_name, data);
         }
 
-        static auto registerMethod(void (*function)(const Request&, Response&),
+        static auto register_method(void (*function)(const Request&, Response&),
                                    const std::string& pattern,
                                    const HttpRequestType request_type,
                                    const HttpRequest request,
@@ -135,20 +135,20 @@ namespace httplib {
                                    const std::string& note,
                                    const std::string& handlerName) -> void {
             const ControllerData data(pattern, note, group, request_type, request, nullptr, function);
-            registerHandler(handlerName, data);
+            register_handler(handlerName, data);
         }
 
     private:
-        class methodRegistrator {
+        class MethodRegistrator {
         public:
-            methodRegistrator() {
+            MethodRegistrator() {
                 if (AutoCreation) {
                     T::initPathRouting();
                 }
             }
         };
 
-        static methodRegistrator registrator_;
+        static MethodRegistrator registrator_;
         static HttpController<T> this_;
 
         virtual auto touch() -> void* {
@@ -157,5 +157,5 @@ namespace httplib {
     };
 
     template<typename T, bool AutoCreation>
-    typename HttpController<T, AutoCreation>::methodRegistrator HttpController<T, AutoCreation>::registrator_;
+    typename HttpController<T, AutoCreation>::MethodRegistrator HttpController<T, AutoCreation>::registrator_;
 }

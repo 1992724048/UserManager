@@ -10,7 +10,7 @@
 #pragma comment(lib, "dbghelp.lib")
 
 
-auto main() -> int {
+auto main() -> int try {
     Crash::init();
     system("chcp 65001");
 
@@ -18,11 +18,9 @@ auto main() -> int {
     config::initialize(util::app_path() / "config.json");
     Logger::prepare_file_logging(util::app_path() / "logs");
 
-    try {
-        return Service::instance().run();
-    } catch (std::exception& exception) {
-        LOG_ERROR << exception.what();
-        std::this_thread::sleep_for(std::chrono::minutes(1));
-        return -1;
-    }
+    return Service::instance().run();
+} catch (std::exception& exception) {
+    LOG_ERROR << exception.what();
+    std::this_thread::sleep_for(std::chrono::minutes(1));
+    return -1;
 }

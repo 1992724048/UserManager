@@ -126,7 +126,7 @@ namespace tp {
          */
         template<typename Iterator, typename F>
         auto push_loop(Iterator _begin, Iterator _end, F&& _f) -> std::vector<std::future<std::invoke_result_t<F, typename std::iterator_traits<Iterator>::value_type>>> {
-            using value_type = typename std::iterator_traits<Iterator>::value_type;
+            using value_type = std::iterator_traits<Iterator>::value_type;
             using ResultType = std::invoke_result_t<F, value_type>;
             std::vector<std::future<ResultType>> futures;
             for (auto it = _begin; it != _end; ++it) {

@@ -1,13 +1,7 @@
 ﻿#include "UserDao.h"
-
 #include <variant>
-
 #include <boost/algorithm/string/join.hpp>
-
 #include "../Dao.h"
-
-#include "../app/AppDao.h"
-
 #include "../data/DataDao.h"
 
 UserDao::UserDao() = default;
@@ -18,12 +12,7 @@ auto UserDao::Add(const std::string& usernamme, const std::string& password) -> 
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.insert("users").columns({
-        "username",
-        "password",
-        "is_ban",
-        "create_time"
-    }).build();
+    const auto sql = builder.insert("users").columns({"username", "password", "is_ban", "create_time"}).build();
 
     User user;
     user.is_ban = false;
@@ -41,9 +30,7 @@ auto UserDao::Get(const std::string& username) -> std::optional<User> {
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.select({
-        "*"
-    }).from("users").where("username = ?").build();
+    const auto sql = builder.select({"*"}).from("users").where("username = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql, username);
@@ -60,10 +47,7 @@ auto UserDao::Update(const std::string& username, const std::string& password, i
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.update("users").set({
-        "password",
-        "is_ban"
-    }).where("username = ?").build();
+    const auto sql = builder.update("users").set({"password", "is_ban"}).where("username = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     return sqlite_wrapper->execute(sql, password, is_ban, username);
@@ -93,14 +77,13 @@ auto UserDao::GetByPage(const int page, const int page_size) -> std::vector<User
     const int offset = (page - 1) * page_size;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.select({
-        "username, password, is_ban, create_time"
-    }).from("users").limit(page_size).offset(offset).build();
+    const auto sql = builder.select({"username, password, is_ban, create_time"}).from("users").limit(page_size).offset(offset).build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql);
-    while (stmt.step())
+    while (stmt.step()) {
         users.push_back(bind(stmt));
+    }
     return users;
 }
 
@@ -131,12 +114,7 @@ auto UserDao::Filter(const std::optional<std::string>& username_part,
     const int offset = (page - 1) * page_size;
 
     SQLiteWrapper::SQLBuilder builder;
-    builder.select({
-        "username",
-        "password",
-        "is_ban",
-        "create_time"
-    }).from("users").limit(page_size).offset(offset);
+    builder.select({"username", "password", "is_ban", "create_time"}).from("users").limit(page_size).offset(offset);
 
     using param_type = std::variant<std::string, int, int64_t>;
     std::vector<param_type> bind_params;
@@ -182,7 +160,7 @@ auto UserDao::Filter(const std::optional<std::string>& username_part,
 }
 
 auto UserDao::bind(const SQLiteWrapper::SQLiteStatement& stmt) -> User {
-    User user;
+    User user{};
     user.username = stmt.getString(0);
     user.password = stmt.getString(1);
     user.is_ban = stmt.getInt(2);

@@ -174,7 +174,7 @@ Service::~Service() {
 
 auto Service::run() const -> int {
     Dao::init_date_base();
-    httplib::HttpControllerBase::registerMethod();
+    httplib::HttpControllerBase::register_method();
 
     LOG_DEBUG << fmt::format("服务器网址: https://localhost:{}/", f_server_port.value());
 
