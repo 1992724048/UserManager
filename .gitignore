@@ -53,3 +53,5 @@ Debug-x64/Server.map
 *.pem
 *.crt
 *.map
+/Release-x64/Server.map
+/Release-x64/Server.pdb
