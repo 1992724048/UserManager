@@ -5,9 +5,10 @@
 class UserDao {
 public:
     UserDao();
-    static auto Add(const std::string& username, const std::string& password) -> int;
+    static auto Add(const std::string& username, const std::string& password, const std::string& email) -> int;
     static auto Get(const std::string& username) -> std::optional<User>;
-    static auto Update(const std::string& username, const std::string& password, int is_ban) -> int;
+    static auto Ban(const std::string& username, bool is_ban) -> int;
+    static auto Update(const std::string& username, const std::string& email, const std::string& password, int is_ban) -> int;
     static auto Delete(const std::string& username) -> int;
     static auto GetByPage(int page, int page_size = 50) -> std::vector<User>;
     static auto GetCount() -> int;

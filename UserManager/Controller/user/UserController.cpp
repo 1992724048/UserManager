@@ -82,12 +82,13 @@ namespace controller {
 
         try {
             const std::string username = json["username"];
+            const std::string email = json["email"];
             const std::string password = json["password"];
             json.clear();
 
             util::check_empty("用户名或密码不能为空!", username, password);
 
-            if (UserDao::Add(username, password)) {
+            if (UserDao::Add(username, password, email)) {
                 json["success"] = true;
                 json["message"] = "添加成功!";
             } else {
@@ -152,18 +153,8 @@ namespace controller {
                 heartbeat.erase(username);
             }
 
-            for (auto& [fst, snd] : captchas) {
-                if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first) >= std::chrono::minutes(1)) {
-                    captchas.erase(fst);
-                }
-            }
-
-            for (auto& [fst, snd] : heartbeat) {
-                if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
-                    heartbeat.erase(fst);
-                    rsa_keys.erase(fst);
-                }
-            }
+            clear_captcha();
+            clear_key_heartbeat();
 
             auto& [fst, snd] = heartbeat[username];
             fst.second = std::chrono::steady_clock::now();
@@ -266,13 +257,18 @@ namespace controller {
 
         try {
             const std::string username = json["username"];
+            const std::string new_username = json["new_username"];
+            const std::string email = json["email"];
             const std::string password = json["password"];
             const int is_ban = json["is_ban"];
             json.clear();
 
-            util::check_empty("用户不能为空!", username);
+            util::check_empty("用户、密码、邮箱不能为空!", username, password, email, new_username);
+            if (new_username != username && UserDao::Get(new_username)) {
+                throw std::runtime_error("新用户名已存在!");
+            }
 
-            if (UserDao::Update(username, password, is_ban)) {
+            if (UserDao::Update(username, email, password, is_ban)) {
                 json["success"] = true;
                 json["message"] = "更新成功!";
             } else {
@@ -312,30 +308,33 @@ namespace controller {
 
         try {
             const std::string username = json["username"];
+            const std::string email = json["email"];
             const std::string password = json["password"];
-            const std::string captcha = json["captcha"];
+            const std::string captcha = json["captcha_email"];
             json.clear();
 
-            util::check_empty("用户名和密码不能为空!", username, password);
-            util::check_empty("验证码不能为空!", captcha);
+            util::check_empty("用户名、密码、邮箱不能为空!", username, password, email);
+            util::check_empty("邮箱验证码不能为空!", captcha);
 
             if (username.size() < 8 || password.size() < 8) {
                 throw std::runtime_error("用户名和密码不能小于8位!");
             }
 
-            if (!captchas.contains(req.remote_addr)) {
+            if (!email_captchas.contains(req.remote_addr)) {
                 throw std::runtime_error("获取验证码数据失败!");
             }
 
-            if (captchas[req.remote_addr].second != captcha) {
+            if (email_captchas[req.remote_addr].second != captcha) {
                 throw std::runtime_error("验证码错误!");
             }
+
+            email_captchas.erase(req.remote_addr);
 
             if (UserDao::Get(username).has_value()) {
                 throw std::runtime_error("用户已存在!");
             }
 
-            if (!UserDao::Add(username, password)) {
+            if (!UserDao::Add(username, password, email)) {
                 throw std::runtime_error("注册失败!");
             }
 
@@ -351,11 +350,7 @@ namespace controller {
     auto UserController::user_get_captcha(const httplib::Request& req, httplib::Response& res) -> void {
         const auto captcha = Captcha::generate_verification_code(4);
 
-        for (auto& [fst, snd] : captchas) {
-            if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first) >= std::chrono::minutes(5)) {
-                captchas.erase(fst);
-            }
-        }
+        clear_captcha();
 
         auto& [fst, snd] = captchas[req.remote_addr];
         fst = std::chrono::steady_clock::now();
@@ -373,14 +368,17 @@ namespace controller {
             const std::string username = json["username"];
             json.clear();
 
-            for (auto& [fst, snd] : heartbeat) {
-                if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
-                    heartbeat.erase(fst);
-                    rsa_keys.erase(fst);
-                }
-            }
+            clear_key_heartbeat();
 
             util::check_empty("用户名不能为空!", username);
+            const auto user = UserDao::Get(username);
+            if (!user) {
+                throw std::runtime_error("用户不存在!");
+            }
+
+            if (user->is_ban) {
+                throw std::runtime_error("账户已被封禁!");
+            }
 
             if (!heartbeat.contains(username) || !rsa_keys.contains(username)) {
                 throw std::runtime_error("用户未登录!");
@@ -408,6 +406,86 @@ namespace controller {
             json["message"] = std::string("[!] ") + exception.what();
         }
         res.set_content(json.dump(), "application/json");
+    }
+
+    auto UserController::send_email(const httplib::Request& req, httplib::Response& res) -> void {
+        nlohmann::json json = nlohmann::json::parse(req.body);
+
+        try {
+            const std::string captcha = json["captcha"];
+            const std::string email = json["email"];
+            json.clear();
+
+            clear_captcha();
+
+            util::check_empty("验证码不能为空!", captcha);
+            util::check_empty("邮箱不能为空!", email);
+
+            if (!captchas.contains(req.remote_addr)) {
+                throw std::runtime_error("获取验证码数据失败!");
+            }
+
+            if (captchas[req.remote_addr].second != captcha) {
+                throw std::runtime_error("验证码错误!");
+            }
+
+            auto& [fst, snd] = captchas[req.remote_addr];
+            fst = std::chrono::steady_clock::now();
+            snd = Captcha::generate_verification_code(8);
+
+
+
+            json["success"] = true;
+            json["message"] = "发送成功!";
+        } catch (std::exception& exception) {
+            json["success"] = false;
+            json["message"] = std::string("发送失败!") + exception.what();
+        }
+        res.set_content(json.dump(), "application/json");
+    }
+
+    auto UserController::user_ban(const httplib::Request& req, httplib::Response& res) -> void {
+        nlohmann::json json = nlohmann::json::parse(req.body);
+
+        try {
+            const std::string username = json["username"];
+            const bool is_ban = json["is_ban"];
+            json.clear();
+
+            util::check_empty("用户名不能为空!", username);
+            if (!UserDao::Get(username).has_value()) {
+                throw std::runtime_error("用户不存在!");
+            }
+
+            if (!UserDao::Ban(username, is_ban)) {
+                throw std::runtime_error("操作失败!");
+            }
+
+            json["success"] = true;
+            json["message"] = "操作成功!";
+        } catch (std::exception& exception) {
+            json["success"] = false;
+            json["message"] = std::string("操作失败!") + exception.what();
+        }
+        res.set_content(json.dump(), "application/json");
+    }
+
+    auto UserController::clear_captcha() -> void {
+        for (auto& [fst, snd] : captchas) {
+            if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first) >= std::chrono::minutes(5)) {
+                captchas.erase(fst);
+                email_captchas.erase(fst);
+            }
+        }
+    }
+
+    auto UserController::clear_key_heartbeat() -> void {
+        for (auto& [fst, snd] : heartbeat) {
+            if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - snd.first.second) >= std::chrono::minutes(1)) {
+                heartbeat.erase(fst);
+                rsa_keys.erase(fst);
+            }
+        }
     }
 
     auto UserController::encode_pack(const std::string& _username, nlohmann::json& _json) -> void {

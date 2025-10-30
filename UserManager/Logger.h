@@ -163,11 +163,10 @@ public:
                 break;
             }
 
-            set_console_color(color);
-            std::cout << "[" << level_text << "] ";
             set_console_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
             std::cout << "[" << runtime_stream.str() << "] ";
-            std::cout << "[T:" << std::to_string(GetCurrentThreadId()) << "] ";
+            set_console_color(color);
+            std::cout << "[" << level_text << "] ";
             set_console_color(FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
             std::cout << "[" << filename << ":" << _line << "] ";
             set_console_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);

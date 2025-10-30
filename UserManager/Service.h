@@ -66,6 +66,7 @@ public:
     config::Field<std::filesystem::path> f_web_files;
     config::Field<std::filesystem::path> f_files_path;
     config::Field<std::filesystem::path> f_web_error_page;
+    config::Field<std::filesystem::path> f_email_page;
     config::Field<config::Enum<Logger::Level>> f_log_level;
     config::Field<config::Enum<Logger::LoggerType>> f_log_type;
 

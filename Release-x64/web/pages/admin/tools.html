@@ -54,8 +54,6 @@
                 </el-table-column>
             </el-table>
         </div>
-
-        <!-- 添加工具的对话框 -->
         <el-dialog v-model="dialogVisible" title="添加工具" width="30%">
             <el-form :model="newTool" label-width="80px">
                 <el-form-item label="名称">
@@ -76,7 +74,6 @@
             </template>
         </el-dialog>
 
-        <!-- 鼠标点击音效 -->
         <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
     </div>
     <script>
@@ -126,7 +123,6 @@
                 }
             },
             mounted() {
-                // 页面加载完成后，尝试自动播放音效
                 const clickSound = document.getElementById('click-sound');
                 clickSound.play().catch(e => console.log('自动播放音效被阻止'));
             }

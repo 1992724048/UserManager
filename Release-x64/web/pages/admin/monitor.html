@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>系统监控</title>
-
     <script src="/res/js/tailwind.js"></script>
     <script src="/res/js/jquery-3.7.1.min.js"></script>
     <script src="/res/js/vue.global.js"></script>
@@ -56,7 +55,6 @@
 
 <body class="bg-gray-100 select-none p-2 pb-0 pt-13 w-full">
     <div id="app" class="p-4">
-        <!-- 显示 CPU 核心数据 -->
         <el-card class="mt-4 shadow-none!">
             <h2>CPU 核心数据</h2>
             <div class="flex">
@@ -79,7 +77,6 @@
                 </el-collapse-item>
               </el-collapse>              
         </el-card>
-        <!-- 显示内存数据 -->
         <el-card class="mt-4 shadow-none!">
             <h2>内存数据</h2>
             <div class="flex">
@@ -90,7 +87,6 @@
             <p>已使用内存: {{ performance.memory.usedMB }} MB</p>
             <p>可用内存: {{ performance.memory.availableMB }} MB</p>
         </el-card>
-        <!-- 显示磁盘数据 -->
         <el-card class="mt-4 shadow-none!">
             <h2>磁盘数据</h2>
             <p>总磁盘空间: {{ performance.disk.totalBytes }} Bytes</p>
@@ -98,7 +94,6 @@
             <p>每秒读取字节数: {{ performance.disk.readBytesPerSec }} Bytes/s</p>
             <p>每秒写入字节数: {{ performance.disk.writeBytesPerSec }} Bytes/s</p>
         </el-card>
-        <!-- 显示网络数据 -->
         <el-card class="mt-4 shadow-none!">
             <h2>网络数据</h2>
             <p>每秒接收字节数: {{ performance.network.recvBytesPerSec }} Bytes/s</p>
@@ -106,7 +101,6 @@
         </el-card>
     </div>
 
-    <!-- 鼠标点击音效 -->
     <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
 
     <script>
@@ -122,13 +116,9 @@
                     },
                     activeNames: [],
                     cpuCoreTable: [],
-                    // CPU 总利用率历史数据及对应时间（30 个数据点）
                     cpuHistory: [],
-                    // 内存使用率历史数据（百分比，usedMB/totalMB*100）
                     memoryHistory: [],
-                    // 各核心历史数据：数组个数与核心数一致，每个为数组
                     coreHistory: [],
-                    // 统一的时间轴，所有历史图共用
                     timeHistory: []
                 }
             },
@@ -138,22 +128,18 @@
                         .then(response => {
                             if (response.data.success) {
                                 this.performance = response.data;
-                                // 更新 CPU 核心表格数据
                                 this.cpuCoreTable = this.performance.cpu.perCore.map((usage, index) => {
                                     return { core: '核心' + index, usage: usage.toFixed(2) };
                                 });
-                                // 统一时间点
                                 const currentTime = new Date().toLocaleTimeString();
                                 this.timeHistory.push(currentTime);
                                 if (this.timeHistory.length > 30) {
                                     this.timeHistory.shift();
                                 }
-                                // 更新 CPU 总利用率历史数据
                                 this.cpuHistory.push(this.performance.cpu.total);
                                 if (this.cpuHistory.length > 30) {
                                     this.cpuHistory.shift();
                                 }
-                                // 更新内存历史数据（按百分比计算）
                                 let memRate = 0;
                                 if (this.performance.memory.totalMB > 0) {
                                     memRate = this.performance.memory.usedMB / this.performance.memory.totalMB * 100;
@@ -162,8 +148,6 @@
                                 if (this.memoryHistory.length > 30) {
                                     this.memoryHistory.shift();
                                 }
-                                // 更新各核心历史数据
-                                // 若核心数变化则重置 coreHistory
                                 if (this.coreHistory.length !== this.performance.cpu.perCore.length) {
                                     this.coreHistory = [];
                                     for (let i = 0; i < this.performance.cpu.perCore.length; i++) {
@@ -176,7 +160,6 @@
                                         this.coreHistory[i].shift();
                                     }
                                 });
-                                // 更新图表数据
                                 this.updateCharts();
                             }
                         })
@@ -185,7 +168,6 @@
                         });
                 },
                 updateCharts() {
-                    // CPU 利用率图表（饼图示例）
                     let cpuChart = echarts.getInstanceByDom(document.getElementById('cpuChart'));
                     if (!cpuChart) {
                         cpuChart = echarts.init(document.getElementById('cpuChart'));
@@ -206,8 +188,6 @@
                         }]
                     };
                     cpuChart.setOption(optionCpu);
-
-                    // 内存使用率图表（柱状图示例）
                     let memoryChart = echarts.getInstanceByDom(document.getElementById('memoryChart'));
                     if (!memoryChart) {
                         memoryChart = echarts.init(document.getElementById('memoryChart'));
@@ -224,8 +204,6 @@
                         }]
                     };
                     memoryChart.setOption(optionMem);
-
-                    // CPU 历史总利用率折线图
                     let cpuHistoryChart = echarts.getInstanceByDom(document.getElementById('cpuHistoryChart'));
                     if (!cpuHistoryChart) {
                         cpuHistoryChart = echarts.init(document.getElementById('cpuHistoryChart'));
@@ -252,8 +230,6 @@
                         }]
                     };
                     cpuHistoryChart.setOption(optionHistory);
-
-                    // 内存历史使用率折线图
                     let memoryHistoryChart = echarts.getInstanceByDom(document.getElementById('memoryHistoryChart'));
                     if (!memoryHistoryChart) {
                         memoryHistoryChart = echarts.init(document.getElementById('memoryHistoryChart'));
@@ -281,7 +257,6 @@
                     };
                     memoryHistoryChart.setOption(optionMemoryHistory);
 
-                    // 历史各核心利用率折线图（多条折线）
                     let coreHistoryChart = echarts.getInstanceByDom(document.getElementById('coreHistoryChart'));
                     if (!coreHistoryChart) {
                         coreHistoryChart = echarts.init(document.getElementById('coreHistoryChart'));
@@ -315,9 +290,7 @@
                 }
             },
             mounted() {
-                // 首次加载
                 this.fetchData();
-                // 每 2 秒更新一次
                 setInterval(this.fetchData, 2000);
             }
         });

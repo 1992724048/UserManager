@@ -55,3 +55,4 @@ Debug-x64/Server.map
 *.map
 /Release-x64/Server.map
 /Release-x64/Server.pdb
+*.txt

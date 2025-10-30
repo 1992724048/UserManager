@@ -20,36 +20,30 @@ struct APIData {
 };
 
 namespace nlohmann {
-    template<>
-    struct adl_serializer<APIParams> {
-        static auto to_json(json& j, const APIParams& p) -> void {
-            j = json{{"name", p.name}, {"type", p.type}, {"required", p.required}, {"desc", p.desc}};
-        }
+    inline auto to_json(json& _j, const APIParams& _p) -> void {
+        _j = json{{"name", _p.name}, {"type", _p.type}, {"required", _p.required}, {"desc", _p.desc}};
+    }
 
-        static auto from_json(const json& j, APIParams& p) -> void {
-            j.at("name").get_to(p.name);
-            j.at("type").get_to(p.type);
-            j.at("required").get_to(p.required);
-            j.at("desc").get_to(p.desc);
-        }
-    };
+    inline auto from_json(const json& _j, APIParams& _p) -> void {
+        _j.at("name").get_to(_p.name);
+        _j.at("type").get_to(_p.type);
+        _j.at("required").get_to(_p.required);
+        _j.at("desc").get_to(_p.desc);
+    }
 
-    template<>
-    struct adl_serializer<APIData> {
-        static auto to_json(json& j, const APIData& d) -> void {
-            j = json{{"name", d.name}, {"note", d.note}, {"url", d.url}, {"method", d.method}, {"type", d.type}, {"desc", d.desc}, {"params", d.params}};
-        }
+    inline auto to_json(json& _j, const APIData& _d) -> void {
+        _j = json{{"name", _d.name}, {"note", _d.note}, {"url", _d.url}, {"method", _d.method}, {"type", _d.type}, {"desc", _d.desc}, {"params", _d.params}};
+    }
 
-        static auto from_json(const json& j, APIData& d) -> void {
-            j.at("name").get_to(d.name);
-            j.at("note").get_to(d.note);
-            j.at("url").get_to(d.url);
-            j.at("method").get_to(d.method);
-            j.at("type").get_to(d.type);
-            j.at("desc").get_to(d.desc);
-            j.at("params").get_to(d.params);
-        }
-    };
+    inline auto from_json(const json& _j, APIData& _d) -> void {
+        _j.at("name").get_to(_d.name);
+        _j.at("note").get_to(_d.note);
+        _j.at("url").get_to(_d.url);
+        _j.at("method").get_to(_d.method);
+        _j.at("type").get_to(_d.type);
+        _j.at("desc").get_to(_d.desc);
+        _j.at("params").get_to(_d.params);
+    }
 }
 
 class APIController final : public httplib::HttpController<APIController> {

@@ -37,8 +37,20 @@ auto AppDao::Delete(const std::string& app) -> int {
     return sqlite_wrapper->execute(sql, app);
 }
 
-auto AppDao::Update(const std::string& app, bool is_stop) -> int {
-    if (app.empty()) {
+auto AppDao::Update(const std::string& _app, const std::string& _ver) -> int {
+    if (_app.empty()) {
+        return 0;
+    }
+
+    SQLiteWrapper::SQLBuilder builder;
+    const auto sql = builder.update("apps").set({ "ver", }).where("app_name = ?").build();
+
+    const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
+    return sqlite_wrapper->execute(sql, _ver, _app);
+}
+
+auto AppDao::Update(const std::string& _app, bool _is_stop) -> int {
+    if (_app.empty()) {
         return 0;
     }
 
@@ -46,7 +58,7 @@ auto AppDao::Update(const std::string& app, bool is_stop) -> int {
     const auto sql = builder.update("apps").set({"is_stop",}).where("app_name = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, is_stop, app);
+    return sqlite_wrapper->execute(sql, _is_stop, _app);
 }
 
 auto AppDao::Update(const std::string& _app, int _users, int _keys) -> int {
@@ -61,24 +73,25 @@ auto AppDao::Update(const std::string& _app, int _users, int _keys) -> int {
     return sqlite_wrapper->execute(sql, _users, _keys, _app);
 }
 
-auto AppDao::Add(const std::string& app_name) -> int {
-    if (Get(app_name)) {
+auto AppDao::Add(const std::string& _app_name, const std::string& _ver) -> int {
+    if (Get(_app_name)) {
         return 0;
     }
 
     App app;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.insert("apps").columns({"app_name", "create_time", "users", "is_stop", "keys"}).build();
+    const auto sql = builder.insert("apps").columns({"app_name", "create_time", "users", "is_stop", "keys", "ver"}).build();
 
-    app.app_name = app_name;
+    app.app_name = _app_name;
     app.create_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     app.users = 0;
     app.is_stop = false;
     app.keys = 0;
+    app.ver = _ver;
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, app.app_name, app.create_time, app.users, app.is_stop, app.keys);
+    return sqlite_wrapper->execute(sql, app.app_name, app.create_time, app.users, app.is_stop, app.keys, app.ver);
 }
 
 auto AppDao::SubKey(const std::string& app_name) -> int {
@@ -171,5 +184,6 @@ auto AppDao::bind(const SQLiteWrapper::SQLiteStatement& stmt) -> App {
     app_.users = stmt.getInt(2);
     app_.is_stop = stmt.getInt(3);
     app_.keys = stmt.getInt(4);
+    app_.ver = stmt.getString(5);
     return app_;
 }

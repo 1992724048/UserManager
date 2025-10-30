@@ -6,22 +6,23 @@
 
 UserDao::UserDao() = default;
 
-auto UserDao::Add(const std::string& usernamme, const std::string& password) -> int {
+auto UserDao::Add(const std::string& usernamme, const std::string& password, const std::string& email) -> int {
     if (Get(usernamme)) {
         return 0;
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.insert("users").columns({"username", "password", "is_ban", "create_time"}).build();
+    const auto sql = builder.insert("users").columns({"*"}).build();
 
     User user;
     user.is_ban = false;
     user.create_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     user.username = usernamme;
     user.password = password;
+    user.email = email;
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, user.username, user.password, user.is_ban, user.create_time);
+    return sqlite_wrapper->execute(sql, user.username, user.email, user.password, user.is_ban, user.create_time);
 }
 
 auto UserDao::Get(const std::string& username) -> std::optional<User> {
@@ -41,16 +42,28 @@ auto UserDao::Get(const std::string& username) -> std::optional<User> {
     return std::nullopt;
 }
 
-auto UserDao::Update(const std::string& username, const std::string& password, int is_ban) -> int {
+auto UserDao::Ban(const std::string& username, bool is_ban) -> int {
     if (username.empty()) {
         return 0;
     }
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.update("users").set({"password", "is_ban"}).where("username = ?").build();
+    const auto sql = builder.update("users").set({ "is_ban" }).where("username = ?").build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
-    return sqlite_wrapper->execute(sql, password, is_ban, username);
+    return sqlite_wrapper->execute(sql, is_ban, username);
+}
+
+auto UserDao::Update(const std::string& username, const std::string& email, const std::string& password, int is_ban) -> int {
+    if (username.empty()) {
+        return 0;
+    }
+
+    SQLiteWrapper::SQLBuilder builder;
+    const auto sql = builder.update("users").set({"password", "is_ban", "username", "email"}).where("username = ?").build();
+
+    const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
+    return sqlite_wrapper->execute(sql, password, is_ban, username, email, username);
 }
 
 auto UserDao::Delete(const std::string& username) -> int {
@@ -77,7 +90,7 @@ auto UserDao::GetByPage(const int page, const int page_size) -> std::vector<User
     const int offset = (page - 1) * page_size;
 
     SQLiteWrapper::SQLBuilder builder;
-    const auto sql = builder.select({"username, password, is_ban, create_time"}).from("users").limit(page_size).offset(offset).build();
+    const auto sql = builder.select({"*"}).from("users").limit(page_size).offset(offset).build();
 
     const auto sqlite_wrapper = SQLiteWrapper::get_connect()->get_sqlite_wrapper();
     const auto stmt = sqlite_wrapper->query(sql);
@@ -162,8 +175,9 @@ auto UserDao::Filter(const std::optional<std::string>& username_part,
 auto UserDao::bind(const SQLiteWrapper::SQLiteStatement& stmt) -> User {
     User user{};
     user.username = stmt.getString(0);
-    user.password = stmt.getString(1);
-    user.is_ban = stmt.getInt(2);
-    user.create_time = stmt.getInt64(3);
+    user.email = stmt.getString(1);
+    user.password = stmt.getString(2);
+    user.is_ban = stmt.getInt(3);
+    user.create_time = stmt.getInt64(4);
     return user;
 }

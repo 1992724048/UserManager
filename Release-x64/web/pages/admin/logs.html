@@ -142,7 +142,6 @@ $cookie$
             </el-table>
         </div>
 
-        <!-- 鼠标点击音效 -->
         <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
     </div>
 </body>
@@ -190,7 +189,7 @@ $cookie$
             },
             formatTimestamp(timestamp) {
                 const date = new Date(timestamp * 1000);
-                const pad = n => n.toString().padStart(2, '0'); // 补零函数
+                const pad = n => n.toString().padStart(2, '0');
 
                 return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
                     `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
@@ -231,10 +230,7 @@ $cookie$
             downloadFile(filename) {
                 const fullPath = this.currentPath ? `${this.currentPath}/${filename}` : filename;
                 try {
-                    // 构造下载地址
                     const url = `/log_file/download?path=${encodeURIComponent(fullPath)}&csrf=${this.csrfToken}`;
-
-                    // 创建中间页
                     const closeScript = `
                         <script>
                             let count = 0;
@@ -249,7 +245,6 @@ $cookie$
                         <\/script>
                     `;
 
-                    // 打开新窗口并写入内容
                     const win = window.open('about:blank', '_blank');
                     win.document.write(`
                         <html>
@@ -260,7 +255,6 @@ $cookie$
                         </html>
                     `);
 
-                    // 处理弹窗拦截
                     if (!win || win.closed) {
                         throw new Error('请允许弹出窗口以完成下载');
                     }

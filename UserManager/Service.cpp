@@ -33,6 +33,7 @@ Service::Service() : NFS(f_server_port, "", "server", 443),
                      NFS(f_web_files, "", "server", util::app_path() / "web"),
                      NFS(f_files_path, "", "server", util::app_path() / "root"),
                      NFS(f_web_error_page, "", "server", util::app_path() / "web"/ "res" / "error.html"),
+                     NFS(f_email_page, "", "server", util::app_path() / "web" / "email.html"),
                      NFS(f_log_level, "", "log", Logger::Level::Trace),
                      NFS(f_log_type, "", "log", Logger::LoggerType::Any) {
     ippInit();

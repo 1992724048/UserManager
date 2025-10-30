@@ -488,13 +488,8 @@ public:
         bool new_db = false;
         const auto& ser = Service::instance();
         LOG_DEBUG << "数据库路径: " << ser.f_sql_path.value().string();
-        const auto db_path = ser.f_sql_path.value().parent_path();
 
-        if (!is_directory(db_path)) {
-            LOG_INFO << "文件夹未找到! 准备创建文件夹.";
-            if (!create_directories(db_path)) {
-                throw std::runtime_error("无法创建数据库文件夹");
-            }
+        if (!std::filesystem::exists(ser.f_sql_path.value())) {
             new_db = true;
         }
 
@@ -508,7 +503,8 @@ public:
                         create_time BIGINT  default 0 not null,
                         users       INTEGER default 0 not null,
                         is_stop     INTEGER default 0 not null,
-                        keys        INTEGER           not null
+                        keys        INTEGER           not null,
+                        ver         TEXT              not null
                     );
                     )",
                 R"(create table datas
@@ -537,6 +533,7 @@ public:
                 R"(create table users
                     (
                         username    TEXT    not null,
+                        email       TEXT    not null,
                         password    TEXT    not null,
                         is_ban      INTEGER not null,
                         create_time BIGINT  not null

@@ -6,11 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>数据管理</title>
-
-    <!-- 引入样式库 -->
     <script src="/res/js/tailwind.js"></script>
-
-    <!-- 引入脚本库 -->
     <script src="/res/js/jquery-3.7.1.min.js"></script>
     <script src="/res/js/vue.global.js"></script>
     <script src="/res/js/all.js"></script>
@@ -235,7 +231,6 @@
             </div>
         </div>
 
-        <!-- 修改数据信息弹窗 -->
         <el-dialog v-model="isEditPopupVisible" class="w-[300px]!" title="修改数据信息" :close-on-click-modal="false">
             <hr class="mb-3 border-b-1 border-blue-600/50" style="color: #2563eb;">
             <el-form :model="editing_data" label-width="80px">
@@ -250,7 +245,6 @@
             </template>
         </el-dialog>
 
-        <!-- 鼠标点击音效 -->
         <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
     </div>
 </body>
@@ -439,14 +433,18 @@
     });
 
     function showNotification(message, success) {
-        const type = success ? "success" : "error";
-        ElementPlus.ElNotification({
-            title: success ? "成功" : "失败",
-            message: message,
-            type: type,
-            duration: 2000,
-            offset: 60
+      if (success) {
+        ElementPlus.ElMessage({
+          message: message,
+          type: "success",
+          offset: 80,
         });
+      } else {
+        ElementPlus.ElMessage.error({
+          message: message,
+          offset: 80,
+        });
+      }
     }
 
     app.use(ElementPlus);

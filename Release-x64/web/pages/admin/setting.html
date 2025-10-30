@@ -7,11 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/res/image/favicon.ico">
     <title>后端设置</title>
-
-    <!-- 引入样式库 -->
     <script src="/res/js/tailwind.js"></script>
 
-    <!-- 引入脚本库 -->
     <script src="/res/js/jquery-3.7.1.min.js"></script>
     <script src="/res/js/vue.global.js"></script>
     <script src="/res/js/all.js"></script>
@@ -19,16 +16,13 @@
     <link rel="stylesheet" href="/res/css/element-plus.css">
 </head>
 <style>
-    /* 引入全局样式 */
     @import url("/res/css/all.css");
 
-    /* 定义字体 */
     @font-face {
         font-family: StarRail;
         src: url('/res/font/zh-cn.ttf');
     }
 
-    /* 全局样式设置 */
     * {
         cursor: url('/res/image/webview_cursor_default.png'), auto;
         font-family: StarRail, serif;
@@ -37,7 +31,6 @@
         box-sizing: border-box;
     }
 
-    /* 弹窗样式 */
     .popup {
         position: fixed;
         top: 50%;
@@ -51,7 +44,6 @@
         overflow-y: scroll;
     }
 
-    /* 背景遮罩样式 */
     .overlay {
         position: fixed;
         top: 0;
@@ -62,40 +54,32 @@
         z-index: 999;
     }
 
-    /* 卡片标题样式 */
     .card-header {
         font-weight: bold;
         font-size: 16px;
         color: #333;
     }
 
-    /* 表单提示信息样式 */
     .tips {
         font-size: 12px;
         color: #999;
         margin-top: 5px;
     }
 
-    /* 警告信息样式 */
     .warning {
         font-size: 12px;
         color: #ff4d4f;
         margin-top: 5px;
     }
 
-    /* 使用 columns 布局 */
     .columns-layout {
         columns: auto;
-        /* 定义4列 */
         gap: 10px;
-        /* 列之间的间距 */
     }
 
     .column-item {
         break-inside: avoid;
-        /* 防止元素被拆分到不同的列 */
         margin-bottom: 8px;
-        /* 元素底部间距 */
     }
 
     form {
@@ -122,9 +106,7 @@
 <body>
     <div id="app" class="p-2! pt-17!">
         <div class="m-4 ml-0 mt-3">
-            <!-- 使用 columns 布局 -->
             <div class="columns-layout">
-                <!-- 服务器设置 -->
                 <div class="column-item" id="server">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -198,7 +180,6 @@
                     </el-card>
                 </div>
 
-                <!-- 面板设置 -->
                 <div class="column-item" id="panel">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -229,7 +210,6 @@
                     </el-card>
                 </div>
 
-                <!-- 文件设置 -->
                 <div class="column-item" id="file">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -271,7 +251,6 @@
                     </el-card>
                 </div>
 
-                <!-- 日志设置 -->
                 <div class="column-item" id="log">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -314,7 +293,6 @@
                     </el-card>
                 </div>
 
-                <!-- 数据库设置 -->
                 <div class="column-item" id="database">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -342,7 +320,6 @@
                     </el-card>
                 </div>
 
-                <!-- 操作按钮 -->
                 <div class="column-item" id="operation">
                     <el-card class="box-card shadow-none!">
                         <template #header>
@@ -370,7 +347,6 @@
             </el-anchor>
         </div>
 
-        <!-- 缓存路径弹窗 -->
         <el-dialog v-model="showPopup" title="缓存路径" width="50%" style="height: 62%;">
             <el-table :data="paths" class="overflow-y-scroll!" style="width: 100%; height: 50vh;">
                 <el-table-column prop="file_path" label="文件路径" width="300"></el-table-column>
@@ -396,7 +372,6 @@
         <el-backtop :right="50" :bottom="100" />
     </div>
 
-    <!-- 鼠标点击音效 -->
     <audio id="click-sound" src="/res/audio/dlc_common_reward.mp3" preload="auto"></audio>
 </body>
 <script>
@@ -428,7 +403,6 @@
             };
         },
         mounted() {
-            // 页面加载时获取设置
             $.get('/setting/get')
                 .done(response => {
                     this.form.server_port = parseInt(response["server_port"]);
@@ -474,7 +448,6 @@
                     return (size / 1024 / 1024 / 1024).toFixed(2) + " GB";
                 }
             },
-            // 保存服务器设置
             saveServerSettings() {
                 if (this.form.server_port < 1 || this.form.server_port > 65535) {
                     ElementPlus.ElMessage.error({
@@ -524,8 +497,6 @@
                     }
                 })
             },
-
-            // 保存面板设置
             savePanelSettings() {
                 if (!this.form.username || !this.form.password) {
                     ElementPlus.ElMessage.error({
@@ -542,8 +513,6 @@
                     });
                     return;
                 }
-
-                // 发送数据到后端
                 $.ajax({
                     url: '/setting/set_panel',
                     type: 'POST',
@@ -573,8 +542,6 @@
                     }
                 });
             },
-
-            // 保存文件设置
             saveFileSettings() {
                 if (!this.form.cert_path || !this.form.key_path) {
                     ElementPlus.ElMessage.error({
@@ -634,8 +601,6 @@
                     }
                 })
             },
-
-            // 保存日志设置
             saveLogSettings() {
                 $.ajax({
                     url: '/setting/set_log',
@@ -666,8 +631,6 @@
                     }
                 })
             },
-
-            // 保存数据库设置
             saveDatabaseSettings() {
                 $.ajax({
                     url: '/setting/set_sql',
@@ -697,8 +660,6 @@
                     }
                 })
             },
-
-            // 清空内存缓存
             clearMemoryCache() {
                 $.get('/file/clear_memory_cache')
                     .done(response => {
